@@ -25,6 +25,7 @@ import org.jscience.physics.amount.Constants;
 
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.BurnPanel;
+import com.billkuker.rocketry.motorsim.grain.CompoundGrain;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.ExtrudedGrain;
 import com.billkuker.rocketry.motorsim.grain.GrainPanel;
@@ -231,7 +232,24 @@ public class Burn {
 		g.setID(Amount.valueOf(10, SI.MILLIMETER));
 		m.setGrain(g);
 		
-		m.setGrain(new MultiGrain(g,2));
+		CoredCylindricalGrain g1 = new CoredCylindricalGrain();
+		g1.setLength(Amount.valueOf(70, SI.MILLIMETER));
+		g1.setOD(Amount.valueOf(30, SI.MILLIMETER));
+		g1.setID(Amount.valueOf(18, SI.MILLIMETER));
+		m.setGrain(g);
+		
+		CoredCylindricalGrain g2 = new CoredCylindricalGrain();
+		g2.setLength(Amount.valueOf(70, SI.MILLIMETER));
+		g2.setOD(Amount.valueOf(12, SI.MILLIMETER));
+		g2.setID(Amount.valueOf(0, SI.MILLIMETER));
+		g2.inhibit(true, false, false);
+		m.setGrain(g);
+		
+		CompoundGrain cg = new CompoundGrain(g1, g2);
+		
+		m.setGrain( cg );
+		
+		//m.setGrain(new MultiGrain(g,2));
 		
 		//m.setGrain(new ExtrudedGrain());
 		

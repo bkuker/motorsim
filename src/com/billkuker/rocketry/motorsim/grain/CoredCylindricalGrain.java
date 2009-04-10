@@ -27,6 +27,12 @@ public class CoredCylindricalGrain implements Grain, Validating {
 	public CoredCylindricalGrain() {
 
 	}
+	
+	public void inhibit(boolean in, boolean out, boolean end){
+		oInh = out;
+		iInh = in;
+		eInh = end;
+	}
 
 	@Override
 	public Amount<Area> surfaceArea(Amount<Length> regression) {
