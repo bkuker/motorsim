@@ -1,5 +1,13 @@
 package com.billkuker.rocketry.motorsim.grain;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
+
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Volume;
@@ -11,7 +19,7 @@ import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.validation.Validating;
 import com.billkuker.rocketry.motorsim.validation.ValidationException;
 
-public class CoredCylindricalGrain implements Grain, Validating {
+public class CoredCylindricalGrain implements Grain, Validating, Grain.Graphical {
 
 	private Amount<Length> length, oD, iD;
 	private boolean oInh = true, iInh = false, eInh = false;
@@ -156,7 +164,44 @@ public class CoredCylindricalGrain implements Grain, Validating {
 		return iD;
 	}
 	
+	@Override
+	public java.awt.geom.Area getCrossSection(Amount<Length> regression){
+		double rmm = regression.doubleValue(SI.MILLIMETER);
+		double oDmm = oD.doubleValue(SI.MILLIMETER);
+		double iDmm = iD.doubleValue(SI.MILLIMETER);
+
+		if ( !oInh )
+			oDmm -= 2.0 * rmm;
+		if ( !iInh )
+			iDmm += 2.0 * rmm;
+		
+		Shape oDs = new Ellipse2D.Double(-oDmm/2.0, -oDmm/2.0, oDmm, oDmm);
+		Shape iDs = new Ellipse2D.Double(-iDmm/2.0, -iDmm/2.0, iDmm, iDmm);
+		
+		java.awt.geom.Area a = new java.awt.geom.Area(oDs);
+		a.subtract(new java.awt.geom.Area(iDs));
+		return a;
+	}
 	
+	public java.awt.geom.Area getSideView(Amount<Length> regression){
+		double rmm = regression.doubleValue(SI.MILLIMETER);
+		double oDmm = oD.doubleValue(SI.MILLIMETER);
+		double iDmm = iD.doubleValue(SI.MILLIMETER);
+		double lmm = length.doubleValue(SI.MILLIMETER);
+
+		if ( !oInh )
+			oDmm -= 2.0 * rmm;
+		if ( !iInh )
+			iDmm += 2.0 * rmm;
+		if ( !eInh )
+			lmm -= 2.0 * rmm;
+		
+		java.awt.geom.Area a = new java.awt.geom.Area();
+		a.add( new java.awt.geom.Area(new Rectangle2D.Double(-oDmm/2,-lmm/2,oDmm, lmm)));
+		a.subtract( new java.awt.geom.Area(new Rectangle2D.Double(-iDmm/2,-lmm/2,iDmm, lmm)));
+		
+		return a;
+	}
 	
 
 }

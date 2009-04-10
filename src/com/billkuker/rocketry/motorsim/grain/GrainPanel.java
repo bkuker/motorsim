@@ -1,9 +1,12 @@
 package com.billkuker.rocketry.motorsim.grain;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.text.NumberFormat;
 
 import javax.measure.quantity.Area;
@@ -71,30 +74,98 @@ public class GrainPanel extends JPanel {
 		charts.setDividerLocation(.5);
 		charts.setResizeWeight(.5);
 		
-		if ( grain instanceof Grain.Graphical)
-			add(xc = new XC((Grain.Graphical)grain), BorderLayout.CENTER);
-		
 		JPanel left = new JPanel(new BorderLayout());
-		left.add(xc);
+		
+		if ( grain instanceof Grain.Graphical){
+			add(xc = new XC((Grain.Graphical)grain), BorderLayout.CENTER);
+			left.add(xc);
+		}
 		left.add(l, BorderLayout.NORTH);
-		left.add( new SL(), BorderLayout.SOUTH);
+		left.add( sl = new SL(), BorderLayout.SOUTH);
 	
 		add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, charts));
 
+	}
+	
+	public void setDisplayedRegression( Amount<Length> r ){
+		displayedRegression = r;
+		
+		NumberFormat nf = NumberFormat.getInstance();
+		nf.setMaximumFractionDigits(2);
+		l.setText("Regression: " + nf.format(displayedRegression.doubleValue(SI.MILLIMETER)) + "mm");
+		
+		area.mark(displayedRegression);
+		volume.mark(displayedRegression);
+		if ( xc != null )
+			xc.repaint();
 	}
 	
 	private class XC extends JPanel{
 		private static final long serialVersionUID = 1L;
 		Grain.Graphical grain;
 		public XC(Grain.Graphical g){
-			setMinimumSize(new Dimension(220,220));
+			setMinimumSize(new Dimension(440,250));
 			grain = g;
 		}
 		public void paint(Graphics g){
 			super.paint(g);
 			Graphics2D g2d = (Graphics2D)g;
 			g2d.translate(10, 30);
+			/*
 			grain.draw(g2d, displayedRegression );
+			*/
+			
+			{
+				AffineTransform t = g2d.getTransform();
+				java.awt.geom.Area unburnt = grain.getCrossSection(Amount.valueOf(0, SI.MILLIMETER));
+				
+				Rectangle bounds = unburnt.getBounds();
+				g2d.scale(200 / bounds.getWidth(), 200 / bounds.getHeight());
+				g2d.translate(-bounds.getX(), -bounds.getY());
+	
+				//Draw the fuel that is left
+				java.awt.geom.Area burning = grain.getCrossSection(displayedRegression);
+				g2d.setColor(Color.RED);
+				g2d.fill(burning);
+				//Draw the fuel that is left
+				java.awt.geom.Area left = grain.getCrossSection(displayedRegression.plus(grain.webThickness().divide(30)));
+				g2d.setColor(Color.GRAY);
+				g2d.fill(left);
+				//Draw the outline of the unburnt grain
+				g2d.setColor(Color.BLACK);
+				g2d.draw(unburnt);
+				//untranslate
+				g2d.setTransform(t);
+			}
+			{
+				AffineTransform t = g2d.getTransform();
+				java.awt.geom.Area unburnt = grain.getSideView(Amount.valueOf(0, SI.MILLIMETER));
+				
+				Rectangle bounds = unburnt.getBounds();
+				g2d.translate(220, 0);
+				
+				double max = bounds.getWidth();
+				if ( bounds.getHeight() > max )
+					max = bounds.getHeight();
+				
+				g2d.scale(200 / max, 200 / max);
+				g2d.translate(-bounds.getX(), -bounds.getY());
+	
+				//Draw the fuel that is left
+				java.awt.geom.Area burning = grain.getSideView(displayedRegression);
+				g2d.setColor(Color.RED);
+				g2d.fill(burning);
+				//Draw the fuel that is left
+				java.awt.geom.Area left = grain.getSideView(displayedRegression.plus(grain.webThickness().divide(30)));
+				g2d.setColor(Color.GRAY);
+				g2d.fill(left);
+				//Draw the outline of the unburnt grain
+				g2d.setColor(Color.BLACK);
+				g2d.draw(unburnt);
+				//untranslate
+				g2d.setTransform(t);
+			}
+			
 		}
 	}
 	
@@ -111,14 +182,8 @@ public class GrainPanel extends JPanel {
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			double r = ((SL)e.getSource()).getValue();
-			displayedRegression = grain.webThickness().divide(STEPS).times(r);
-			NumberFormat nf = NumberFormat.getInstance();
-			nf.setMaximumFractionDigits(2);
-			l.setText("Regression: " + nf.format(displayedRegression.doubleValue(SI.MILLIMETER)) + "mm");
-			area.mark(displayedRegression);
-			volume.mark(displayedRegression);
-			if ( xc != null )
-				xc.repaint();
+
+			setDisplayedRegression(grain.webThickness().divide(STEPS).times(r));
 		}
 	}
 	

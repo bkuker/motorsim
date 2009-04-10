@@ -24,8 +24,10 @@ import org.jscience.physics.amount.Amount;
 import org.jscience.physics.amount.Constants;
 
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
+import com.billkuker.rocketry.motorsim.grain.BurnPanel;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.ExtrudedGrain;
+import com.billkuker.rocketry.motorsim.grain.GrainPanel;
 import com.billkuker.rocketry.motorsim.visual.Chart;
 
 public class Burn {
@@ -40,10 +42,10 @@ public class Burn {
 	
 	private static double densityRatio = 0.96;
 	
-	protected class Interval{
+	public class Interval{
 		Amount<Duration> time;
-		Amount<Length> regression;
-		Amount<Pressure> chamberPressure;
+		public Amount<Length> regression;
+		public Amount<Pressure> chamberPressure;
 		Amount<Mass> chamberProduct;
 		Amount<Force> thrust;
 
@@ -53,6 +55,18 @@ public class Burn {
 	}
 	
 	protected SortedMap<Amount<Duration>,Interval> data = new TreeMap<Amount<Duration>, Interval>();
+	
+	public SortedMap<Amount<Duration>,Interval> getData(){
+		return data;
+	}
+	
+	public Motor getMotor(){
+		return motor;
+	}
+
+	public Amount<Duration> burnTime(){
+		return data.lastKey();
+	}
 	
 	public Burn(Motor m){
 		motor = m;
@@ -216,7 +230,7 @@ public class Burn {
 		g.setID(Amount.valueOf(10, SI.MILLIMETER));
 		m.setGrain(g);
 		
-		m.setGrain(new ExtrudedGrain());
+		//m.setGrain(new ExtrudedGrain());
 		
 		ConvergentDivergentNozzle n = new ConvergentDivergentNozzle();
 		n.setThroatDiameter(Amount.valueOf(6.600, SI.MILLIMETER));
@@ -228,6 +242,8 @@ public class Burn {
 		
 		b.burn();
 		
+		new BurnPanel(b).show();
+		/*
 		Chart<Duration, Pressure> r = new Chart<Duration, Pressure>(
 				SI.SECOND,
 				SI.MEGA(SI.PASCAL),
@@ -244,19 +260,7 @@ public class Burn {
 		t.setDomain(b.data.keySet());
 		t.show();
 		
-		/*
-		Chart<Length, Area> s = new Chart<Length, Area>(SI.MILLIMETER,
-				SI.MILLIMETER.pow(2).asType(Area.class), g, "surfaceArea");
-		s.setDomain(s.new IntervalDomain(Amount.valueOf(0, SI.CENTIMETER), g
-				.webThickness()));
-		s.show();
-		*/
-		
-		Chart<Length, Dimensionless> kn = new Chart<Length, Dimensionless>(SI.MILLIMETER,
-				Dimensionless.UNIT, b, "kn");
-		kn.setDomain(kn.new IntervalDomain(Amount.valueOf(0, SI.CENTIMETER), m.getGrain()
-				.webThickness()));
-		kn.show();
+		new GrainPanel( m.getGrain() ).show();*/
 		
 	}
 }

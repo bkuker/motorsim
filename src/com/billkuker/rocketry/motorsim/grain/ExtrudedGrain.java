@@ -56,8 +56,6 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 		Amount<Volume> volume;
 	}
 
-	SortedMap<Amount<Length>, RegEntry> data = new TreeMap<Amount<Length>, RegEntry>();
-
 	Amount<Length> webThickness;
 
 	{
@@ -71,8 +69,8 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 		Shape outside = new Ellipse2D.Double(0, 0, 30, 30);
 		plus.add(outside);
 		inhibited.add(outside);
-		minus.add(new Rectangle2D.Double(12, 25, 5, 10));
-		minus.add(new Ellipse2D.Double(10, 4, 5, 5));
+		minus.add(new Rectangle2D.Double(13, 13, 4, 30));
+		//minus.add(new Ellipse2D.Double(12, 12, 6, 6));
 		length = Amount.valueOf(70, SI.MILLIMETER);
 		/**/
 
@@ -85,89 +83,48 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 
 		findWebThickness();
 
-		fillInData();
 	}
 
 	@Override
 	public Amount<Area> surfaceArea(Amount<Length> regression) {
+		Amount<Area> zero = Amount.valueOf(0, Area.UNIT);
+		
 		if (regression.isGreaterThan(webThickness))
-			return Amount.valueOf(0, Area.UNIT);
-		Amount<Length> highKey = data.tailMap(regression).firstKey();
-		Amount<Length> lowKey;
-		try {
-			lowKey = data.headMap(regression).lastKey();
-		} catch (NoSuchElementException e) {
-			return data.get(highKey).surfaceArea;
-		}
+			return zero;
+		
+		Amount<Length> rLen = length.minus(regression.times(2));
+		if (rLen.isLessThan(Amount.valueOf(0, SI.MILLIMETER)))
+			return zero;
 
-		double lp = regression.minus(lowKey).divide(highKey.minus(lowKey)).to(
-				Dimensionless.UNIT).doubleValue(Dimensionless.UNIT);
+		java.awt.geom.Area burn = getCrossSection(regression);
+		
+		if (burn.isEmpty())
+			return zero;
+		
+		burn.subtract(getCrossSection(regression.plus(Amount.valueOf(.001,
+				SI.MILLIMETER))));
+	
+		Amount<Area> xSection = crossSectionArea(regression);
 
-		Amount<Area> lowVal = data.get(lowKey).surfaceArea;
-		Amount<Area> highVal = data.get(highKey).surfaceArea;
-
-		return lowVal.times(1 - lp).plus(highVal.times(lp));
+		return perimeter(burn).divide(2).times(rLen).plus(
+				xSection.times(2)).to(Area.UNIT);
 	}
 
 	@Override
 	public Amount<Volume> volume(Amount<Length> regression) {
-		if (regression.isGreaterThan(webThickness))
-			return Amount.valueOf(0, Volume.UNIT);
-		Amount<Length> highKey = data.tailMap(regression).firstKey();
-		Amount<Length> lowKey;
-		try {
-			lowKey = data.headMap(regression).lastKey();
-		} catch (NoSuchElementException e) {
-			return data.get(highKey).volume;
-		}
+		Amount<Volume> zero = Amount.valueOf(0, Volume.UNIT);
+		
+		Amount<Length> rLen = length.minus(regression.times(2));
+		if (rLen.isLessThan(Amount.valueOf(0, SI.MILLIMETER)))
+			return zero;
+		
+		Amount<Area> xSection = crossSectionArea(regression);
 
-		double lp = regression.minus(lowKey).divide(highKey.minus(lowKey)).to(
-				Dimensionless.UNIT).doubleValue(Dimensionless.UNIT);
+		return xSection.times(rLen).to(Volume.UNIT);
 
-		Amount<Volume> lowVal = data.get(lowKey).volume;
-		Amount<Volume> highVal = data.get(highKey).volume;
-
-		return lowVal.times(1 - lp).plus(highVal.times(lp));
 	}
 
-	private void fillInData() {
-		double max = webThickness().doubleValue(SI.MILLIMETER);
-		double delta = max / 100;
-		rStep = Amount.valueOf(delta, SI.MILLIMETER).divide(10);
-		for (double r = 0; r <= max + 1; r += delta) {
-			RegEntry e = new RegEntry();
-			Amount<Length> regression = Amount.valueOf(r, SI.MILLIMETER);
 
-			Amount<Length> rLen = length.minus(regression.times(2));
-			if (rLen.isLessThan(Amount.valueOf(0, SI.MILLIMETER)))
-				break;
-
-			System.out.println("Calculating area for regression " + regression);
-
-			java.awt.geom.Area burn = getArea(regression);
-			if (burn.isEmpty())
-				break;
-			burn.subtract(getArea(regression.plus(Amount.valueOf(.001,
-					SI.MILLIMETER))));
-
-			//Amount<Area> xSection = crossSectionArea(getArea(regression));
-			
-			Amount<Area> xSection = crossSectionArea(regression);
-
-			e.volume = xSection.times(rLen).to(Volume.UNIT);
-
-			e.surfaceArea = perimeter(burn).divide(2).times(rLen).plus(
-					xSection.times(2)).to(Area.UNIT);
-
-			data.put(regression, e);
-
-		}
-
-		RegEntry e = new RegEntry();
-		e.surfaceArea = Amount.valueOf(0, Area.UNIT);
-		e.volume = Amount.valueOf(0, Volume.UNIT);
-		data.put(webThickness(), e);
-	}
 
 	
 	private Amount<Area> crossSectionArea(Amount<Length> regression) {
@@ -189,7 +146,7 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 		
 		//Subtract PLUS from MINUS and return
 		Amount<Area> area = plusArea.minus(minusArea);
-		System.out.println(area.to(SI.MILLIMETER.pow(2)));
+
 		return area;
 	}
 
@@ -227,7 +184,7 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 	}
 
 	private void findWebThickness() {
-		java.awt.geom.Area a = getArea(Amount.valueOf(0, SI.MILLIMETER));
+		java.awt.geom.Area a = getCrossSection(Amount.valueOf(0, SI.MILLIMETER));
 		Rectangle r = a.getBounds();
 		double max = r.getWidth() < r.getHeight() ? r.getHeight() : r
 				.getWidth(); // The max size
@@ -237,7 +194,7 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 			guess = min + (max - min) / 2; // Guess halfway through
 			System.out.println("Min: " + min + " Guess: " + guess + " Max: "
 					+ max);
-			a = getArea(Amount.valueOf(guess, SI.MILLIMETER));
+			a = getCrossSection(Amount.valueOf(guess, SI.MILLIMETER));
 			if (a.isEmpty()) {
 				// guess is too big
 				max = guess;
@@ -253,9 +210,23 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 			webThickness = length.divide(2);
 	}
 
-	private java.awt.geom.Area getArea(Amount<Length> regression) {
+	@Override
+	public java.awt.geom.Area getCrossSection(Amount<Length> regression) {
 		java.awt.geom.Area res = getPlus(regression);
 		res.subtract(getMinus(regression));
+		return res;
+	}
+	
+	@Override
+	public java.awt.geom.Area getSideView(Amount<Length> regression) {
+		java.awt.geom.Area res = new java.awt.geom.Area();
+		double rLenmm = length.minus(regression.times(2)).doubleValue(SI.MILLIMETER);
+		
+		for( java.awt.geom.Area a : separate(getCrossSection(regression))){
+			Rectangle2D bounds = a.getBounds2D();
+			Rectangle2D side = new Rectangle2D.Double(bounds.getMinX(), -rLenmm/2.0, bounds.getWidth(), rLenmm);
+			res.add(new java.awt.geom.Area(side));
+		}
 		return res;
 	}
 	
@@ -292,15 +263,42 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 			return new Ellipse2D.Double(x, y, w, h);
 		} else if (s instanceof Rectangle2D) {
 			Rectangle2D r = (Rectangle2D) s;
+			
+			if ( plus ){
+				double d = -2 * mm;
+				double w = r.getWidth() + d;
+				double h = r.getHeight() + d;
+				double x = r.getX() - d / 2;
+				double y = r.getY() - d / 2;
+				return new Rectangle2D.Double(x, y, w, h);
+			} else {
+				//A rectangular hole gets rounded corners as it grows
+				java.awt.geom.Area a = new java.awt.geom.Area();
+				double d = 2 * mm;
+				
+				//Make it wider
+				double w = r.getWidth() + d;
+				double h = r.getHeight();
+				double x = r.getX() - d / 2;
+				double y = r.getY();
+				a.add( new java.awt.geom.Area(new Rectangle2D.Double(x, y, w, h)));
+				
+				//Make it taller
+				w = r.getWidth();
+				h = r.getHeight() + d;
+				x = r.getX();
+				y = r.getY() - d / 2;
+				a.add( new java.awt.geom.Area(new Rectangle2D.Double(x, y, w, h)));
+				
+				//Add rounded corners
+				a.add( new java.awt.geom.Area(new Ellipse2D.Double(r.getX()-mm, r.getY()-mm, mm*2, mm*2)));
+				a.add( new java.awt.geom.Area(new Ellipse2D.Double(r.getX()+r.getWidth()-mm, r.getY()-mm, mm*2, mm*2)));
+				a.add( new java.awt.geom.Area(new Ellipse2D.Double(r.getX()+r.getWidth()-mm, r.getY()+r.getHeight()-mm, mm*2, mm*2)));
+				a.add( new java.awt.geom.Area(new Ellipse2D.Double(r.getX()-mm, r.getY()+r.getHeight()-mm, mm*2, mm*2)));
+				
+				return a;
+			}
 
-			double d = plus ? -2 * mm : 2 * mm;
-
-			double w = r.getWidth() + d;
-			double h = r.getHeight() + d;
-			double x = r.getX() - d / 2;
-			double y = r.getY() - d / 2;
-
-			return new Rectangle2D.Double(x, y, w, h);
 		}
 		return null;
 	}
@@ -310,30 +308,6 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 		new GrainPanel(e).show();
 	}
 
-	@Override
-	public void draw(Graphics2D g2d, Amount<Length> regression) {
-
-		java.awt.geom.Area reg = getArea(regression);
-		java.awt.geom.Area burn = getArea(regression);
-		burn.subtract(getArea(regression.plus(Amount.valueOf(.001,
-				SI.MILLIMETER))));
-		java.awt.geom.Area noreg = getArea(Amount.valueOf(0, SI.MILLIMETER));
-
-		Rectangle bounds = noreg.getBounds();
-		g2d.scale(200 / bounds.getWidth(), 200 / bounds.getHeight());
-		g2d.translate(-bounds.getX(), -bounds.getY());
-
-		g2d.setStroke(new BasicStroke(0.5f));
-
-		g2d.setColor(Color.GRAY);
-		g2d.fill(reg);
-		g2d.setColor(Color.RED);
-		g2d.draw(burn);
-		g2d.setColor(Color.BLACK);
-		g2d.draw(noreg);
-		
-
-	}
 
 	/*
 	 * Separate an area into multiple distinct area.
@@ -429,7 +403,7 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 				y = sy = coords[1];
 				break;
 			default:
-				System.err.println("Got " + type);
+				throw new Error("Bad segment type from Flattening Path Iterator");
 			}
 			i.next();
 		}
@@ -439,7 +413,6 @@ public class ExtrudedGrain implements Grain, Grain.Graphical {
 		if ( area < 0 ) //Depending on winding it could be negative
 			area = area * -1.0;
 		
-		System.out.println(area);
 		
 		return Amount.valueOf(area, SI.MILLIMETER.pow(2)).to(Area.UNIT);
 	}

@@ -10,8 +10,9 @@ import org.jscience.physics.amount.Amount;
 
 public interface Grain   {
 	
-	public interface Graphical{
-		public void draw( Graphics2D g, Amount<Length> regression );
+	public interface Graphical extends Grain{
+		public java.awt.geom.Area getCrossSection(Amount<Length> regression);
+		public java.awt.geom.Area getSideView(Amount<Length> regression);
 	}
 	
 	public interface DiscreteRegression{
