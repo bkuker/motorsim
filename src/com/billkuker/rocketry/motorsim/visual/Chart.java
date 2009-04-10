@@ -96,13 +96,13 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 
 		this.xUnit = xUnit;
 		this.yUnit = yUnit;
-		chart = ChartFactory.createXYLineChart(source.getClass()
-				.getSimpleName(), // Title
+		chart = ChartFactory.createXYLineChart(
+				method.substring(0,1).toUpperCase() + method.substring(1), // Title
 				xUnit.toString(), // x-axis Label
 				yUnit.toString(), // y-axis Label
 				dataset,
 				PlotOrientation.VERTICAL, // Plot Orientation
-				true, // Show Legend
+				false, // Show Legend
 				true, // Use tool tips
 				false // Configure chart to generate URLs?
 				);
