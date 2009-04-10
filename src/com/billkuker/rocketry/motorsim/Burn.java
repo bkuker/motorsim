@@ -236,18 +236,17 @@ public class Burn {
 		g1.setLength(Amount.valueOf(70, SI.MILLIMETER));
 		g1.setOD(Amount.valueOf(30, SI.MILLIMETER));
 		g1.setID(Amount.valueOf(18, SI.MILLIMETER));
-		m.setGrain(g);
+		g1.inhibit(false, true, true);
 		
 		CoredCylindricalGrain g2 = new CoredCylindricalGrain();
 		g2.setLength(Amount.valueOf(70, SI.MILLIMETER));
 		g2.setOD(Amount.valueOf(12, SI.MILLIMETER));
 		g2.setID(Amount.valueOf(0, SI.MILLIMETER));
-		g2.inhibit(true, false, false);
-		m.setGrain(g);
+		g2.inhibit(true, false, true);
 		
 		CompoundGrain cg = new CompoundGrain(g1, g2);
 		
-		m.setGrain( cg );
+		m.setGrain( new MultiGrain(cg, 2) );
 		
 		//m.setGrain(new MultiGrain(g,2));
 		
