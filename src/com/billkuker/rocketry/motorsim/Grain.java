@@ -1,7 +1,5 @@
 package com.billkuker.rocketry.motorsim;
 
-import java.awt.Graphics2D;
-
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Volume;

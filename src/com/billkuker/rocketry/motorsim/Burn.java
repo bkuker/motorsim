@@ -27,10 +27,7 @@ import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.BurnPanel;
 import com.billkuker.rocketry.motorsim.grain.CompoundGrain;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
-import com.billkuker.rocketry.motorsim.grain.ExtrudedGrain;
-import com.billkuker.rocketry.motorsim.grain.GrainPanel;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
-import com.billkuker.rocketry.motorsim.visual.Chart;
 
 public class Burn {
 	

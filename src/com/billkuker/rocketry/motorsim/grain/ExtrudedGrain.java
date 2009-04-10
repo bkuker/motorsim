@@ -1,11 +1,5 @@
 package com.billkuker.rocketry.motorsim.grain;
 
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -14,29 +8,16 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.measure.quantity.Area;
-import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Volume;
 import javax.measure.unit.SI;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSplitPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Grain;
-import com.billkuker.rocketry.motorsim.visual.Chart;
 
 public class ExtrudedGrain implements Grain {
 
