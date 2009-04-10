@@ -76,10 +76,9 @@ public class GrainPanel extends JPanel {
 		
 		JPanel left = new JPanel(new BorderLayout());
 		
-		if ( grain instanceof Grain.Graphical){
-			add(xc = new XC((Grain.Graphical)grain), BorderLayout.CENTER);
-			left.add(xc);
-		}
+		add(xc = new XC(grain), BorderLayout.CENTER);
+		left.add(xc);
+
 		left.add(l, BorderLayout.NORTH);
 		left.add( sl = new SL(), BorderLayout.SOUTH);
 	
@@ -102,8 +101,8 @@ public class GrainPanel extends JPanel {
 	
 	private class XC extends JPanel{
 		private static final long serialVersionUID = 1L;
-		Grain.Graphical grain;
-		public XC(Grain.Graphical g){
+		Grain grain;
+		public XC(Grain g){
 			setMinimumSize(new Dimension(440,250));
 			grain = g;
 		}

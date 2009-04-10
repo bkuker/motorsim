@@ -38,7 +38,7 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.visual.Chart;
 
-public class ExtrudedGrain implements Grain, Grain.Graphical {
+public class ExtrudedGrain implements Grain {
 
 	Set<Shape> plus = new HashSet<Shape>();
 

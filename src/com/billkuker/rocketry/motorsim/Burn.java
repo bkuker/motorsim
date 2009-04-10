@@ -28,6 +28,7 @@ import com.billkuker.rocketry.motorsim.grain.BurnPanel;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.ExtrudedGrain;
 import com.billkuker.rocketry.motorsim.grain.GrainPanel;
+import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.visual.Chart;
 
 public class Burn {
@@ -220,7 +221,7 @@ public class Burn {
 		m.setFuel(new KNSU());
 		
 		CylindricalChamber c = new CylindricalChamber();
-		c.setLength(Amount.valueOf(100, SI.MILLIMETER));
+		c.setLength(Amount.valueOf(200, SI.MILLIMETER));
 		c.setID(Amount.valueOf(30, SI.MILLIMETER));
 		m.setChamber(c);
 		
@@ -230,10 +231,12 @@ public class Burn {
 		g.setID(Amount.valueOf(10, SI.MILLIMETER));
 		m.setGrain(g);
 		
+		m.setGrain(new MultiGrain(g,2));
+		
 		//m.setGrain(new ExtrudedGrain());
 		
 		ConvergentDivergentNozzle n = new ConvergentDivergentNozzle();
-		n.setThroatDiameter(Amount.valueOf(6.600, SI.MILLIMETER));
+		n.setThroatDiameter(Amount.valueOf(8.500, SI.MILLIMETER));
 		n.setExitDiameter(Amount.valueOf(20.87, SI.MILLIMETER));
 		n.setEfficiency(.87);
 		m.setNozzle(n);

@@ -19,7 +19,7 @@ import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.validation.Validating;
 import com.billkuker.rocketry.motorsim.validation.ValidationException;
 
-public class CoredCylindricalGrain implements Grain, Validating, Grain.Graphical {
+public class CoredCylindricalGrain implements Grain, Validating {
 
 	private Amount<Length> length, oD, iD;
 	private boolean oInh = true, iInh = false, eInh = false;
