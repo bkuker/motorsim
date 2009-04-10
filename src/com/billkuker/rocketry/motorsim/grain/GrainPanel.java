@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.text.NumberFormat;
 
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
@@ -68,7 +69,7 @@ public class GrainPanel extends JPanel {
 		
 		JSplitPane charts = new JSplitPane(JSplitPane.VERTICAL_SPLIT, area, volume);
 		charts.setDividerLocation(.5);
-		
+		charts.setResizeWeight(.5);
 		
 		if ( grain instanceof Grain.Graphical)
 			add(xc = new XC((Grain.Graphical)grain), BorderLayout.CENTER);
@@ -86,7 +87,7 @@ public class GrainPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 		Grain.Graphical grain;
 		public XC(Grain.Graphical g){
-			setMinimumSize(new Dimension(120,120));
+			setMinimumSize(new Dimension(220,220));
 			grain = g;
 		}
 		public void paint(Graphics g){
@@ -99,7 +100,7 @@ public class GrainPanel extends JPanel {
 	
 	private class SL extends JSlider implements ChangeListener{
 		private static final long serialVersionUID = 1L;
-		private static final int STEPS = 20;
+		private static final int STEPS = 60;
 		public SL(){
 			addChangeListener(this);
 			setMinimum(0);
@@ -111,7 +112,9 @@ public class GrainPanel extends JPanel {
 		public void stateChanged(ChangeEvent e) {
 			double r = ((SL)e.getSource()).getValue();
 			displayedRegression = grain.webThickness().divide(STEPS).times(r);
-			l.setText("Regression: " + displayedRegression);
+			NumberFormat nf = NumberFormat.getInstance();
+			nf.setMaximumFractionDigits(2);
+			l.setText("Regression: " + nf.format(displayedRegression.doubleValue(SI.MILLIMETER)) + "mm");
 			area.mark(displayedRegression);
 			volume.mark(displayedRegression);
 			if ( xc != null )
