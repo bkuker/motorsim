@@ -7,6 +7,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyVetoException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,9 +19,11 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Grain;
+import com.billkuker.rocketry.motorsim.MotorPart;
+import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
-public class ExtrudedGrain implements Grain {
+public class ExtrudedGrain extends MotorPart implements Grain {
 
 	Set<Shape> plus = new HashSet<Shape>();
 
@@ -29,6 +32,8 @@ public class ExtrudedGrain implements Grain {
 	Set<Shape> inhibited = new HashSet<Shape>();
 
 	Amount<Length> length = Amount.valueOf(25, SI.MILLIMETER);
+	
+	boolean endSurfaceInhibited = false;
 
 	Amount<Length> rStep;
 
@@ -68,7 +73,10 @@ public class ExtrudedGrain implements Grain {
 		if (regression.isGreaterThan(webThickness))
 			return zero;
 		
-		Amount<Length> rLen = length.minus(regression.times(2));
+		Amount<Length> rLen = length;
+		if ( !endSurfaceInhibited ) //Regress length if uninhibited
+			rLen = length.minus(regression.times(2));
+		
 		if (rLen.isLessThan(Amount.valueOf(0, SI.MILLIMETER)))
 			return zero;
 
@@ -90,7 +98,10 @@ public class ExtrudedGrain implements Grain {
 	public Amount<Volume> volume(Amount<Length> regression) {
 		Amount<Volume> zero = Amount.valueOf(0, Volume.UNIT);
 		
-		Amount<Length> rLen = length.minus(regression.times(2));
+		Amount<Length> rLen = length;
+		if ( !endSurfaceInhibited ) //Regress length if uninhibited
+			rLen = length.minus(regression.times(2));
+		
 		if (rLen.isLessThan(Amount.valueOf(0, SI.MILLIMETER)))
 			return zero;
 		
@@ -196,7 +207,12 @@ public class ExtrudedGrain implements Grain {
 	@Override
 	public java.awt.geom.Area getSideView(Amount<Length> regression) {
 		java.awt.geom.Area res = new java.awt.geom.Area();
-		double rLenmm = length.minus(regression.times(2)).doubleValue(SI.MILLIMETER);
+		
+		Amount<Length> rLen = length;
+		if ( !endSurfaceInhibited ) //Regress length if uninhibited
+			rLen = length.minus(regression.times(2));
+		
+		double rLenmm = rLen.doubleValue(SI.MILLIMETER);
 		
 		for( java.awt.geom.Area a : separate(getCrossSection(regression))){
 			Rectangle2D bounds = a.getBounds2D();
@@ -281,6 +297,7 @@ public class ExtrudedGrain implements Grain {
 
 	public static void main(String args[]) throws Exception {
 		ExtrudedGrain e = new ExtrudedGrain();
+		new Editor(e).show();
 		new GrainPanel(e).show();
 	}
 
@@ -391,6 +408,28 @@ public class ExtrudedGrain implements Grain {
 		
 		
 		return Amount.valueOf(area, SI.MILLIMETER.pow(2)).to(Area.UNIT);
+	}
+
+	public Amount<Length> getLength() {
+		return length;
+	}
+
+	public void setLength(Amount<Length> length) throws PropertyVetoException {
+		fireVetoableChange("length", this.length, length);
+		Amount<Length> old = this.length;
+		this.length = length;
+		firePropertyChange("length", old, length);
+	}
+
+	public boolean isEndSurfaceInhibited() {
+		return endSurfaceInhibited;
+	}
+
+	public void setEndSurfaceInhibited(boolean endSurfaceInhibited) throws PropertyVetoException {
+		fireVetoableChange("endSurfaceInhibited", this.endSurfaceInhibited, endSurfaceInhibited);
+		boolean old = this.endSurfaceInhibited;
+		this.endSurfaceInhibited = endSurfaceInhibited;
+		firePropertyChange("endSurfaceInhibited", old, endSurfaceInhibited);
 	}
 
 }
