@@ -1,6 +1,7 @@
 package com.billkuker.rocketry.motorsim.grain;
 
 import java.awt.geom.Area;
+import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,8 +12,9 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Grain;
+import com.billkuker.rocketry.motorsim.MotorPart;
 
-public class CompoundGrain implements Grain {
+public class CompoundGrain extends MotorPart implements Grain {
 	
 	private Set<Grain> grains = new HashSet<Grain>();
 	
@@ -22,6 +24,18 @@ public class CompoundGrain implements Grain {
 	
 	public void add( Grain g ){
 		grains.add(g);
+	}
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		for ( Grain g : grains )
+			if ( g instanceof MotorPart )
+				((MotorPart)g).addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		for ( Grain g : grains )
+			if ( g instanceof MotorPart )
+				((MotorPart)g).removePropertyChangeListener(listener);
 	}
 
 	public Area getCrossSection(Amount<Length> regression) {
