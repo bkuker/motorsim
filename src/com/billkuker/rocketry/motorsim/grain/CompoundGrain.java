@@ -1,9 +1,12 @@
 package com.billkuker.rocketry.motorsim.grain;
 
 import java.awt.geom.Area;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Volume;
+import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
@@ -11,38 +14,52 @@ import com.billkuker.rocketry.motorsim.Grain;
 
 public class CompoundGrain implements Grain {
 	
-	private Grain a, b;
+	private Set<Grain> grains = new HashSet<Grain>();
 	
-	public CompoundGrain(Grain a, Grain b){
-		this.a = a;
-		this.b = b;
+	public CompoundGrain(){
+
+	}
+	
+	public void add( Grain g ){
+		grains.add(g);
 	}
 
 	public Area getCrossSection(Amount<Length> regression) {
-		Area aa = a.getCrossSection(regression);
-		aa.add(b.getCrossSection(regression));
-		return aa;
+		Area a = new Area();
+		for ( Grain g : grains )
+			a.add( g.getCrossSection(regression) );
+		return a;
 	}
 
 	public Area getSideView(Amount<Length> regression) {
-		Area aa = a.getSideView(regression);
-		aa.add(b.getSideView(regression));
-		return aa;
+		Area a = new Area();
+		for ( Grain g : grains )
+			a.add( g.getSideView(regression) );
+		return a;
 	}
 
 	public Amount<javax.measure.quantity.Area> surfaceArea(
 			Amount<Length> regression) {
-		return a.surfaceArea(regression).plus(b.surfaceArea(regression));
+		Amount<javax.measure.quantity.Area> a = Amount.valueOf(0, SI.SQUARE_METRE);
+		for ( Grain g : grains )
+			a = a.plus(g.surfaceArea(regression));
+		return a;
 	}
 
 	public Amount<Volume> volume(Amount<Length> regression) {
-		return a.volume(regression).plus(b.volume(regression));
+		Amount<Volume> v = Amount.valueOf(0, SI.CUBIC_METRE);
+		for ( Grain g : grains )
+			v = v.plus(g.volume(regression));
+		return v;
 	}
 
 	public Amount<Length> webThickness() {
-		Amount<Length> l = a.webThickness();
-		if ( b.webThickness().isGreaterThan(l) )
-			return b.webThickness();
+		Amount<Length> l = Amount.valueOf(0, SI.MILLIMETER);
+		for ( Grain g : grains ){
+			Amount<Length> gl = g.webThickness();
+			if ( gl.isGreaterThan(l) )
+				l = gl;
+		}
 		return l;
 	}
 
