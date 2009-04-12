@@ -1,18 +1,20 @@
 package com.billkuker.rocketry.motorsim.test;
 
+import java.beans.PropertyVetoException;
+
 import javax.measure.quantity.Length;
 import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 import org.junit.Test;
 
+import com.billkuker.rocketry.motorsim.MotorPart;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
-import com.billkuker.rocketry.motorsim.validation.ValidationException;
 
 public class CoredCylindricalGrainTest extends RocketTest {
 
 	@Test
-	public void testSurfaceArea() {
+	public void testSurfaceArea() throws PropertyVetoException {
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
 		
 		g.setLength(Amount.valueOf(70, SI.MILLIMETER));
@@ -29,7 +31,7 @@ public class CoredCylindricalGrainTest extends RocketTest {
 	
 
 	@Test
-	public void testWebThickness() {
+	public void testWebThickness() throws PropertyVetoException {
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
 		
 		//thin and long
@@ -48,7 +50,7 @@ public class CoredCylindricalGrainTest extends RocketTest {
 	}
 
 	@Test
-	public void testVolume() {
+	public void testVolume() throws PropertyVetoException {
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
 		
 		//thin and long
@@ -59,8 +61,8 @@ public class CoredCylindricalGrainTest extends RocketTest {
 		System.out.println(g.volume(Amount.valueOf(0, SI.MILLIMETER)));
 	}
 
-	@Test(expected=ValidationException.class)
-	public void testCheckValidity() throws ValidationException{
+	@Test(expected=MotorPart.Validating.ValidationException.class)
+	public void testCheckValidity() throws MotorPart.Validating.ValidationException, PropertyVetoException{
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
 		
 		//thin and long

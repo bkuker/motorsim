@@ -1,4 +1,4 @@
-package com.billkuker.rocketry.motorsim.grain;
+package com.billkuker.rocketry.motorsim.visual;
 
 import java.awt.BorderLayout;
 import java.text.NumberFormat;
@@ -18,7 +18,6 @@ import javax.swing.event.ChangeListener;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
-import com.billkuker.rocketry.motorsim.visual.Chart;
 
 public class BurnPanel extends JPanel {
 	private Burn burn;

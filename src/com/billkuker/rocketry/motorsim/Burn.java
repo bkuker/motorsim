@@ -24,10 +24,10 @@ import org.jscience.physics.amount.Amount;
 import org.jscience.physics.amount.Constants;
 
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
-import com.billkuker.rocketry.motorsim.grain.BurnPanel;
 import com.billkuker.rocketry.motorsim.grain.CompoundGrain;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
+import com.billkuker.rocketry.motorsim.visual.BurnPanel;
 
 public class Burn {
 	

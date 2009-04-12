@@ -1,14 +1,21 @@
 package com.billkuker.rocketry.motorsim;
 
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Pressure;
+import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
-public class ConvergentDivergentNozzle implements Nozzle {
+public class ConvergentDivergentNozzle extends MotorPart implements Nozzle {
 
 	private Amount<Length> throatDiameter;
 	
@@ -33,7 +40,11 @@ public class ConvergentDivergentNozzle implements Nozzle {
 
 
 	public void setThroatDiameter(Amount<Length> throatDiameter) {
+		if ( exitDiameter != null && throatDiameter.isGreaterThan(exitDiameter))
+			throw new IllegalArgumentException("Throat > Exit");
+		Amount<Length> old = this.throatDiameter;
 		this.throatDiameter = throatDiameter;
+		firePropertyChange("throatDiameter", old, throatDiameter);
 	}
 	
 
@@ -43,7 +54,11 @@ public class ConvergentDivergentNozzle implements Nozzle {
 
 
 	public void setExitDiameter(Amount<Length> exitDiameter) {
+		if ( throatDiameter != null && exitDiameter.isLessThan(throatDiameter))
+			throw new IllegalArgumentException("Throat > Exit");
+		Amount<Length> old = this.exitDiameter;
 		this.exitDiameter = exitDiameter;
+		firePropertyChange("exitDiameter", old, exitDiameter);
 	}
 	
 	@Override
@@ -75,8 +90,35 @@ public class ConvergentDivergentNozzle implements Nozzle {
 	}
 
 	public void setEfficiency(double efficiency) {
+		double old = this.efficiency;
 		this.efficiency = efficiency;
+		firePropertyChange("efficiency", old, efficiency);
 	}
 
-
+	public Shape nozzleShape(Amount<Length> chamberDiameter){
+		GeneralPath s = new GeneralPath();
+		double throatR = throatDiameter.divide(2).doubleValue(SI.MILLIMETER);
+		double exitR = exitDiameter.divide(2).doubleValue(SI.MILLIMETER);
+		double cR;
+		if (chamberDiameter == null)
+			cR = exitR;
+		else
+			cR = chamberDiameter.divide(2).doubleValue(SI.MILLIMETER);
+		
+		double diff = exitR-throatR;
+		double cDiff = cR-throatR;
+		
+		s.append(new Line2D.Double(0,0,diff,diff*3), false);
+		s.append(new Line2D.Double(0,0,cDiff,-cDiff), true);
+		
+		s.transform(AffineTransform.getScaleInstance(-1, 1));
+		s.transform(AffineTransform.getTranslateInstance(-throatR, 0));
+		
+		s.append(new Line2D.Double(0,0,diff,diff*3), false);
+		s.append(new Line2D.Double(0,0,cDiff,-cDiff), true);
+		
+		//a.add(new java.awt.geom.Area( new Ellipse2D.Double(0,0,5,5)));
+		
+		return s;
+	}
 }

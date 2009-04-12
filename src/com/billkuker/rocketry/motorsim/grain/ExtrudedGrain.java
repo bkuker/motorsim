@@ -18,6 +18,7 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Grain;
+import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class ExtrudedGrain implements Grain {
 

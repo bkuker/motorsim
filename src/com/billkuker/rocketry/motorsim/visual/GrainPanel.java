@@ -1,4 +1,4 @@
-package com.billkuker.rocketry.motorsim.grain;
+package com.billkuker.rocketry.motorsim.visual;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
 
 import javax.measure.quantity.Area;
@@ -24,7 +26,7 @@ import javax.swing.event.ChangeListener;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Grain;
-import com.billkuker.rocketry.motorsim.visual.Chart;
+import com.billkuker.rocketry.motorsim.MotorPart;
 
 public class GrainPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -40,6 +42,18 @@ public class GrainPanel extends JPanel {
 		super(new BorderLayout());
 
 		grain = g;
+		
+		if ( g instanceof MotorPart ){
+			((MotorPart)g).addPropertyChangeListener(new PropertyChangeListener(){
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					repaint();
+					area.setDomain(area.new IntervalDomain(Amount.valueOf(0, SI.MILLIMETER), grain.webThickness()));
+					volume.setDomain(volume.new IntervalDomain(Amount.valueOf(0, SI.MILLIMETER), grain.webThickness()));
+				}
+			});
+		}
+
 
 		try {
 

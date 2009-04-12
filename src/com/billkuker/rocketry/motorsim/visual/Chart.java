@@ -24,6 +24,8 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jscience.physics.amount.Amount;
 
+import sun.misc.Cleaner;
+
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 
 public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
@@ -128,6 +130,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 		//double step = (high - low) / 50;
 		//for (double x = low; x < high; x += step) {
 			//Amount<X> ax = Amount.valueOf(x, xUnit);
+		series.clear();
 		for( Amount<X> ax: d){
 			try {
 				Amount<Y> y = (Amount<Y>) f.invoke(source, ax);

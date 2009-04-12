@@ -6,6 +6,7 @@
 	<classpathentry kind="lib" path="jfreechart-1.0.12.jar"/>
 	<classpathentry kind="lib" path="jcommon-1.0.15.jar"/>
 	<classpathentry kind="lib" path="log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="l2fprod-common-sheet.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -3,6 +3,7 @@ package com.billkuker.rocketry.motorsim.grain;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyVetoException;
 
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
@@ -12,22 +13,25 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Grain;
-import com.billkuker.rocketry.motorsim.validation.Validating;
-import com.billkuker.rocketry.motorsim.validation.ValidationException;
+import com.billkuker.rocketry.motorsim.MotorPart;
 
-public class CoredCylindricalGrain implements Grain, Validating {
+
+public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart.Validating {
 
 	private Amount<Length> length, oD, iD;
-	private boolean oInh = true, iInh = false, eInh = false;
+	private boolean outerSurfaceInhibited = true, innerSurfaceInhibited = false, endSurfaceInhibited = false;
 
 	public CoredCylindricalGrain() {
-
+		length = Amount.valueOf(100, SI.MILLIMETER);
+		oD = Amount.valueOf(30, SI.MILLIMETER);
+		iD = Amount.valueOf(10, SI.MILLIMETER);
 	}
 	
+	
 	public void inhibit(boolean in, boolean out, boolean end){
-		oInh = out;
-		iInh = in;
-		eInh = end;
+		outerSurfaceInhibited = out;
+		innerSurfaceInhibited = in;
+		endSurfaceInhibited = end;
 	}
 
 	@Override
@@ -36,19 +40,19 @@ public class CoredCylindricalGrain implements Grain, Validating {
 		
 		//Calculated regressed length
 		Amount<Length> cLength = length;
-		if ( !eInh ){
+		if ( !endSurfaceInhibited ){
 			cLength = cLength.minus(regression.times(2));
 		}
 		
 		//Calculate regressed iD
 		Amount<Length> cID = iD;
-		if ( !iInh ){
+		if ( !innerSurfaceInhibited ){
 			cID = iD.plus(regression.times(2));
 		}
 		
 		//Calculate regressed oD
 		Amount<Length> cOD = oD;
-		if ( !oInh ){
+		if ( !outerSurfaceInhibited ){
 			cOD = oD.minus(regression.times(2));
 		}
 		
@@ -65,7 +69,7 @@ public class CoredCylindricalGrain implements Grain, Validating {
 		
 		Amount<Area> ends = (cOD.divide(2).pow(2).times(Math.PI)).minus(cID.divide(2).pow(2).times(Math.PI)).times(2).to(SI.SQUARE_METRE);
 		
-		Amount<Area> total = inner.times(iInh?0:1).plus(outer.times(oInh?0:1)).plus(ends.times(eInh?0:1));
+		Amount<Area> total = inner.times(innerSurfaceInhibited?0:1).plus(outer.times(outerSurfaceInhibited?0:1)).plus(ends.times(endSurfaceInhibited?0:1));
 		
 		return total;
 	}
@@ -76,19 +80,19 @@ public class CoredCylindricalGrain implements Grain, Validating {
 		
 		//Calculated regressed length
 		Amount<Length> cLength = length;
-		if ( !eInh ){
+		if ( !endSurfaceInhibited ){
 			cLength = cLength.minus(regression.times(2));
 		}
 		
 		//Calculate regressed iD
 		Amount<Length> cID = iD;
-		if ( !iInh ){
+		if ( !innerSurfaceInhibited ){
 			cID = iD.plus(regression.times(2));
 		}
 		
 		//Calculate regressed oD
 		Amount<Length> cOD = oD;
-		if ( !oInh ){
+		if ( !outerSurfaceInhibited ){
 			cOD = oD.minus(regression.times(2));
 		}
 		
@@ -105,16 +109,25 @@ public class CoredCylindricalGrain implements Grain, Validating {
 		return end.times(cLength).to(SI.CUBIC_METRE);
 	}
 
-	public void setLength(Amount<Length> length) {
+	public void setLength(Amount<Length> length) throws PropertyVetoException {
+		fireVetoableChange("length", this.length, length);
+		Amount<Length> old = this.length;
 		this.length = length;
+		firePropertyChange("length", old, length);
 	}
 
-	public void setOD(Amount<Length> od) {
-		oD = od;
+	public void setOD(Amount<Length> od) throws PropertyVetoException {
+		fireVetoableChange("od", this.oD, od);
+		Amount<Length> old = this.oD;
+		this.oD = od;
+		firePropertyChange("OD", old, oD);
 	}
 
-	public void setID(Amount<Length> id) {
+	public void setID(Amount<Length> id) throws PropertyVetoException {
+		fireVetoableChange("id", this.iD, id);
+		Amount<Length> old = this.iD;
 		iD = id;
+		firePropertyChange("ID", old, iD);
 	}
 	
 	public void checkValidity() throws ValidationException{
@@ -127,22 +140,26 @@ public class CoredCylindricalGrain implements Grain, Validating {
 		if ( iD.isGreaterThan(oD) )
 			throw new ValidationException(this, "iD > oD");
 		
-		if ( iInh && oInh && eInh )
+		if ( innerSurfaceInhibited && outerSurfaceInhibited && endSurfaceInhibited )
 			throw new ValidationException(this, "No exposed grain surface");
 		
 	}
 
 	@Override
 	public Amount<Length> webThickness() {
+		if ( innerSurfaceInhibited && outerSurfaceInhibited && endSurfaceInhibited ){
+			return oD;
+		}
+		
 		Amount<Length> radial = null;
-		if ( !iInh && !oInh )
+		if ( !innerSurfaceInhibited && !outerSurfaceInhibited )
 			radial = oD.minus(iD).divide(4); //Outer and inner exposed
-		else if ( !iInh || !oInh )
+		else if ( !innerSurfaceInhibited || !outerSurfaceInhibited )
 			radial = oD.minus(iD).divide(2); //Outer or inner exposed
 		
 		Amount<Length> axial = null;
 		
-		if ( !eInh )
+		if ( !endSurfaceInhibited )
 			axial = length.divide(2);
 		
 		if ( axial == null )
@@ -172,9 +189,9 @@ public class CoredCylindricalGrain implements Grain, Validating {
 		double oDmm = oD.doubleValue(SI.MILLIMETER);
 		double iDmm = iD.doubleValue(SI.MILLIMETER);
 
-		if ( !oInh )
+		if ( !outerSurfaceInhibited )
 			oDmm -= 2.0 * rmm;
-		if ( !iInh )
+		if ( !innerSurfaceInhibited )
 			iDmm += 2.0 * rmm;
 		
 		Shape oDs = new Ellipse2D.Double(-oDmm/2.0, -oDmm/2.0, oDmm, oDmm);
@@ -191,11 +208,11 @@ public class CoredCylindricalGrain implements Grain, Validating {
 		double iDmm = iD.doubleValue(SI.MILLIMETER);
 		double lmm = length.doubleValue(SI.MILLIMETER);
 
-		if ( !oInh )
+		if ( !outerSurfaceInhibited )
 			oDmm -= 2.0 * rmm;
-		if ( !iInh )
+		if ( !innerSurfaceInhibited )
 			iDmm += 2.0 * rmm;
-		if ( !eInh )
+		if ( !endSurfaceInhibited )
 			lmm -= 2.0 * rmm;
 		
 		java.awt.geom.Area a = new java.awt.geom.Area();
@@ -203,6 +220,45 @@ public class CoredCylindricalGrain implements Grain, Validating {
 		a.subtract( new java.awt.geom.Area(new Rectangle2D.Double(-iDmm/2,-lmm/2,iDmm, lmm)));
 		
 		return a;
+	}
+
+
+	public boolean isOuterSurfaceInhibited() {
+		return outerSurfaceInhibited;
+	}
+
+
+	public void setOuterSurfaceInhibited(boolean outerSurfaceInhibited) throws PropertyVetoException {
+		fireVetoableChange("outerSurfaceInhibited", this.outerSurfaceInhibited, outerSurfaceInhibited);
+		boolean old = this.outerSurfaceInhibited;
+		this.outerSurfaceInhibited = outerSurfaceInhibited;
+		firePropertyChange("outerSurfaceInhibited", old, outerSurfaceInhibited);
+	}
+
+
+	public boolean isInnerSurfaceInhibited() {
+		return innerSurfaceInhibited;
+	}
+
+
+	public void setInnerSurfaceInhibited(boolean innerSurfaceInhibited)  throws PropertyVetoException {
+		fireVetoableChange("innerSurfaceInhibited", this.innerSurfaceInhibited, innerSurfaceInhibited);
+		boolean old = this.innerSurfaceInhibited;
+		this.innerSurfaceInhibited = innerSurfaceInhibited;
+		firePropertyChange("innerSurfaceInhibited", old, innerSurfaceInhibited);
+	}
+
+
+	public boolean isEndSurfaceInhibited() {
+		return endSurfaceInhibited;
+	}
+
+
+	public void setEndSurfaceInhibited(boolean endSurfaceInhibited) throws PropertyVetoException {
+		fireVetoableChange("endSurfaceInhibited", this.endSurfaceInhibited, endSurfaceInhibited);
+		boolean old = this.endSurfaceInhibited;
+		this.endSurfaceInhibited = endSurfaceInhibited;
+		firePropertyChange("endSurfaceInhibited", old, endSurfaceInhibited);
 	}
 	
 
