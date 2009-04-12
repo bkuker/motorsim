@@ -24,8 +24,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jscience.physics.amount.Amount;
 
-import sun.misc.Cleaner;
-
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 
 public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {

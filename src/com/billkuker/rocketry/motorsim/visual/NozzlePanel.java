@@ -6,22 +6,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.geom.Area;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.measure.unit.SI;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.text.EditorKit;
 
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
 import com.billkuker.rocketry.motorsim.MotorPart;
 import com.billkuker.rocketry.motorsim.Nozzle;
-import com.billkuker.rocketry.motorsim.visual.Chart.IntervalDomain;
 
 public class NozzlePanel extends JPanel {
 	private Nozzle nozzle;

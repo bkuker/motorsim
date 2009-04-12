@@ -1,34 +1,16 @@
 package com.billkuker.rocketry.motorsim.visual;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.InputEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
-import java.beans.PropertyVetoException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 
 import javax.measure.unit.NonSI;
 import javax.measure.unit.Unit;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -37,7 +19,6 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
-import com.sun.media.sound.Toolkit;
 
 public class Editor extends JPanel {
 	private static Logger log = Logger.getLogger(Editor.class);
