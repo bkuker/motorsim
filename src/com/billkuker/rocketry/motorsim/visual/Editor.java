@@ -1,26 +1,32 @@
 package com.billkuker.rocketry.motorsim.visual;
+
 import java.awt.Component;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Vector;
 
 import javax.measure.unit.NonSI;
 import javax.measure.unit.Unit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
+import com.billkuker.rocketry.motorsim.grain.RodAndTubeGrain;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 
-public class Editor extends JPanel {
+public class Editor extends PropertySheetPanel {
 	private static final long serialVersionUID = 1L;
 
 	private static Logger log = Logger.getLogger(Editor.class);
@@ -31,68 +37,61 @@ public class Editor extends JPanel {
 			IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
 		obj = o;
-		/*
-		BeanInfo b = Introspector.getBeanInfo(o.getClass());
-		setLayout(new GridLayout(b.getPropertyDescriptors().length - 1, 2));
-		for (PropertyDescriptor p : b.getPropertyDescriptors()) {
-			log.debug(p.getName());
-			if (p.getName().equals("class"))
-				continue;
 
-			add(new JLabel(p.getName()));
-			if (p.getPropertyType().isAssignableFrom(Amount.class)){
-				add(new AmountEditor(p));
-			} else if ( p.getPropertyType() == boolean.class ){
-				add( new BooleanEditor(p) );
-				
-			}
+		PropertyEditorManager.registerEditor(Amount.class,
+				AmountPropertyEditor.class);
+
+		// Build the list of properties we want it to edit
+		//final PropertySheetPanel ps = new PropertySheetPanel();
+		PropertyDescriptor props[] = Introspector.getBeanInfo(obj.getClass())
+				.getPropertyDescriptors();
+		Vector<PropertyDescriptor> v = new Vector<PropertyDescriptor>();
+		for (int i = 0; i < props.length; i++) {
+			if (props[i].getName().equals("class"))
+				continue;
+			v.add(props[i]);
 		}
-		log.debug(PropertyEditorManager.findEditor(boolean.class).supportsCustomEditor());*/
-		
-		PropertyEditorManager.registerEditor(Amount.class, AmountPropertyEditor.class);
-		
-		final PropertySheetPanel ps = new PropertySheetPanel();
-		ps.setBeanInfo(Introspector.getBeanInfo(obj.getClass()));
-		ps.readFromObject(obj);
-		add(ps);
-		
-		ps.addPropertySheetChangeListener(new PropertyChangeListener(){
+		setProperties(v.toArray(new PropertyDescriptor[v.size()]));
+
+		readFromObject(obj);
+
+		addPropertySheetChangeListener(new PropertyChangeListener() {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				//When something changes just update the
-				//object, I want the changes to be immediate.
+				// When something changes just update the
+				// object, I want the changes to be immediate.
 				try {
-					ps.writeToObject(obj);
-				} catch ( Exception v ){
-					//TODO
+					log.debug("Writing properties to object.");
+					writeToObject(obj);
+				} catch (Exception v) {
+					// TODO
 					v.printStackTrace();
 					java.awt.Toolkit.getDefaultToolkit().beep();
 				} finally {
-					ps.readFromObject(obj);
+					readFromObject(obj);
 				}
 			}
-			
+
 		});
 	}
 
 	public static void main(String args[]) throws Exception {
-		CoredCylindricalGrain g = new CoredCylindricalGrain();
-		g.setOD(Amount.valueOf(1, NonSI.INCH));
+		Grain g = new CoredCylindricalGrain();
+		g = new RodAndTubeGrain();
 		new Editor(g).show();
-		
 		new GrainPanel(g).show();
 	}
 
 	public void show() {
 		JFrame f = new JFrame();
-		f.setSize(600,400);
+		f.setSize(600, 400);
 		f.setContentPane(this);
-		f.setDefaultCloseOperation(f.DISPOSE_ON_CLOSE);
+		f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
 	}
-	
-	public static class AmountPropertyEditor extends PropertyEditorSupport{
+
+	public static class AmountPropertyEditor extends PropertyEditorSupport {
 		JTextField editor = new JTextField();
 		Unit oldUnit;
 
@@ -100,48 +99,62 @@ public class Editor extends JPanel {
 		public boolean supportsCustomEditor() {
 			return true;
 		}
-		@Override public String getAsText(){
+
+		@Override
+		public String getAsText() {
 			return editor.getText();
 		}
-		
-		@Override public Object getValue(){
+
+		@Override
+		public Object getValue() {
 			String text = editor.getText().trim();
+
+			// Trying to determine if the value is integer or
+			// has a decimal part will prevent the uncertainty
+			// term from appearing when user types an exact value
 			try {
 				try {
 					return Amount.valueOf(Integer.parseInt(text), oldUnit);
-				} catch (NumberFormatException e){
-					
+				} catch (NumberFormatException e) {
+
 				}
 				Amount a = Amount.valueOf(Double.parseDouble(text), oldUnit);
 				return a;
-			} catch (NumberFormatException e){
+			} catch (NumberFormatException e) {
+				// Storing the old unit allows you to type 10 into a field
+				// that says 20 mm and get 10 mm, so you dont have to
+				// type the unit if they havn't changed.
 				Amount a = Amount.valueOf(editor.getText());
 				oldUnit = a.getUnit();
 				return a;
 			}
 
 		}
-		@Override public void setValue(Object o){
-			Amount a = (Amount)o;
+
+		@Override
+		public void setValue(Object o) {
+			Amount a = (Amount) o;
 			oldUnit = a.getUnit();
-			
+
 			String text;
-			if ( a.isExact() )
-					 text = a.getExactValue() + " " + a.getUnit();
+			//Leave off the fractional part if it is not relevant
+			if (a.isExact())
+				text = a.getExactValue() + " " + a.getUnit();
 			else
-				 text = a.doubleValue(a.getUnit()) + " " + a.getUnit();
-			
+				text = a.doubleValue(a.getUnit()) + " " + a.getUnit();
+
 			setAsText(text);
 		}
-		@Override public void setAsText(String text) throws IllegalArgumentException {
+
+		@Override
+		public void setAsText(String text) throws IllegalArgumentException {
 			editor.setText(text);
 		};
+
 		@Override
-		public Component getCustomEditor(){
+		public Component getCustomEditor() {
 			return editor;
 		}
 	}
-
-
 
 }
