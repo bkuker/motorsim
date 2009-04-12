@@ -48,7 +48,7 @@ public class MotorPart {
 						if (ps[i].getName().equals(evt.getPropertyName())){
 							Type t = ps[i].getReadMethod().getGenericReturnType();
 							ParameterizedType p = (ParameterizedType) t;
-							Class expected = (Class) p.getActualTypeArguments()[0];
+							Class expected = (Class)p.getActualTypeArguments()[0];
 							Field f = expected.getDeclaredField("UNIT");
 							Unit u = (Unit) f.get(null);
 							

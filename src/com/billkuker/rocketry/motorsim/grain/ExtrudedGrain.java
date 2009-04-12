@@ -32,12 +32,6 @@ public class ExtrudedGrain implements Grain {
 
 	Amount<Length> rStep;
 
-	private class RegEntry {
-		Amount<Area> surfaceArea;
-
-		Amount<Volume> volume;
-	}
-
 	Amount<Length> webThickness;
 
 	{

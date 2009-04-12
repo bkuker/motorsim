@@ -27,8 +27,8 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 
 public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
+	private static final long serialVersionUID = 1L;
 
-	
 	public class IntervalDomain implements Iterable<Amount<X>>{
 		
 		Amount<X> low, high, delta;
@@ -131,7 +131,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 		series.clear();
 		for( Amount<X> ax: d){
 			try {
-				Amount<Y> y = (Amount<Y>) f.invoke(source, ax);
+				Amount<Y> y = (Amount<Y>)f.invoke(source, ax);
 				add(ax, y);
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
@@ -152,6 +152,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 	
 	public void show(){
 		new JFrame(){
+			private static final long serialVersionUID = 1L;
 			{
 				setContentPane(Chart.this);
 				setSize(640,480);

@@ -21,6 +21,8 @@ import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 
 public class Editor extends JPanel {
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger.getLogger(Editor.class);
 
 	private Object obj;

@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -20,6 +21,7 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.Burn;
 
 public class BurnPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 	private Burn burn;
 	Chart<Duration, Pressure> pressure;
 	Chart<Duration, Force> thrust;
@@ -133,7 +135,7 @@ public class BurnPanel extends JPanel {
 		f.setSize(1280,720);
 		f.setLocation(0, 0);
 		f.setContentPane(this);
-		f.setDefaultCloseOperation(f.DISPOSE_ON_CLOSE);
+		f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
 	}
 }

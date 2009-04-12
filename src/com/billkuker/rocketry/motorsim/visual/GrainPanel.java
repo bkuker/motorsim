@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -204,7 +205,7 @@ public class GrainPanel extends JPanel {
 		JFrame f = new JFrame();
 		f.setSize(1024,600);
 		f.setContentPane(this);
-		f.setDefaultCloseOperation(f.DISPOSE_ON_CLOSE);
+		f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
 	}
 

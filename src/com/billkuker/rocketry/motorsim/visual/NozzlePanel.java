@@ -12,6 +12,7 @@ import java.beans.PropertyChangeListener;
 import javax.measure.unit.SI;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import org.jscience.physics.amount.Amount;
 
@@ -20,6 +21,7 @@ import com.billkuker.rocketry.motorsim.MotorPart;
 import com.billkuker.rocketry.motorsim.Nozzle;
 
 public class NozzlePanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 	private Nozzle nozzle;
 	public NozzlePanel(Nozzle n){
 		nozzle = n;
@@ -61,7 +63,7 @@ public class NozzlePanel extends JPanel {
 		JFrame f = new JFrame();
 		f.setSize(220,250);
 		f.setContentPane(this);
-		f.setDefaultCloseOperation(f.DISPOSE_ON_CLOSE);
+		f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
 	}
 	
