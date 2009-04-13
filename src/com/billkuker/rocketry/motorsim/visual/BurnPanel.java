@@ -56,7 +56,7 @@ public class BurnPanel extends JPanel {
 			burnRate.setDomain(
 					burnRate.new IntervalDomain(
 							Amount.valueOf(0, SI.MEGA(SI.PASCAL)),
-							Amount.valueOf(3, SI.MEGA(SI.PASCAL)),
+							Amount.valueOf(11, SI.MEGA(SI.PASCAL)),
 							20
 							));
 			
