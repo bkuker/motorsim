@@ -43,7 +43,7 @@ public class MultiGrain implements Grain {
 		
 		java.awt.geom.Area ret = new java.awt.geom.Area();
 		java.awt.geom.Area g = grain.getSideView(regression);
-		Rectangle2D b = g.getBounds2D();
+
 		for ( int i = 0 ; i < count ; i++ ){
 			ret.add(g);
 			ret.transform(AffineTransform.getTranslateInstance(0, unburntBounds.getHeight() + 10));

@@ -12,9 +12,6 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
-
-import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.MotorPart;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
