@@ -4,16 +4,12 @@ import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Temperature;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
-import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
-import com.billkuker.rocketry.motorsim.Fuel.CombustionProduct;
 import com.billkuker.rocketry.motorsim.RocketScience.MolarWeight;
-import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel.Type;
 import com.billkuker.rocketry.motorsim.visual.Chart;
-import com.billkuker.rocketry.motorsim.visual.Chart.IntervalDomain;
 
 public class KNSB extends PiecewiseSaintRobertFuel {
 
@@ -33,7 +29,7 @@ public class KNSB extends PiecewiseSaintRobertFuel {
 
 	@Override
 	public CombustionProduct getCombustionProduct() {
-		return new CombustionProduct(){ //TODO THIS IS THE KNSU STUFF
+		return new CombustionProduct(){
 			
 			@Override
 			public Amount<Temperature> idealCombustionTemperature() {

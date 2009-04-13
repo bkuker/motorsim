@@ -5,11 +5,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.measure.quantity.Pressure;
-import javax.measure.quantity.VolumetricDensity;
 
 import org.jscience.physics.amount.Amount;
-
-import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel.Type;
 
 public abstract class PiecewiseSaintRobertFuel extends SaintRobertFuel {
 
