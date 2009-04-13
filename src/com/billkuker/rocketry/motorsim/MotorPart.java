@@ -13,7 +13,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import javax.measure.quantity.Quantity;
 import javax.measure.unit.Unit;
 
 import org.jscience.physics.amount.Amount;
@@ -38,52 +37,38 @@ public class MotorPart {
 		vcs = new VetoableChangeSupport(this);
 		
 		vcs.addVetoableChangeListener(new VetoableChangeListener(){
+			@SuppressWarnings("unchecked")
 			@Override
 			public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
 				if ( evt.getNewValue() instanceof Amount ){
-				try {
-					BeanInfo b = Introspector.getBeanInfo(evt.getSource().getClass());
-					PropertyDescriptor ps[] = b.getPropertyDescriptors();
-					for ( int i = 0; i < ps.length; i++ ){
-						if (ps[i].getName().equals(evt.getPropertyName())){
-							Type t = ps[i].getReadMethod().getGenericReturnType();
-							ParameterizedType p = (ParameterizedType) t;
-							Class expected = (Class)p.getActualTypeArguments()[0];
-							Field f = expected.getDeclaredField("UNIT");
-							Unit u = (Unit) f.get(null);
-							
-							Amount a = (Amount)evt.getNewValue();
-							if (!a.getUnit().isCompatible(u))
-								throw new PropertyVetoException(ps[i].getShortDescription()
-										+ " must be in units of "
-										+ expected.getSimpleName(), evt);
-
-							System.out.println("Expected " + expected + " got " + u);
+					try {
+						BeanInfo b = Introspector.getBeanInfo(evt.getSource().getClass());
+						PropertyDescriptor ps[] = b.getPropertyDescriptors();
+						for ( int i = 0; i < ps.length; i++ ){
+							if (ps[i].getName().equals(evt.getPropertyName())){
+								Type t = ps[i].getReadMethod().getGenericReturnType();
+								ParameterizedType p = (ParameterizedType) t;
+								Class expected = (Class)p.getActualTypeArguments()[0];
+								Field f = expected.getDeclaredField("UNIT");
+								Unit u = (Unit) f.get(null);
+								
+								Amount a = (Amount)evt.getNewValue();
+								if (!a.getUnit().isCompatible(u))
+									throw new PropertyVetoException(ps[i].getShortDescription()
+											+ " must be in units of "
+											+ expected.getSimpleName(), evt);
+	
+								System.out.println("Expected " + expected + " got " + u);
+							}
 						}
+					} catch ( PropertyVetoException e ){
+						throw e;
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				} catch ( PropertyVetoException e ){
-					throw e;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 				}
 			}
 		});
-	}
-
-	public <T extends Quantity> void checkAmount(Amount<T> a, Class<T> q)
-			throws IllegalArgumentException {
-		try {
-			Field f = q.getDeclaredField("UNIT");
-			Unit<T> u = (Unit<T>)f.get(null);
-
-			if (!a.getUnit().isCompatible(u)) {
-				throw new IllegalArgumentException("Value "
-						+ " must be in units of " + q.getSimpleName());
-			}
-		} catch (Exception e) {
-			throw new Error(e);
-		}
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {

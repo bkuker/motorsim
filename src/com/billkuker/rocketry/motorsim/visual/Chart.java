@@ -122,6 +122,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setDomain(Iterable<Amount<X>> d) {
 
 		//double low = d.low.doubleValue(xUnit);

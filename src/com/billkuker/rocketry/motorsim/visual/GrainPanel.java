@@ -36,7 +36,6 @@ public class GrainPanel extends JPanel {
 	private Chart<Length,Area> area;
 	Chart<Length, Volume> volume;
 	private XC xc;
-	private SL sl;
 	private Grain grain;
 	
 	public GrainPanel(Grain g){
@@ -95,7 +94,7 @@ public class GrainPanel extends JPanel {
 		left.add(xc);
 
 		left.add(l, BorderLayout.NORTH);
-		left.add( sl = new SL(), BorderLayout.SOUTH);
+		left.add( new SL(), BorderLayout.SOUTH);
 	
 		add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, charts));
 

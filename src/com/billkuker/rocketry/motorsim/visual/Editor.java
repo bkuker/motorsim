@@ -11,19 +11,14 @@ import java.beans.PropertyEditorSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 
-import javax.measure.unit.NonSI;
 import javax.measure.unit.Unit;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
-import com.billkuker.rocketry.motorsim.Grain;
-import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
-import com.billkuker.rocketry.motorsim.grain.RodAndTubeGrain;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 
 public class Editor extends PropertySheetPanel {
@@ -98,6 +93,7 @@ public class Editor extends PropertySheetPanel {
 			return editor.getText();
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public Object getValue() {
 			String text = editor.getText().trim();
@@ -124,6 +120,7 @@ public class Editor extends PropertySheetPanel {
 
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void setValue(Object o) {
 			Amount a = (Amount) o;
