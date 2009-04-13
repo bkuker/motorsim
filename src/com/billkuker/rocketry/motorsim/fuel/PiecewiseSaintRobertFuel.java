@@ -32,7 +32,8 @@ public abstract class PiecewiseSaintRobertFuel extends SaintRobertFuel {
 			Entry e = entries.get(samplePressure);
 			return e.a;
 		} catch ( NoSuchElementException e ){
-			return 0;
+			System.err.println("Pressure " + pressure + " is outside of expiermental range for " + this.getClass().getSimpleName());
+			return entries.get(entries.lastKey()).a;
 		}
 	}
 
@@ -43,7 +44,8 @@ public abstract class PiecewiseSaintRobertFuel extends SaintRobertFuel {
 			Entry e = entries.get(samplePressure);
 			return e.n;
 		} catch ( NoSuchElementException e ){
-			return 0;
+			System.err.println("Pressure " + pressure + " is outside of expiermental range for " + this.getClass().getSimpleName());
+			return entries.get(entries.lastKey()).n;
 		}
 	}
 
