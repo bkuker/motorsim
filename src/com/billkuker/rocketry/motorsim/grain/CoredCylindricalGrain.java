@@ -12,26 +12,29 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
 import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.MotorPart;
+import com.billkuker.rocketry.motorsim.visual.Editor;
+import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 
-public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart.Validating {
+public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Validating {
 
-	private Amount<Length> length, oD, iD;
-	private boolean outerSurfaceInhibited = true, innerSurfaceInhibited = false, endSurfaceInhibited = false;
+	private Amount<Length> oD, iD;
+	private boolean outerSurfaceInhibited = true, innerSurfaceInhibited = false;
 
 	public CoredCylindricalGrain() {
-		length = Amount.valueOf(100, SI.MILLIMETER);
+
 		oD = Amount.valueOf(30, SI.MILLIMETER);
 		iD = Amount.valueOf(10, SI.MILLIMETER);
 	}
 	
-	
+	@Deprecated
 	public void inhibit(boolean in, boolean out, boolean end){
 		outerSurfaceInhibited = out;
 		innerSurfaceInhibited = in;
-		endSurfaceInhibited = end;
 	}
 
 	@Override
@@ -39,10 +42,7 @@ public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart
 		Amount<Length> zero = Amount.valueOf(0, SI.MILLIMETER);
 		
 		//Calculated regressed length
-		Amount<Length> cLength = length;
-		if ( !endSurfaceInhibited ){
-			cLength = cLength.minus(regression.times(2));
-		}
+		Amount<Length> cLength = regressedLength(regression);
 		
 		//Calculate regressed iD
 		Amount<Length> cID = iD;
@@ -69,7 +69,7 @@ public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart
 		
 		Amount<Area> ends = (cOD.divide(2).pow(2).times(Math.PI)).minus(cID.divide(2).pow(2).times(Math.PI)).times(2).to(SI.SQUARE_METRE);
 		
-		Amount<Area> total = inner.times(innerSurfaceInhibited?0:1).plus(outer.times(outerSurfaceInhibited?0:1)).plus(ends.times(endSurfaceInhibited?0:1));
+		Amount<Area> total = inner.times(innerSurfaceInhibited?0:1).plus(outer.times(outerSurfaceInhibited?0:1)).plus(ends.times(numberOfBurningEnds()));
 		
 		return total;
 	}
@@ -79,10 +79,7 @@ public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart
 		Amount<Length> zero = Amount.valueOf(0, SI.MILLIMETER);
 		
 		//Calculated regressed length
-		Amount<Length> cLength = length;
-		if ( !endSurfaceInhibited ){
-			cLength = cLength.minus(regression.times(2));
-		}
+		Amount<Length> cLength = regressedLength(regression);
 		
 		//Calculate regressed iD
 		Amount<Length> cID = iD;
@@ -109,13 +106,6 @@ public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart
 		return end.times(cLength).to(SI.CUBIC_METRE);
 	}
 
-	public void setLength(Amount<Length> length) throws PropertyVetoException {
-		fireVetoableChange("length", this.length, length);
-		Amount<Length> old = this.length;
-		this.length = length;
-		firePropertyChange("length", old, length);
-	}
-
 	public void setOD(Amount<Length> od) throws PropertyVetoException {
 		fireVetoableChange("od", this.oD, od);
 		Amount<Length> old = this.oD;
@@ -135,20 +125,20 @@ public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart
 			throw new ValidationException(this, "Invalid iD");
 		if ( oD.equals(Amount.ZERO) )
 			throw new ValidationException(this, "Invalid oD");
-		if ( length.equals(Amount.ZERO) )
+		if ( getLength().equals(Amount.ZERO) )
 			throw new ValidationException(this, "Invalid Length");
 		if ( iD.isGreaterThan(oD) )
 			throw new ValidationException(this, "iD > oD");
 		
-		if ( innerSurfaceInhibited && outerSurfaceInhibited && endSurfaceInhibited )
+		if ( innerSurfaceInhibited && outerSurfaceInhibited )
 			throw new ValidationException(this, "No exposed grain surface");
 		
 	}
 
 	@Override
 	public Amount<Length> webThickness() {
-		if ( innerSurfaceInhibited && outerSurfaceInhibited && endSurfaceInhibited ){
-			return oD;
+		if ( innerSurfaceInhibited && outerSurfaceInhibited ){
+			return oD; //TODO gotta move this to the end
 		}
 		
 		Amount<Length> radial = null;
@@ -159,8 +149,8 @@ public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart
 		
 		Amount<Length> axial = null;
 		
-		if ( !endSurfaceInhibited )
-			axial = length.divide(2);
+		if ( numberOfBurningEnds() != 0 )
+			axial = getLength().divide(numberOfBurningEnds());
 		
 		if ( axial == null )
 			return radial;
@@ -169,10 +159,6 @@ public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart
 		if ( radial.isLessThan(axial) )
 			return radial;
 		return axial;
-	}
-
-	public Amount<Length> getLength() {
-		return length;
 	}
 
 	public Amount<Length> getOD() {
@@ -206,18 +192,24 @@ public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart
 		double rmm = regression.doubleValue(SI.MILLIMETER);
 		double oDmm = oD.doubleValue(SI.MILLIMETER);
 		double iDmm = iD.doubleValue(SI.MILLIMETER);
-		double lmm = length.doubleValue(SI.MILLIMETER);
+		double lmm = regressedLength(regression).doubleValue(SI.MILLIMETER);
+		double length = getLength().doubleValue(SI.MILLIMETER);
 
 		if ( !outerSurfaceInhibited )
 			oDmm -= 2.0 * rmm;
 		if ( !innerSurfaceInhibited )
 			iDmm += 2.0 * rmm;
-		if ( !endSurfaceInhibited )
-			lmm -= 2.0 * rmm;
 		
 		java.awt.geom.Area a = new java.awt.geom.Area();
-		a.add( new java.awt.geom.Area(new Rectangle2D.Double(-oDmm/2,-lmm/2,oDmm, lmm)));
-		a.subtract( new java.awt.geom.Area(new Rectangle2D.Double(-iDmm/2,-lmm/2,iDmm, lmm)));
+		
+		double top = -lmm/2;
+		if ( isForeEndInhibited() && !isAftEndInhibited() )
+			top = -length/2;
+		else if ( isAftEndInhibited() && !isForeEndInhibited() )
+			top = length-lmm;
+		
+		a.add( new java.awt.geom.Area(new Rectangle2D.Double(-oDmm/2,top,oDmm, lmm)));
+		a.subtract( new java.awt.geom.Area(new Rectangle2D.Double(-iDmm/2,-length/2,iDmm, length)));
 		
 		return a;
 	}
@@ -248,18 +240,12 @@ public class CoredCylindricalGrain extends MotorPart implements Grain, MotorPart
 		firePropertyChange("innerSurfaceInhibited", old, innerSurfaceInhibited);
 	}
 
-
-	public boolean isEndSurfaceInhibited() {
-		return endSurfaceInhibited;
+	public static void main(String args[]) throws Exception {
+		CoredCylindricalGrain e = new CoredCylindricalGrain();
+		new Editor(e).show();
+		new GrainPanel(e).show();
 	}
 
-
-	public void setEndSurfaceInhibited(boolean endSurfaceInhibited) throws PropertyVetoException {
-		fireVetoableChange("endSurfaceInhibited", this.endSurfaceInhibited, endSurfaceInhibited);
-		boolean old = this.endSurfaceInhibited;
-		this.endSurfaceInhibited = endSurfaceInhibited;
-		firePropertyChange("endSurfaceInhibited", old, endSurfaceInhibited);
-	}
 	
 
 }

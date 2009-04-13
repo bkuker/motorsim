@@ -8,6 +8,8 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Grain;
+import com.billkuker.rocketry.motorsim.visual.Editor;
+import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class RodAndTubeGrain extends CompoundGrain {
 	CoredCylindricalGrain rod, tube;
@@ -19,14 +21,15 @@ public class RodAndTubeGrain extends CompoundGrain {
 			rod.setID(Amount.valueOf(0, SI.MILLIMETER));
 			rod.setOD(Amount.valueOf(10, SI.MILLIMETER));
 			rod.setOuterSurfaceInhibited(false);
-			rod.setEndSurfaceInhibited(true);
+			rod.setForeEndInhibited(true);
+			rod.setAftEndInhibited(true);
 			
 			tube = new CoredCylindricalGrain();
 			tube.setInnerSurfaceInhibited(false);
 			tube.setID(Amount.valueOf(20, SI.MILLIMETER));
 			tube.setOD(Amount.valueOf(30, SI.MILLIMETER));
-			tube.setOuterSurfaceInhibited(true);
-			tube.setEndSurfaceInhibited(true);
+			tube.setForeEndInhibited(true);
+			tube.setAftEndInhibited(true);
 		} catch ( PropertyVetoException v ){
 			v.printStackTrace();
 			//I know these values are OK
@@ -60,16 +63,6 @@ public class RodAndTubeGrain extends CompoundGrain {
 		tube.setOD(od);
 	}
 
-	public boolean isEndSurfaceInhibited() {
-		return rod.isEndSurfaceInhibited();
-	}
-
-	public void setEndSurfaceInhibited(boolean endSurfaceInhibited)
-			throws PropertyVetoException {
-		rod.setEndSurfaceInhibited(endSurfaceInhibited);
-		tube.setEndSurfaceInhibited(endSurfaceInhibited);
-	}
-
 	public Amount<Length> getLength() {
 		return rod.getLength();
 	}
@@ -79,4 +72,30 @@ public class RodAndTubeGrain extends CompoundGrain {
 		tube.setLength(length);
 	}
 
+	public boolean isAftEndInhibited() {
+		return rod.isAftEndInhibited();
+	}
+
+	public boolean isForeEndInhibited() {
+		return rod.isForeEndInhibited();
+	}
+
+	public void setAftEndInhibited(boolean aftEndInhibited)
+			throws PropertyVetoException {
+		rod.setAftEndInhibited(aftEndInhibited);
+		tube.setAftEndInhibited(aftEndInhibited);
+	}
+
+	public void setForeEndInhibited(boolean foreEndInhibited)
+			throws PropertyVetoException {
+		rod.setForeEndInhibited(foreEndInhibited);
+		tube.setForeEndInhibited(foreEndInhibited);
+	}
+
+
+	public static void main(String args[]) throws Exception {
+		Grain g = new RodAndTubeGrain();
+		new Editor(g).show();
+		new GrainPanel(g).show();
+	}
 }
