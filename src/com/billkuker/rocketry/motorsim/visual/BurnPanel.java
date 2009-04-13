@@ -7,6 +7,7 @@ import javax.measure.quantity.Duration;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
+import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -43,7 +44,7 @@ public class BurnPanel extends JPanel {
 			
 			thrust = new Chart<Duration, Force>(
 					SI.SECOND,
-					SI.NEWTON,
+					NonSI.POUND_FORCE,//SI.NEWTON,
 					b,
 					"thrust");
 			thrust.setDomain(burn.getData().keySet());
