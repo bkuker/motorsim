@@ -6,6 +6,7 @@ import java.awt.geom.Rectangle2D;
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Volume;
+import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
@@ -38,12 +39,14 @@ public class MultiGrain implements Grain {
 	}
 
 	public java.awt.geom.Area getSideView(Amount<Length> regression) {
+		Rectangle2D unburntBounds = grain.getSideView(Amount.valueOf(0, SI.MILLIMETER)).getBounds2D();
+		
 		java.awt.geom.Area ret = new java.awt.geom.Area();
 		java.awt.geom.Area g = grain.getSideView(regression);
 		Rectangle2D b = g.getBounds2D();
 		for ( int i = 0 ; i < count ; i++ ){
 			ret.add(g);
-			ret.transform(AffineTransform.getTranslateInstance(b.getWidth() + 10, 0));
+			ret.transform(AffineTransform.getTranslateInstance(0, unburntBounds.getHeight() + 10));
 		}
 		return ret;
 	}
