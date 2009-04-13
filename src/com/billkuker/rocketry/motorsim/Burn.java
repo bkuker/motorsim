@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 import org.jscience.physics.amount.Constants;
 
+import com.billkuker.rocketry.motorsim.fuel.KNSB;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CompoundGrain;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
@@ -219,7 +220,7 @@ public class Burn {
 		m.setFuel(new KNSU());
 		
 		CylindricalChamber c = new CylindricalChamber();
-		c.setLength(Amount.valueOf(200, SI.MILLIMETER));
+		c.setLength(Amount.valueOf(400, SI.MILLIMETER));
 		c.setID(Amount.valueOf(30, SI.MILLIMETER));
 		m.setChamber(c);
 		
@@ -241,16 +242,18 @@ public class Burn {
 		g2.setID(Amount.valueOf(0, SI.MILLIMETER));
 		g2.inhibit(true, false, true);
 		
-		CompoundGrain cg = new CompoundGrain(g1, g2);
+		CompoundGrain cg = new CompoundGrain();
+		cg.add(g1);
+		cg.add(g2);
 		
-		m.setGrain( new MultiGrain(cg, 2) );
+		//m.setGrain( new MultiGrain(cg, 2) );
 		
-		//m.setGrain(new MultiGrain(g,2));
+		m.setGrain(new MultiGrain(g,4));
 		
 		//m.setGrain(new ExtrudedGrain());
 		
 		ConvergentDivergentNozzle n = new ConvergentDivergentNozzle();
-		n.setThroatDiameter(Amount.valueOf(8.500, SI.MILLIMETER));
+		n.setThroatDiameter(Amount.valueOf(5.500, SI.MILLIMETER));
 		n.setExitDiameter(Amount.valueOf(20.87, SI.MILLIMETER));
 		n.setEfficiency(.87);
 		m.setNozzle(n);
