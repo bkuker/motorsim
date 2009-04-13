@@ -60,8 +60,9 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 
 				@Override
 				public Amount<X> next() {
+					Amount<X> ret = current;
 					current = current.plus(delta);
-					return current;
+					return ret;
 				}
 				@Override
 				public final void remove() {
