@@ -14,14 +14,18 @@ import com.billkuker.rocketry.motorsim.Fuel;
 public abstract class SaintRobertFuel implements Fuel {
 	
 	protected enum Type{
-		Si(SI.MILLIMETER.divide(SI.SECOND), SI.MEGA(SI.PASCAL)),
-		English(NonSI.INCH.divide(SI.SECOND), NonSI.POUND_FORCE.divide(NonSI.INCH.pow(2)))
+		Si(
+				SI.MILLIMETER.divide(SI.SECOND).asType(Velocity.class),
+				SI.MEGA(SI.PASCAL).asType(Pressure.class)),
+		English(
+				NonSI.INCH.divide(SI.SECOND).asType(Velocity.class),
+				NonSI.POUND_FORCE.divide(NonSI.INCH.pow(2)).asType(Pressure.class))
 		;
 		
 		private final Unit<Velocity> v;
 		private final Unit<Pressure> p;
 		
-		Type( Unit v, Unit p){
+		Type( Unit<Velocity> v, Unit<Pressure> p){
 			this.p = p;
 			this.v = v;
 		}
