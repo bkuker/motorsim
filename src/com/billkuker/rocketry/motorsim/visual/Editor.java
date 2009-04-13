@@ -76,13 +76,6 @@ public class Editor extends PropertySheetPanel {
 		});
 	}
 
-	public static void main(String args[]) throws Exception {
-		Grain g = new CoredCylindricalGrain();
-		g = new RodAndTubeGrain();
-		new Editor(g).show();
-		new GrainPanel(g).show();
-	}
-
 	public void show() {
 		JFrame f = new JFrame();
 		f.setSize(600, 400);
