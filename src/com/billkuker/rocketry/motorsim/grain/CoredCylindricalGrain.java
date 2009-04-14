@@ -37,6 +37,8 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 	@Override
 	public Amount<Area> surfaceArea(Amount<Length> regression) {
 		Amount<Length> zero = Amount.valueOf(0, SI.MILLIMETER);
+		if ( regression.isLessThan(zero) )
+			return Amount.valueOf(0, SI.SQUARE_METRE);
 		
 		//Calculated regressed length
 		Amount<Length> cLength = regressedLength(regression);
@@ -66,7 +68,7 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 		
 		Amount<Area> ends = (cOD.divide(2).pow(2).times(Math.PI)).minus(cID.divide(2).pow(2).times(Math.PI)).times(2).to(SI.SQUARE_METRE);
 		
-		Amount<Area> total = inner.times(innerSurfaceInhibited?0:1).plus(outer.times(outerSurfaceInhibited?0:1)).plus(ends.times(numberOfBurningEnds()));
+		Amount<Area> total = inner.times(innerSurfaceInhibited?0:1).plus(outer.times(outerSurfaceInhibited?0:1)).plus(ends.times(numberOfBurningEnds(regression)));
 		
 		return total;
 	}
@@ -74,6 +76,9 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 	@Override
 	public Amount<Volume> volume(Amount<Length> regression) {
 		Amount<Length> zero = Amount.valueOf(0, SI.MILLIMETER);
+		
+		if ( regression.isLessThan(zero) )
+			regression = zero;
 		
 		//Calculated regressed length
 		Amount<Length> cLength = regressedLength(regression);
@@ -146,8 +151,8 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 		
 		Amount<Length> axial = null;
 		
-		if ( numberOfBurningEnds() != 0 )
-			axial = getLength().divide(numberOfBurningEnds());
+		if ( numberOfBurningEnds(Amount.valueOf(0, SI.MILLIMETER)) != 0 )
+			axial = getLength().divide(numberOfBurningEnds(Amount.valueOf(0, SI.MILLIMETER)));
 		
 		if ( axial == null )
 			return radial;
@@ -168,6 +173,9 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 	
 	@Override
 	public java.awt.geom.Area getCrossSection(Amount<Length> regression){
+		Amount<Length> zero = Amount.valueOf(0, SI.MILLIMETER);
+		if ( regression.isLessThan(zero) )
+			regression = zero;
 		double rmm = regression.doubleValue(SI.MILLIMETER);
 		double oDmm = oD.doubleValue(SI.MILLIMETER);
 		double iDmm = iD.doubleValue(SI.MILLIMETER);
@@ -186,6 +194,9 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 	}
 	
 	public java.awt.geom.Area getSideView(Amount<Length> regression){
+		Amount<Length> zero = Amount.valueOf(0, SI.MILLIMETER);
+		if ( regression.isLessThan(zero) )
+			regression = zero;
 		double rmm = regression.doubleValue(SI.MILLIMETER);
 		double oDmm = oD.doubleValue(SI.MILLIMETER);
 		double iDmm = iD.doubleValue(SI.MILLIMETER);
