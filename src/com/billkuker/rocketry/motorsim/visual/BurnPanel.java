@@ -89,7 +89,7 @@ public class BurnPanel extends JPanel {
 	
 	private class SL extends JSlider implements ChangeListener{
 		private static final long serialVersionUID = 1L;
-		private static final int STEPS = 150;
+		private static final int STEPS = 300;
 		public SL(){
 			addChangeListener(this);
 			setMinimum(0);
