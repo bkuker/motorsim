@@ -17,21 +17,36 @@ public class MultiGrain implements Grain {
 	private Grain grain;
 	private int count;
 	
+	private double flush = 1;
+	private Amount<Length> delay = Amount.valueOf(0, SI.MILLIMETER);
+	
 	public MultiGrain( Grain g, int c ){
 		grain = g;
 		count = c;
 	}
+	
+	private Amount<Length> getAdjustedRegression(Amount<Length> regression, int grain){
+		return regression.minus(delay.times(grain)).times(Math.pow(flush,grain));
+	}
 
 	public Amount<Area> surfaceArea(Amount<Length> regression) {
-		return grain.surfaceArea(regression).times(count);
+		Amount<Area> ret = Amount.valueOf(0, SI.SQUARE_METRE);
+		for ( int i = 0; i < count; i++ ){
+			ret = ret.plus(grain.surfaceArea(getAdjustedRegression(regression, i)));
+		}
+		return ret;
 	}
 
 	public Amount<Volume> volume(Amount<Length> regression) {
-		return grain.volume(regression).times(count);
+		Amount<Volume> ret = Amount.valueOf(0, SI.CUBIC_METRE);
+		for ( int i = 0; i < count; i++ ){
+			ret = ret.plus(grain.volume(getAdjustedRegression(regression, i)));
+		}
+		return ret;
 	}
 
 	public Amount<Length> webThickness() {
-		return grain.webThickness();
+		return grain.webThickness().plus(delay.times(count));
 	}
 
 	public java.awt.geom.Area getCrossSection(Amount<Length> regression) {
@@ -42,11 +57,11 @@ public class MultiGrain implements Grain {
 		Rectangle2D unburntBounds = grain.getSideView(Amount.valueOf(0, SI.MILLIMETER)).getBounds2D();
 		
 		java.awt.geom.Area ret = new java.awt.geom.Area();
-		java.awt.geom.Area g = grain.getSideView(regression);
 
 		for ( int i = 0 ; i < count ; i++ ){
-			ret.add(g);
-			ret.transform(AffineTransform.getTranslateInstance(0, unburntBounds.getHeight() + 10));
+			java.awt.geom.Area g = grain.getSideView(getAdjustedRegression(regression, i));
+			ret.add(g);	
+			ret.transform(AffineTransform.getTranslateInstance(0, -(unburntBounds.getHeight() + 10)));
 		}
 		return ret;
 	}
