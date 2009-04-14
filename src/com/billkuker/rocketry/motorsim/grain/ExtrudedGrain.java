@@ -14,13 +14,18 @@ public abstract class ExtrudedGrain extends MotorPart implements Grain {
 	private boolean foreEndInhibited = false;
 	private boolean aftEndInhibited = false;
 	private Amount<Length> length = Amount.valueOf(100, SI.MILLIMETER);
+	private Amount<Length> endLight = Amount.valueOf(0, SI.MILLIMETER);
 	
-	protected int numberOfBurningEnds(){
+	protected int numberOfBurningEnds(Amount<Length> regression){
+		if ( regression.isLessThan(endLight) )
+			return 0;
 		return (foreEndInhibited?0:1) + (aftEndInhibited?0:1);
 	}
 	
 	protected Amount<Length> regressedLength(Amount<Length> regression){
-		return length.minus(regression.times(numberOfBurningEnds()));
+		if ( regression.isLessThan(endLight) )
+			return length;
+		return length.minus(regression.minus(endLight).times(numberOfBurningEnds(regression)));
 	}
 
 	public boolean isForeEndInhibited() {
