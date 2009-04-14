@@ -2,14 +2,9 @@ package com.billkuker.rocketry.motorsim.grain;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyVetoException;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
