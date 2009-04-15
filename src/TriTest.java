@@ -46,6 +46,10 @@ public class TriTest extends JPanel {
 						coords[1] = first[1];
 					case PathIterator.SEG_LINETO:
 						//Do it;
+						
+						//TODO XXX
+						//Usint arctan is imprecise, the base of the rectangle does not perfectly coincide with the
+						//edge of the poly. Instead I should find the normal vector and build the rect myself prerotated.
 						double len = Math.sqrt(Math.pow(last[0] - coords[0], 2) + Math.pow(last[1] - coords[1], 2));
 						double dx = coords[0]-last[0];
 						double dy = coords[1]-last[1];
