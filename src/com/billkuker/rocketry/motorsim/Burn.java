@@ -70,6 +70,7 @@ public class Burn {
 	
 	public Burn(Motor m){
 		motor = m;
+		burn();
 	}
 	
 	private void burn(){
@@ -217,15 +218,15 @@ public class Burn {
 	
 	public static void main( String args[]) throws Exception{
 		Motor m = new Motor();
-		m.setFuel(new KNSU());
+		m.setFuel(new KNSB());
 		
 		CylindricalChamber c = new CylindricalChamber();
-		c.setLength(Amount.valueOf(400, SI.MILLIMETER));
+		c.setLength(Amount.valueOf(300, SI.MILLIMETER));
 		c.setID(Amount.valueOf(30, SI.MILLIMETER));
 		m.setChamber(c);
 		
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
-		g.setLength(Amount.valueOf(70, SI.MILLIMETER));
+		g.setLength(Amount.valueOf(35, SI.MILLIMETER));
 		g.setOD(Amount.valueOf(30, SI.MILLIMETER));
 		g.setID(Amount.valueOf(10, SI.MILLIMETER));
 		m.setGrain(g);
@@ -248,7 +249,9 @@ public class Burn {
 		
 		//m.setGrain( new MultiGrain(cg, 2) );
 		
-		m.setGrain(new MultiGrain(g,4));
+		//g.setAftEndInhibited(true);
+		//g.setForeEndInhibited(true);
+		m.setGrain(new MultiGrain(g,3));
 		
 		//m.setGrain(new ExtrudedGrain());
 		
