@@ -1,5 +1,6 @@
 package com.billkuker.rocketry.motorsim.grain;
 
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -7,11 +8,11 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
-
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Volume;
 import javax.measure.unit.SI;
 
+import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Grain;
@@ -19,6 +20,8 @@ import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class RotatedShapeGrain implements Grain {
+	
+	private static Logger log = Logger.getLogger(RotatedShapeGrain.class);
 	
 	public enum Quality {
 		High()
@@ -95,8 +98,6 @@ public class RotatedShapeGrain implements Grain {
 		
 		burn.subtract(shape.getShape(regression.plus(Amount.valueOf(quality.surfaceAreaStep,
 				SI.MILLIMETER))));
-		
-		System.out.println(regression);
 	
 		double sqmm = yRotatedSurfaceArea(burn);
 
@@ -117,13 +118,34 @@ public class RotatedShapeGrain implements Grain {
 	}
 
 	@Override
-	//TODO find actual thickness
 	public Amount<Length> webThickness() {
-		if ( web != null )
+		if (web != null)
 			return web;
-		Rectangle2D b = shape.getShape(Amount.valueOf(0, SI.MILLIMETER)).getBounds2D();
-		double webmm = b.getWidth()>b.getHeight()?b.getWidth():b.getHeight();
-		return web = Amount.valueOf(webmm, SI.MILLIMETER);
+
+		java.awt.geom.Area a = getCrossSection(Amount.valueOf(0, SI.MILLIMETER));
+		Rectangle r = a.getBounds();
+		double max = r.getWidth() < r.getHeight() ? r.getHeight() : r
+				.getWidth(); // The max size
+		double min = 0;
+		double guess;
+		while (true) {
+			guess = min + (max - min) / 2; // Guess halfway through
+			log.debug("Min: " + min + " Guess: " + guess + " Max: " + max);
+			a = getCrossSection(Amount.valueOf(guess, SI.MILLIMETER));
+			if (a.isEmpty()) {
+				// guess is too big
+				max = guess;
+			} else {
+				// min is too big
+				min = guess;
+			}
+			if ((max - min) < .01)
+				break;
+		}
+		web = Amount.valueOf(guess, SI.MILLIMETER);
+
+		return web;
+
 	}
 	
 
@@ -211,8 +233,6 @@ public class RotatedShapeGrain implements Grain {
 					double s2 = Math.sqrt(xs*xs + (h-dy)*(h-dy));
 					add = Math.PI * (xl*s1 - xs*s2);
 				}
-				
-				System.out.println(add);
 				
 				len += add;
 
