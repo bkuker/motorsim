@@ -30,9 +30,9 @@ public class RotatedShapeGrain implements Grain {
 			}},
 		Low()			{{
 			 surfaceAreaStep = .001;
-			 squareFlatteningError = 0.01;
+			 squareFlatteningError = .1;
 			 squareSubdivide = .1;
-			 areaFlatteningError = .01;
+			 areaFlatteningError = .1;
 		}};
 		
 		double surfaceAreaStep = .001;
@@ -48,12 +48,12 @@ public class RotatedShapeGrain implements Grain {
 	Amount<Length> web = null;
 	
 	{
-		Shape outside = new Rectangle2D.Double(0,0,15,70);
+		Shape outside = new Rectangle2D.Double(0,0,15,100);
 		shape.add( outside );
 		shape.inhibit( outside );
-		shape.subtract( new Rectangle2D.Double(0,50,5,70));
-		
-		shape.subtract(new Rectangle2D.Double(0, 70, 15, 10));
+		shape.subtract( new Rectangle2D.Double(0,0,5,100));
+		shape.subtract(new Rectangle2D.Double(0, -10, 15, 10));
+		shape.subtract(new Rectangle2D.Double(0, 100, 15, 10));
 	}
 
 	@Override
@@ -117,6 +117,7 @@ public class RotatedShapeGrain implements Grain {
 	}
 
 	@Override
+	//TODO find actual thickness
 	public Amount<Length> webThickness() {
 		if ( web != null )
 			return web;
