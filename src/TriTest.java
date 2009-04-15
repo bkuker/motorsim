@@ -19,94 +19,100 @@ import javax.swing.event.ChangeListener;
 
 public class TriTest extends JPanel {
 	
+	private class RegressableShape {
+		private Area a;
+		public RegressableShape( Shape s ){
+			if ( s instanceof Area )
+				a = (Area)s;
+			a = new Area(s);
+		}
+		
+		public Area getRegressedShape(double regression){
+			Area ret = new Area();	
+			
+			PathIterator i = a.getPathIterator(new AffineTransform(), .001);
+			double last[] = {0,0};
+			double first[] = {0,0};
+			while (!i.isDone()) {
+				double coords[] = new double[6];
+				int type = i.currentSegment(coords);
+				switch (type){
+					case PathIterator.SEG_MOVETO:
+						first[0] = last[0] = coords[0];
+						first[1] = last[1] = coords[1];
+						break;
+					case PathIterator.SEG_CLOSE:
+						coords[0] = first[0];
+						coords[1] = first[1];
+					case PathIterator.SEG_LINETO:
+						//Do it;
+						double len = Math.sqrt(Math.pow(last[0] - coords[0], 2) + Math.pow(last[1] - coords[1], 2));
+						double dx = coords[0]-last[0];
+						double dy = coords[1]-last[1];
+						double angle = Math.atan2(dy, dx);
+								
+						Area rect;
+						if ( regression > 0 )
+							rect = new Area(new Rectangle2D.Double(0,0,len,regression));
+						else
+							rect = new Area(new Rectangle2D.Double(0,regression,len,-regression));
+						rect.transform(AffineTransform.getRotateInstance(angle));
+						rect.transform(AffineTransform.getTranslateInstance(last[0], last[1]));
+						ret.add(rect);
+						
+						if ( regression > 0 ){
+							ret.add(new Area(new Ellipse2D.Double(coords[0]-regression, coords[1]-regression, regression*2, regression*2)));
+						} else {
+							ret.add(new Area(new Ellipse2D.Double(coords[0]+regression, coords[1]+regression, -regression*2, -regression*2)));
+						}
+						
+						
+						last[0] = coords[0];
+						last[1] = coords[1];
+						break;
+					case PathIterator.SEG_CUBICTO:
+					case PathIterator.SEG_QUADTO:
+						throw new Error("Unflattend Geometry!");
+				}
+				i.next();
+			}
+			
+			if ( regression > 0 ){
+				ret.add(a);
+			}else{
+				Area acp = (Area)a.clone();
+				acp.subtract(ret);
+				ret = acp;
+			}
+			return ret;
+		}
+	}
+	
 	double r = 0;
+	
+	RegressableShape shape;
+	{
+		GeneralPath p = new GeneralPath();
+		p.moveTo(100,100);
+		p.lineTo(200, 200);
+		p.lineTo(100, 300);
+		p.closePath();
+		shape = new RegressableShape(p);
+	}
+	
 	@Override
 	public void paint(Graphics gg){
 		Graphics2D g = (Graphics2D)gg;
 		
 		g.clearRect(0, 0, 600, 600);
-		GeneralPath p;
-		
-		p = new GeneralPath();
-		p.moveTo(100,100);
-		p.lineTo(200, 150);
-		p.lineTo(150, 180);
-		p.lineTo(100, 300);
-		p.closePath();
+
 		g.setColor(Color.red);
-		g.draw(growArea(p, r));
-		g.setColor(Color.black);		
-		g.draw(p);
-		
-		
-		p = new GeneralPath();
-		p.moveTo(10,10);
-		p.lineTo(50, 20);
-		p.lineTo(60, 30);
-		p.closePath();
-		g.setColor(Color.red);
-		g.draw(growArea(p, 10));
-		g.setColor(Color.black);		
-		g.draw(p);
+		g.draw(shape.getRegressedShape(r));
+		//g.setColor(Color.black);		
+		//g.draw(shape.getRegressedShape(0));
 		
 	}
 	
-	private Area growArea( Shape a, double sz ){
-		Area ret = new Area();
-		
-		PathIterator i = a.getPathIterator(new AffineTransform(), .001);
-		double last[] = {0,0};
-		double first[] = {0,0};
-		while (!i.isDone()) {
-			double coords[] = new double[6];
-			int type = i.currentSegment(coords);
-			switch (type){
-				case PathIterator.SEG_MOVETO:
-					first[0] = last[0] = coords[0];
-					first[1] = last[1] = coords[1];
-					break;
-				case PathIterator.SEG_CLOSE:
-					coords[0] = first[0];
-					coords[1] = first[1];
-				case PathIterator.SEG_LINETO:
-					//Do it;
-					double len = Math.sqrt(Math.pow(last[0] - coords[0], 2) + Math.pow(last[1] - coords[1], 2));
-					double dx = coords[0]-last[0];
-					double dy = coords[1]-last[1];
-					double angle = Math.atan2(dy, dx);
-							
-					Area rect;
-					if ( sz > 0 )
-						rect = new Area(new Rectangle2D.Double(0,-sz,len,sz));
-					else
-						rect = new Area(new Rectangle2D.Double(0,0,len,-sz));
-					rect.transform(AffineTransform.getRotateInstance(angle));
-					rect.transform(AffineTransform.getTranslateInstance(last[0], last[1]));
-					ret.add(rect);
-					
-					if ( sz > 0 ){
-						ret.add(new Area(new Ellipse2D.Double(coords[0]-sz, coords[1]-sz, sz*2, sz*2)));
-					} else {
-						ret.add(new Area(new Ellipse2D.Double(coords[0]+sz, coords[1]+sz, -sz*2, -sz*2)));
-					}
-					
-					
-					last[0] = coords[0];
-					last[1] = coords[1];
-					break;
-				case PathIterator.SEG_CUBICTO:
-				case PathIterator.SEG_QUADTO:
-					throw new Error("Unflattend Geometry!");
-			}
-			i.next();
-		}
-		
-		if ( sz > 0 )
-			ret.add(new Area(a));
-		else
-			ret.intersect(new Area(a));
-		return ret;
-	}
 	
 	public static void main( String args[] ){
 		JFrame f = new JFrame();
