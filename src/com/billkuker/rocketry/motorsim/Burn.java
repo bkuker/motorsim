@@ -23,13 +23,6 @@ import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 import org.jscience.physics.amount.Constants;
 
-import com.billkuker.rocketry.motorsim.fuel.KNSB;
-import com.billkuker.rocketry.motorsim.fuel.KNSU;
-import com.billkuker.rocketry.motorsim.grain.CompoundGrain;
-import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
-import com.billkuker.rocketry.motorsim.grain.MultiGrain;
-import com.billkuker.rocketry.motorsim.visual.BurnPanel;
-
 public class Burn {
 	
 	private static Logger log = Logger.getLogger(Burn.class);
@@ -152,8 +145,7 @@ public class Burn {
 				//This unit conversion helps JScience to convert nozzle flow rate to
 				//kg/s a little later on I verified the conversion by hand and
 				//JScience checks it too.
-				specificGasConstant = specificGasConstant.to(
-						SI.METER.pow(2).divide(SI.SECOND.pow(2).times(SI.KELVIN)));
+				specificGasConstant = convertSpecificGasConstantUnits(specificGasConstant);
 				
 				log.debug("Specific Gas Constant: (good)" + specificGasConstant);
 				
@@ -204,6 +196,17 @@ public class Burn {
 				
 	}
 	
+	@SuppressWarnings("unchecked")
+	/*
+	 * This converts the units of this constant to something JScience is able
+	 * to work from. This conversion is unchecked at compile time, but
+	 * JScience keeps me honest at runtime.
+	 */
+	private Amount convertSpecificGasConstantUnits(Amount a){
+		return a.to(
+				SI.METER.pow(2).divide(SI.SECOND.pow(2).times(SI.KELVIN)));
+	}
+	
 	public Amount<Pressure> pressure(Amount<Duration> time){
 		return data.get(time).chamberPressure;
 	}
@@ -216,74 +219,4 @@ public class Burn {
 		return motor.getGrain().surfaceArea(regression).divide(motor.getNozzle().throatArea()).to(Dimensionless.UNIT);
 	}
 	
-	public static void main( String args[]) throws Exception{
-		Motor m = new Motor();
-		m.setFuel(new KNSB());
-		
-		CylindricalChamber c = new CylindricalChamber();
-		c.setLength(Amount.valueOf(300, SI.MILLIMETER));
-		c.setID(Amount.valueOf(30, SI.MILLIMETER));
-		m.setChamber(c);
-		
-		CoredCylindricalGrain g = new CoredCylindricalGrain();
-		g.setLength(Amount.valueOf(35, SI.MILLIMETER));
-		g.setOD(Amount.valueOf(30, SI.MILLIMETER));
-		g.setID(Amount.valueOf(10, SI.MILLIMETER));
-		m.setGrain(g);
-		
-		CoredCylindricalGrain g1 = new CoredCylindricalGrain();
-		g1.setLength(Amount.valueOf(70, SI.MILLIMETER));
-		g1.setOD(Amount.valueOf(30, SI.MILLIMETER));
-		g1.setID(Amount.valueOf(18, SI.MILLIMETER));
-		g1.inhibit(false, true, true);
-		
-		CoredCylindricalGrain g2 = new CoredCylindricalGrain();
-		g2.setLength(Amount.valueOf(70, SI.MILLIMETER));
-		g2.setOD(Amount.valueOf(12, SI.MILLIMETER));
-		g2.setID(Amount.valueOf(0, SI.MILLIMETER));
-		g2.inhibit(true, false, true);
-		
-		CompoundGrain cg = new CompoundGrain();
-		cg.add(g1);
-		cg.add(g2);
-		
-		//m.setGrain( new MultiGrain(cg, 2) );
-		
-		//g.setAftEndInhibited(true);
-		//g.setForeEndInhibited(true);
-		m.setGrain(new MultiGrain(g,3));
-		
-		//m.setGrain(new ExtrudedGrain());
-		
-		ConvergentDivergentNozzle n = new ConvergentDivergentNozzle();
-		n.setThroatDiameter(Amount.valueOf(5.500, SI.MILLIMETER));
-		n.setExitDiameter(Amount.valueOf(20.87, SI.MILLIMETER));
-		n.setEfficiency(.87);
-		m.setNozzle(n);
-		
-		Burn b = new Burn(m);
-		
-		b.burn();
-		
-		new BurnPanel(b).show();
-		/*
-		Chart<Duration, Pressure> r = new Chart<Duration, Pressure>(
-				SI.SECOND,
-				SI.MEGA(SI.PASCAL),
-				b,
-				"pressure");
-		r.setDomain(b.data.keySet());
-		r.show();
-		
-		Chart<Duration, Force> t = new Chart<Duration, Force>(
-				SI.SECOND,
-				SI.NEWTON,
-				b,
-				"thrust");
-		t.setDomain(b.data.keySet());
-		t.show();
-		
-		new GrainPanel( m.getGrain() ).show();*/
-		
-	}
 }

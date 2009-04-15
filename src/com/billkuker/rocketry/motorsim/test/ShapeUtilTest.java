@@ -4,9 +4,6 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
-import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
-
 import org.jscience.physics.amount.Amount;
 import org.junit.Test;
 

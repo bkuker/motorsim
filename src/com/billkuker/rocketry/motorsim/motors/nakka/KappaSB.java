@@ -1,7 +1,6 @@
 package com.billkuker.rocketry.motorsim.motors.nakka;
 
 import javax.measure.unit.NonSI;
-import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 

@@ -3,7 +3,6 @@ package com.billkuker.rocketry.motorsim.test;
 import java.beans.PropertyVetoException;
 
 import javax.measure.quantity.Area;
-import javax.measure.quantity.Length;
 import javax.measure.quantity.Volume;
 import javax.measure.unit.SI;
 
