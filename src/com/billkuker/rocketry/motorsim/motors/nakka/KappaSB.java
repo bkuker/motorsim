@@ -15,6 +15,7 @@ import com.billkuker.rocketry.motorsim.visual.BurnPanel;
 
 public class KappaSB extends Motor{
 	public KappaSB() throws Exception{
+		setName("Kappa-Sorbitol");
 		setFuel(new KNSB());
 		
 		CylindricalChamber c = new CylindricalChamber();

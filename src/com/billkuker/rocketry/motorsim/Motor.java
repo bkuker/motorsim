@@ -5,6 +5,8 @@ public class Motor {
 	private Grain grain;
 	private Nozzle nozzle;
 	private Fuel fuel;
+	private String name;
+	
 	
 	public Chamber getChamber() {
 		return chamber;
@@ -36,5 +38,13 @@ public class Motor {
 
 	public void setFuel(Fuel fuel) {
 		this.fuel = fuel;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

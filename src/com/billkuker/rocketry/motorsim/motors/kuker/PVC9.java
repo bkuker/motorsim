@@ -15,6 +15,7 @@ import com.billkuker.rocketry.motorsim.visual.BurnPanel;
 
 public class PVC9 extends Motor {
 	public PVC9() throws Exception{
+		setName("PVC9");
 		setFuel(new KNSU());
 		
 		CylindricalChamber c = new CylindricalChamber();
