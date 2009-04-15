@@ -8,6 +8,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.JFrame;
@@ -28,11 +29,20 @@ public class TriTest extends JPanel {
 		}
 		
 		public Area getRegressedShape(double regression){
-			Area ret = new Area();	
+			if ( regression == 0 )
+				return a;
+			
+			//Build these separatly because intersecting the line
+			//with the circle creates a small amount of error which
+			//shows up when the resulting edge is no longer exactly
+			//colinear with the original edge.
+			Area rRect = new Area();	
+			Area rCirc = new Area();
 			
 			PathIterator i = a.getPathIterator(new AffineTransform(), .001);
 			double last[] = {0,0};
 			double first[] = {0,0};
+
 			while (!i.isDone()) {
 				double coords[] = new double[6];
 				int type = i.currentSegment(coords);
@@ -45,31 +55,27 @@ public class TriTest extends JPanel {
 						coords[0] = first[0];
 						coords[1] = first[1];
 					case PathIterator.SEG_LINETO:
-						//Do it;
-						
-						//TODO XXX
-						//Usint arctan is imprecise, the base of the rectangle does not perfectly coincide with the
-						//edge of the poly. Instead I should find the normal vector and build the rect myself prerotated.
-						double len = Math.sqrt(Math.pow(last[0] - coords[0], 2) + Math.pow(last[1] - coords[1], 2));
+						//Calculate the normal to this edge
 						double dx = coords[0]-last[0];
 						double dy = coords[1]-last[1];
-						double angle = Math.atan2(dy, dx);
-								
-						Area rect;
-						if ( regression > 0 )
-							rect = new Area(new Rectangle2D.Double(0,0,len,regression));
-						else
-							rect = new Area(new Rectangle2D.Double(0,regression,len,-regression));
-						rect.transform(AffineTransform.getRotateInstance(angle));
-						rect.transform(AffineTransform.getTranslateInstance(last[0], last[1]));
-						ret.add(rect);
+						double len = Math.sqrt(dx*dx + dy*dy);						
+						double normal[] = {-dy/len,dx/len};
 						
-						if ( regression > 0 ){
-							ret.add(new Area(new Ellipse2D.Double(coords[0]-regression, coords[1]-regression, regression*2, regression*2)));
-						} else {
-							ret.add(new Area(new Ellipse2D.Double(coords[0]+regression, coords[1]+regression, -regression*2, -regression*2)));
-						}
-						
+						//Calculate the displacement of the endpoints
+						//to create a rect
+						double displacement[] = {regression*normal[0], regression*normal[1]};
+
+						//Create that rect. Winding does not seem to matter...
+						GeneralPath p = new GeneralPath();
+						p.moveTo(last[0], last[1]);
+						p.lineTo(last[0]+displacement[0], last[1]+displacement[1]);
+						p.lineTo(coords[0]+displacement[0], coords[1]+displacement[1]);
+						p.lineTo(coords[0], coords[1]);
+						p.closePath();
+						rRect.add( new Area(p));
+
+						double er = Math.abs(regression);
+						rCirc.add(new Area(new Ellipse2D.Double(coords[0]-er, coords[1]-er, 2*er, 2*er)));
 						
 						last[0] = coords[0];
 						last[1] = coords[1];
@@ -81,14 +87,18 @@ public class TriTest extends JPanel {
 				i.next();
 			}
 			
+
 			if ( regression > 0 ){
-				ret.add(a);
+				//Combine all together
+				rRect.add(a);
+				rRect.add(rCirc);
 			}else{
 				Area acp = (Area)a.clone();
-				acp.subtract(ret);
-				ret = acp;
+				acp.subtract(rRect);
+				acp.subtract(rCirc);
+				rRect = acp;
 			}
-			return ret;
+			return rRect;
 		}
 	}
 	
@@ -110,10 +120,14 @@ public class TriTest extends JPanel {
 		
 		g.clearRect(0, 0, 600, 600);
 
+
+		g.setColor(Color.black);
+		g.fill(shape.getRegressedShape(r));
+		g.setColor(Color.yellow);		
+		g.draw(shape.getRegressedShape(0));
 		g.setColor(Color.red);
 		g.draw(shape.getRegressedShape(r));
-		//g.setColor(Color.black);		
-		//g.draw(shape.getRegressedShape(0));
+
 		
 	}
 	
