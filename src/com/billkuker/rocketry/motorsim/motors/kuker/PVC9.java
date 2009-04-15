@@ -1,5 +1,7 @@
 package com.billkuker.rocketry.motorsim.motors.kuker;
 
+import java.beans.PropertyVetoException;
+
 import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
@@ -14,7 +16,7 @@ import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.visual.BurnPanel;
 
 public class PVC9 extends Motor {
-	public PVC9() throws Exception{
+	public PVC9(){
 		setName("PVC9");
 		setFuel(new KNSU());
 		
@@ -24,9 +26,13 @@ public class PVC9 extends Motor {
 		setChamber(c);
 		
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
-		g.setLength(Amount.valueOf(70, SI.MILLIMETER));
-		g.setOD(Amount.valueOf(29, SI.MILLIMETER));
-		g.setID(Amount.valueOf(8, SI.MILLIMETER));
+		try{
+			g.setLength(Amount.valueOf(70, SI.MILLIMETER));
+			g.setOD(Amount.valueOf(29, SI.MILLIMETER));
+			g.setID(Amount.valueOf(8, SI.MILLIMETER));
+		} catch ( PropertyVetoException v ){
+			throw new Error(v);
+		}
 	
 		setGrain( new MultiGrain(g, 2) );
 		

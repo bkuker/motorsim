@@ -1,5 +1,7 @@
 package com.billkuker.rocketry.motorsim.motors.nakka;
 
+import java.beans.PropertyVetoException;
+
 import javax.measure.unit.NonSI;
 
 import org.jscience.physics.amount.Amount;
@@ -14,7 +16,7 @@ import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.visual.BurnPanel;
 
 public class KappaSB extends Motor{
-	public KappaSB() throws Exception{
+	public KappaSB(){
 		setName("Kappa-Sorbitol");
 		setFuel(new KNSB());
 		
@@ -24,9 +26,13 @@ public class KappaSB extends Motor{
 		setChamber(c);
 		
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
-		g.setLength(Amount.valueOf(3.8, NonSI.INCH));
-		g.setOD(Amount.valueOf(2.23, NonSI.INCH));
-		g.setID(Amount.valueOf(.75, NonSI.INCH));
+		try{
+			g.setLength(Amount.valueOf(3.8, NonSI.INCH));
+			g.setOD(Amount.valueOf(2.23, NonSI.INCH));
+			g.setID(Amount.valueOf(.75, NonSI.INCH));
+		} catch (PropertyVetoException v){
+			throw new Error(v);
+		}
 	
 		setGrain( new MultiGrain(g, 4) );
 		
