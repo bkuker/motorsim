@@ -19,6 +19,21 @@ import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class ExtrudedShapeGrain extends MotorPart implements Grain {
+	
+	public static ExtrudedShapeGrain DEFAULT_GRAIN = new ExtrudedShapeGrain(){
+		{
+			try{
+				Shape outside = new Ellipse2D.Double(0, 0, 30, 30);
+				xsection.add(outside);
+				xsection.inhibit(outside);
+				xsection.subtract(new Ellipse2D.Double(10,10, 10, 10));
+				setLength(Amount.valueOf(70, SI.MILLIMETER));
+				setEndSurfaceInhibited(false);
+			} catch ( Exception e ){
+				throw new Error(e);
+			}
+		}
+	};
 
 	BurningShape xsection = new BurningShape();
 
@@ -29,33 +44,6 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 	Amount<Length> rStep;
 
 	Amount<Length> webThickness;
-
-	{
-		/*
-		 * Similar test grain Shape outside = new Ellipse2D.Double(50,50,30,30);
-		 * plus.add(outside); minus.add(new Ellipse2D.Double(50,60,10,10));
-		 * inhibited.add(outside); length = Amount.valueOf(70, SI.MILLIMETER); /
-		 */
-
-		/* Big c-slot */
-		Shape outside = new Ellipse2D.Double(0, 0, 30, 30);
-		xsection.add(outside);
-		xsection.inhibit(outside);
-		//xsection.subtract(new Rectangle2D.Double(13, 13, 4, 30));
-		xsection.subtract(new Ellipse2D.Double(10,10, 10, 10));
-		length = Amount.valueOf(100, SI.MILLIMETER);
-		/**/
-
-		/*
-		 * Plus sign Shape outside = new Ellipse2D.Double(0,0,200,200);
-		 * plus.add(outside); inhibited.add(outside); minus.add(new
-		 * Rectangle2D.Double(90,40,20,120)); minus.add(new
-		 * Rectangle2D.Double(40,90,120,20));
-		 */
-
-		findWebThickness();
-
-	}
 
 	@Override
 	public Amount<Area> surfaceArea(Amount<Length> regression) {
@@ -105,10 +93,8 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 
 	@Override
 	public Amount<Length> webThickness() {
-		return webThickness;
-	}
-
-	private void findWebThickness() {
+		if ( webThickness != null )
+			return webThickness;
 		java.awt.geom.Area a = getCrossSection(Amount.valueOf(0, SI.MILLIMETER));
 		Rectangle r = a.getBounds();
 		double max = r.getWidth() < r.getHeight() ? r.getHeight() : r
@@ -133,6 +119,7 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 		webThickness = Amount.valueOf(guess, SI.MILLIMETER);
 		if (webThickness.isGreaterThan(length.divide(2)))
 			webThickness = length.divide(2);
+		return webThickness;
 	}
 
 	@Override
@@ -157,13 +144,6 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 		}
 		return res;
 	}
-	
-	public static void main(String args[]) throws Exception {
-		ExtrudedShapeGrain e = new ExtrudedShapeGrain();
-		new Editor(e).show();
-		new GrainPanel(e).show();
-	}
-
 
 	public Amount<Length> getLength() {
 		return length;
@@ -185,6 +165,13 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 		boolean old = this.endSurfaceInhibited;
 		this.endSurfaceInhibited = endSurfaceInhibited;
 		firePropertyChange("endSurfaceInhibited", old, endSurfaceInhibited);
+	}
+
+	
+	public static void main(String args[]) throws Exception {
+		ExtrudedShapeGrain e = DEFAULT_GRAIN;
+		new Editor(e).show();
+		new GrainPanel(e).show();
 	}
 
 }

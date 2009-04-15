@@ -21,9 +21,24 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 
 	private Amount<Length> oD, iD;
 	private boolean outerSurfaceInhibited = true, innerSurfaceInhibited = false;
+	
+	public static CoredCylindricalGrain DEFAULT_GRAIN = new CoredCylindricalGrain(){
+		{
+			try{
+				setOD(Amount.valueOf(30, SI.MILLIMETER));
+				setID(Amount.valueOf(10, SI.MILLIMETER));
+				setLength(Amount.valueOf(70, SI.MILLIMETER));
+				setInnerSurfaceInhibited(false);
+				setOuterSurfaceInhibited(true);
+				setForeEndInhibited(false);
+				setAftEndInhibited(false);
+			} catch ( Exception e ){
+				throw new Error(e);
+			}
+		}
+	};
 
 	public CoredCylindricalGrain() {
-
 		oD = Amount.valueOf(30, SI.MILLIMETER);
 		iD = Amount.valueOf(10, SI.MILLIMETER);
 	}
@@ -249,11 +264,9 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 	}
 
 	public static void main(String args[]) throws Exception {
-		CoredCylindricalGrain e = new CoredCylindricalGrain();
+		CoredCylindricalGrain e = DEFAULT_GRAIN;
 		new Editor(e).show();
 		new GrainPanel(e).show();
 	}
-
-	
 
 }

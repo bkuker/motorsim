@@ -23,6 +23,21 @@ public class RotatedShapeGrain implements Grain {
 	
 	private static Logger log = Logger.getLogger(RotatedShapeGrain.class);
 	
+	public static RotatedShapeGrain DEFAULT_GRAIN = new RotatedShapeGrain(){
+		{
+			try{
+				Shape outside = new Rectangle2D.Double(0,0,15,70);
+				shape.add( outside );
+				shape.inhibit( outside );
+				shape.subtract( new Rectangle2D.Double(0,0,5,70));
+				shape.subtract(new Rectangle2D.Double(0, -10, 15, 10));
+				shape.subtract(new Rectangle2D.Double(0, 70, 15, 10));
+			} catch ( Exception e ){
+				throw new Error(e);
+			}
+		}
+	};
+	
 	public enum Quality {
 		High()
 			{{
@@ -50,15 +65,6 @@ public class RotatedShapeGrain implements Grain {
 	
 	Amount<Length> web = null;
 	
-	{
-		Shape outside = new Rectangle2D.Double(0,0,15,100);
-		shape.add( outside );
-		shape.inhibit( outside );
-		shape.subtract( new Rectangle2D.Double(0,0,5,100));
-		shape.subtract(new Rectangle2D.Double(0, -10, 15, 10));
-		shape.subtract(new Rectangle2D.Double(0, 100, 15, 10));
-	}
-
 	@Override
 	public Area getCrossSection(Amount<Length> regression) {
 		Area ret = new Area();
@@ -147,14 +153,7 @@ public class RotatedShapeGrain implements Grain {
 		return web;
 
 	}
-	
 
-	public static void main(String args[]) throws Exception {
-		RotatedShapeGrain e = new RotatedShapeGrain();
-		new Editor(e).show();
-		new GrainPanel(e).show();
-	}
-	
 	private Shape square(java.awt.geom.Area a) {
 		PathIterator i = a.getPathIterator(new AffineTransform(), quality.squareFlatteningError);
 		GeneralPath cur = new GeneralPath();
@@ -249,5 +248,12 @@ public class RotatedShapeGrain implements Grain {
 		return len;
 	}
 
+	
 
+	public static void main(String args[]) throws Exception {
+		RotatedShapeGrain e = DEFAULT_GRAIN;
+		new Editor(e).show();
+		new GrainPanel(e).show();
+	}
+	
 }

@@ -14,27 +14,33 @@ import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 public class RodAndTubeGrain extends CompoundGrain {
 	CoredCylindricalGrain rod, tube;
 	
+	public static RodAndTubeGrain DEFAULT_GRAIN = new RodAndTubeGrain(){
+		{
+			try{
+				setOd(Amount.valueOf(30, SI.MILLIMETER));
+				setTubeID(Amount.valueOf(20, SI.MILLIMETER));
+				setRodDiameter(Amount.valueOf(10, SI.MILLIMETER));
+				setForeEndInhibited(true);
+				setAftEndInhibited(true);
+			} catch ( Exception e ){
+				throw new Error(e);
+			}
+		}
+	};
+	
 	public RodAndTubeGrain() {
 		try{
 			rod = new CoredCylindricalGrain();
-			rod.setInnerSurfaceInhibited(true);
 			rod.setID(Amount.valueOf(0, SI.MILLIMETER));
-			rod.setOD(Amount.valueOf(10, SI.MILLIMETER));
+			rod.setInnerSurfaceInhibited(true);
 			rod.setOuterSurfaceInhibited(false);
-			rod.setForeEndInhibited(true);
-			rod.setAftEndInhibited(true);
 			
 			tube = new CoredCylindricalGrain();
 			tube.setInnerSurfaceInhibited(false);
-			tube.setID(Amount.valueOf(20, SI.MILLIMETER));
-			tube.setOD(Amount.valueOf(30, SI.MILLIMETER));
-			tube.setForeEndInhibited(true);
-			tube.setAftEndInhibited(true);
 		} catch ( PropertyVetoException v ){
 			v.printStackTrace();
 			//I know these values are OK
 		}
-		
 		add(rod);
 		add(tube);
 	}
@@ -94,7 +100,7 @@ public class RodAndTubeGrain extends CompoundGrain {
 
 
 	public static void main(String args[]) throws Exception {
-		Grain g = new RodAndTubeGrain();
+		Grain g = DEFAULT_GRAIN;
 		new Editor(g).show();
 		new GrainPanel(g).show();
 	}
