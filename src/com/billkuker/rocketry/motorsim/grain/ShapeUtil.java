@@ -19,10 +19,12 @@ public class ShapeUtil {
 	 * http://valis.cs.uiuc.edu/~sariel/research/CG/compgeom/msg00831.html
 	 * http://stackoverflow.com/questions/451426/how-do-i-calculate-the-surface-area-of-a-2d-polygon
 	 * http://www.wikihow.com/Calculate-the-Area-of-a-Polygon
+	 * According to http://www.geog.ubc.ca/courses/klink/gis.notes/ncgia/u33.html
+	 * this algorithm works OK with holes, and it seems to (see test)
 	 */
 	public static Amount<Area> area(java.awt.geom.Area a) {
-		if ( !a.isSingular() )
-			throw new IllegalArgumentException("Can not calculate area of non-singular shape!");
+		//if ( !a.isSingular() )
+			//throw new IllegalArgumentException("Can not calculate area of non-singular shape!");
 		PathIterator i = a.getPathIterator(new AffineTransform(), .001);
 		
 		
@@ -64,8 +66,9 @@ public class ShapeUtil {
 		
 		area = area / 2.0; // Result so far is double the signed area
 		
-		if ( area < 0 ) //Depending on winding it could be negative
+		if ( area < 0 ){ //Depending on winding it could be negative
 			area = area * -1.0;
+		}
 		
 		
 		return Amount.valueOf(area, SI.MILLIMETER.pow(2)).to(Area.UNIT);
