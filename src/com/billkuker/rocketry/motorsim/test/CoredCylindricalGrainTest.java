@@ -2,7 +2,9 @@ package com.billkuker.rocketry.motorsim.test;
 
 import java.beans.PropertyVetoException;
 
+import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
+import javax.measure.quantity.Volume;
 import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
@@ -15,18 +17,20 @@ public class CoredCylindricalGrainTest extends RocketTest {
 
 	@Test
 	public void testSurfaceArea() throws PropertyVetoException {
+	
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
 		
-		g.setLength(Amount.valueOf(70, SI.MILLIMETER));
+		g.setLength(Amount.valueOf(100, SI.MILLIMETER));
+		g.setOD(Amount.valueOf(30, SI.MILLIMETER));
+		g.setID(Amount.valueOf(10, SI.MILLIMETER));
 		
-		g.setOD(Amount.valueOf(23.5, SI.MILLIMETER));
+		g.setForeEndInhibited(false);
+		g.setAftEndInhibited(false);
+		g.setOuterSurfaceInhibited(true);
+		g.setInnerSurfaceInhibited(false);
 		
-		g.setID(Amount.valueOf(7.9375, SI.MILLIMETER));
-		
-		for ( int mm = 0; mm < 15; mm++ ){
-			Amount<Length> r = Amount.valueOf(mm, SI.MILLIMETER);
-			System.out.println( r + ", "  + g.surfaceArea(r).to(SI.MILLIMETER.pow(2)) + ", " + g.volume(r) );
-		}
+		Amount<Area> a = g.surfaceArea(Amount.valueOf(6, SI.MILLIMETER));
+		assertApproximate(a, Amount.valueOf(6736, sqMM), Amount.valueOf(1, sqMM) );
 	}
 	
 
@@ -58,7 +62,19 @@ public class CoredCylindricalGrainTest extends RocketTest {
 		g.setOD(Amount.valueOf(30, SI.MILLIMETER));
 		g.setID(Amount.valueOf(10, SI.MILLIMETER));
 		
-		System.out.println(g.volume(Amount.valueOf(0, SI.MILLIMETER)));
+		g.setForeEndInhibited(false);
+		g.setAftEndInhibited(false);
+		g.setOuterSurfaceInhibited(true);
+		g.setInnerSurfaceInhibited(false);
+		
+		Amount<Volume> v = g.volume(Amount.valueOf(3, SI.MILLIMETER));
+		assertApproximate(v, Amount.valueOf(47545, cubeMM), Amount.valueOf(1, cubeMM));
+		
+		v = g.volume(Amount.valueOf(5, SI.MILLIMETER));
+		assertApproximate(v, Amount.valueOf(35343, cubeMM), Amount.valueOf(1, cubeMM));
+		
+		v = g.volume(Amount.valueOf(9, SI.MILLIMETER));
+		assertApproximate(v, Amount.valueOf(7471, cubeMM), Amount.valueOf(1, cubeMM));
 	}
 
 	@Test(expected=MotorPart.Validating.ValidationException.class)
