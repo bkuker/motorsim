@@ -20,6 +20,29 @@ import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class RotatedShapeGrain implements Grain {
 	
+	public enum Quality {
+		High()
+			{{
+				 surfaceAreaStep = .001;
+				 squareFlatteningError = 0.001;
+				 squareSubdivide = .01;
+				 areaFlatteningError = .001;
+			}},
+		Low()			{{
+			 surfaceAreaStep = .001;
+			 squareFlatteningError = 0.01;
+			 squareSubdivide = .1;
+			 areaFlatteningError = .01;
+		}};
+		
+		double surfaceAreaStep = .001;
+		double squareFlatteningError = 0.001;
+		double squareSubdivide = .01;
+		double areaFlatteningError = .001;
+	}
+	
+	Quality quality = Quality.Low;
+	
 	BurningShape shape = new BurningShape();
 	
 	Amount<Length> web = null;
@@ -29,6 +52,7 @@ public class RotatedShapeGrain implements Grain {
 		shape.add( outside );
 		shape.inhibit( outside );
 		shape.subtract( new Rectangle2D.Double(0,50,5,70));
+		
 		shape.subtract(new Rectangle2D.Double(0, 70, 15, 10));
 	}
 
@@ -69,7 +93,7 @@ public class RotatedShapeGrain implements Grain {
 		if (burn.isEmpty())
 			return zero;
 		
-		burn.subtract(shape.getShape(regression.plus(Amount.valueOf(.001,
+		burn.subtract(shape.getShape(regression.plus(Amount.valueOf(quality.surfaceAreaStep,
 				SI.MILLIMETER))));
 		
 		System.out.println(regression);
@@ -109,7 +133,7 @@ public class RotatedShapeGrain implements Grain {
 	}
 	
 	private Shape square(java.awt.geom.Area a) {
-		PathIterator i = a.getPathIterator(new AffineTransform(), 0.001);
+		PathIterator i = a.getPathIterator(new AffineTransform(), quality.squareFlatteningError);
 		GeneralPath cur = new GeneralPath();
 
 		double last[] = {0,0};
@@ -131,7 +155,7 @@ public class RotatedShapeGrain implements Grain {
 				double x = last[0];
 				double y = last[1];
 				double len = Math.sqrt(Math.pow(last[0]-coords[0], 2) + Math.pow(last[1]-coords[1], 2));
-				int steps = (int)(len / .01) + 5;
+				int steps = (int)(len / quality.squareSubdivide) + 5;
 				for (int s = 0; s < steps; s++) {
 					x += (coords[0] - last[0]) / steps;
 					y += (coords[1] - last[1]) / steps;
@@ -150,7 +174,7 @@ public class RotatedShapeGrain implements Grain {
 	}
 	
 	private double yRotatedSurfaceArea(java.awt.geom.Area a) {
-		PathIterator i = a.getPathIterator(new AffineTransform(), .001);
+		PathIterator i = a.getPathIterator(new AffineTransform(), quality.areaFlatteningError);
 		double x = 0, y = 0;
 		double mx = 0, my = 0;
 		double len = 0;
