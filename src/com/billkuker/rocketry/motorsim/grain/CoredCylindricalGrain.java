@@ -66,9 +66,9 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 		
 		Amount<Area> outer = cOD.times(Math.PI).times(cLength).to(SI.SQUARE_METRE);
 		
-		Amount<Area> ends = (cOD.divide(2).pow(2).times(Math.PI)).minus(cID.divide(2).pow(2).times(Math.PI)).times(2).to(SI.SQUARE_METRE);
+		Amount<Area> end = (cOD.divide(2).pow(2).times(Math.PI)).minus(cID.divide(2).pow(2).times(Math.PI)).to(SI.SQUARE_METRE);
 		
-		Amount<Area> total = inner.times(innerSurfaceInhibited?0:1).plus(outer.times(outerSurfaceInhibited?0:1)).plus(ends.times(numberOfBurningEnds(regression)));
+		Amount<Area> total = inner.times(innerSurfaceInhibited?0:1).plus(outer.times(outerSurfaceInhibited?0:1)).plus(end.times(numberOfBurningEnds(regression)));
 		
 		return total;
 	}
@@ -214,7 +214,7 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 		if ( isForeEndInhibited() && !isAftEndInhibited() )
 			top = -length/2;
 		else if ( isAftEndInhibited() && !isForeEndInhibited() )
-			top = length-lmm;
+			top = length/2-lmm;
 		
 		a.add( new java.awt.geom.Area(new Rectangle2D.Double(-oDmm/2,top,oDmm, lmm)));
 		a.subtract( new java.awt.geom.Area(new Rectangle2D.Double(-iDmm/2,-length/2,iDmm, length)));
