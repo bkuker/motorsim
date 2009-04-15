@@ -41,9 +41,9 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 		Shape outside = new Ellipse2D.Double(0, 0, 30, 30);
 		xsection.add(outside);
 		xsection.inhibit(outside);
-		xsection.subtract(new Rectangle2D.Double(13, 13, 4, 30));
-		//minus.add(new Ellipse2D.Double(12, 12, 6, 6));
-		length = Amount.valueOf(70, SI.MILLIMETER);
+		//xsection.subtract(new Rectangle2D.Double(13, 13, 4, 30));
+		xsection.subtract(new Ellipse2D.Double(10,10, 10, 10));
+		length = Amount.valueOf(100, SI.MILLIMETER);
 		/**/
 
 		/*
@@ -79,7 +79,7 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 		burn.subtract(getCrossSection(regression.plus(Amount.valueOf(.001,
 				SI.MILLIMETER))));
 	
-		Amount<Area> xSection = crossSectionArea(regression);
+		Amount<Area> xSection = ShapeUtil.area(xsection.getShape(regression));
 
 		return ShapeUtil.perimeter(burn).divide(2).times(rLen).plus(
 				xSection.times(2)).to(Area.UNIT);
@@ -96,37 +96,12 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 		if (rLen.isLessThan(Amount.valueOf(0, SI.MILLIMETER)))
 			return zero;
 		
-		Amount<Area> xSection = crossSectionArea(regression);
+		Amount<Area> xSection = ShapeUtil.area(xsection.getShape(regression));
 
 		return xSection.times(rLen).to(Volume.UNIT);
 
 	}
 
-
-
-	
-	private Amount<Area> crossSectionArea(Amount<Length> regression) {
-		//Get the PLUS shape and sum its area
-		java.awt.geom.Area plus = xsection.getPlus(regression);
-		Amount<Area> plusArea = Amount.valueOf(0, SI.SQUARE_METRE);
-		for (java.awt.geom.Area a : ShapeUtil.separate(plus)) {
-			plusArea = plusArea.plus(ShapeUtil.area(a));
-		}
-		
-		//Get the MINUS shape, intersect it with PLUS to get just the parts
-		//that are removed, sum it's area
-		java.awt.geom.Area minus = xsection.getMinus(regression);
-		minus.intersect(plus);
-		Amount<Area> minusArea = Amount.valueOf(0, SI.SQUARE_METRE);
-		for (java.awt.geom.Area a : ShapeUtil.separate(minus)) {
-			minusArea = minusArea.plus(ShapeUtil.area(a));
-		}
-		
-		//Subtract PLUS from MINUS and return
-		Amount<Area> area = plusArea.minus(minusArea);
-
-		return area;
-	}
 
 	@Override
 	public Amount<Length> webThickness() {

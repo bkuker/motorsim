@@ -35,7 +35,7 @@ public class BurningShape {
 	}
 	
 	
-	public java.awt.geom.Area getPlus(Amount<Length> regression) {
+	private java.awt.geom.Area getPlus(Amount<Length> regression) {
 		java.awt.geom.Area a = new java.awt.geom.Area();
 		for (Shape s : plus)
 			a.add(new java.awt.geom.Area(regress(s, regression
@@ -43,7 +43,7 @@ public class BurningShape {
 		return a;
 	}
 	
-	public java.awt.geom.Area getMinus(Amount<Length> regression) {
+	private java.awt.geom.Area getMinus(Amount<Length> regression) {
 		java.awt.geom.Area a = new java.awt.geom.Area();
 		for (Shape s : minus)
 			a.add(new java.awt.geom.Area(regress(s, regression
