@@ -73,6 +73,7 @@ public class Editor extends PropertySheetPanel {
 
 	public void show() {
 		JFrame f = new JFrame();
+		f.setTitle(obj.getClass().getName());
 		f.setSize(600, 400);
 		f.setContentPane(this);
 		f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

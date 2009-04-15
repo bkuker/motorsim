@@ -202,6 +202,7 @@ public class GrainPanel extends JPanel {
 	
 	public void show(){
 		JFrame f = new JFrame();
+		f.setTitle(grain.getClass().getName());
 		f.setSize(1024,600);
 		f.setContentPane(this);
 		f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
