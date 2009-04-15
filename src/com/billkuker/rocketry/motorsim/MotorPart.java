@@ -15,11 +15,14 @@ import java.lang.reflect.Type;
 
 import javax.measure.unit.Unit;
 
+import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
 public class MotorPart {
 	PropertyChangeSupport pcs;
 	VetoableChangeSupport vcs;
+	
+	private static Logger log = Logger.getLogger(MotorPart.class);
 	
 	public interface Validating {
 		 void checkValidity() throws ValidationException;
@@ -58,7 +61,7 @@ public class MotorPart {
 											+ " must be in units of "
 											+ expected.getSimpleName(), evt);
 	
-								System.out.println("Expected " + expected + " got " + u);
+								log.debug("Expected " + expected + " got " + u);
 							}
 						}
 					} catch ( PropertyVetoException e ){
