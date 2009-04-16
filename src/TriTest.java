@@ -141,7 +141,6 @@ public class TriTest extends JPanel {
 				setMaximum(100);
 				addChangeListener(new ChangeListener(){
 					{ setValue(0); }
-					@Override
 					public void stateChanged(ChangeEvent arg0) {
 						t.r = getValue();
 						t.repaint();

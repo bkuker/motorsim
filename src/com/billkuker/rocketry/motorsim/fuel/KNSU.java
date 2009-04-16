@@ -34,22 +34,18 @@ public class KNSU extends SaintRobertFuel {
 	public CombustionProduct getCombustionProduct(){
 		return new CombustionProduct(){
 		
-			@Override
 			public Amount<Temperature> idealCombustionTemperature() {
 				return Amount.valueOf(1720, SI.KELVIN);
 			}
 		
-			@Override
 			public Amount<MolarWeight> effectiveMolarWeight() {
 				return Amount.valueOf("41.98 kg/kmol").to(MolarWeight.UNIT);
 			}
 		
-			@Override
 			public double ratioOfSpecificHeats() {
 				return 1.133;
 			}
 		
-			@Override
 			public double ratioOfSpecificHeats2Phase() {
 				return 1.044;
 			}

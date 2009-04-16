@@ -41,7 +41,6 @@ public class MotorPart {
 		
 		vcs.addVetoableChangeListener(new VetoableChangeListener(){
 			@SuppressWarnings("unchecked")
-			@Override
 			public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
 				if ( evt.getNewValue() instanceof Amount ){
 					try {

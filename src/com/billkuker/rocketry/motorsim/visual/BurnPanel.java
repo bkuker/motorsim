@@ -97,7 +97,6 @@ public class BurnPanel extends JPanel {
 			setValue(0);
 		}
 		
-		@Override
 		public void stateChanged(ChangeEvent e) {
 			double t = ((SL)e.getSource()).getValue();
 			displayedTime = burn.burnTime().divide(STEPS).times(t);

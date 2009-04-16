@@ -45,7 +45,6 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 
 	Amount<Length> webThickness;
 
-	@Override
 	public Amount<Area> surfaceArea(Amount<Length> regression) {
 		Amount<Area> zero = Amount.valueOf(0, Area.UNIT);
 		
@@ -73,7 +72,6 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 				xSection.times(2)).to(Area.UNIT);
 	}
 
-	@Override
 	public Amount<Volume> volume(Amount<Length> regression) {
 		Amount<Volume> zero = Amount.valueOf(0, Volume.UNIT);
 		
@@ -91,7 +89,6 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 	}
 
 
-	@Override
 	public Amount<Length> webThickness() {
 		if ( webThickness != null )
 			return webThickness;
@@ -122,12 +119,10 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 		return webThickness;
 	}
 
-	@Override
 	public java.awt.geom.Area getCrossSection(Amount<Length> regression) {
 		return xsection.getShape(regression);
 	}
 	
-	@Override
 	public java.awt.geom.Area getSideView(Amount<Length> regression) {
 		java.awt.geom.Area res = new java.awt.geom.Area();
 		

@@ -48,23 +48,20 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 		}
 
 
-		@Override
 		public Iterator<Amount<X>> iterator() {
 			return new Iterator<Amount<X>>(){
 				Amount<X> current = low;
 				
-				@Override
 				public boolean hasNext() {
 					return current.isLessThan(high.plus(delta));
 				}
 
-				@Override
 				public Amount<X> next() {
 					Amount<X> ret = current;
 					current = current.plus(delta);
 					return ret;
 				}
-				@Override
+				
 				public final void remove() {
 					throw new UnsupportedOperationException("Chart domain iterators are not modifiable.");
 				}

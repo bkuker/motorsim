@@ -52,7 +52,6 @@ public class Editor extends PropertySheetPanel {
 
 		addPropertySheetChangeListener(new PropertyChangeListener() {
 
-			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				// When something changes just update the
 				// object, I want the changes to be immediate.

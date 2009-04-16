@@ -45,7 +45,6 @@ public class GrainPanel extends JPanel {
 		
 		if ( g instanceof MotorPart ){
 			((MotorPart)g).addPropertyChangeListener(new PropertyChangeListener(){
-				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					repaint();
 					area.setDomain(area.new IntervalDomain(Amount.valueOf(0, SI.MILLIMETER), grain.webThickness()));
@@ -192,7 +191,6 @@ public class GrainPanel extends JPanel {
 			setValue(0);
 		}
 		
-		@Override
 		public void stateChanged(ChangeEvent e) {
 			double r = ((SL)e.getSource()).getValue();
 

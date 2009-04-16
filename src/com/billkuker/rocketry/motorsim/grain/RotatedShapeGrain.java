@@ -65,7 +65,6 @@ public class RotatedShapeGrain implements Grain {
 	
 	Amount<Length> web = null;
 	
-	@Override
 	public Area getCrossSection(Amount<Length> regression) {
 		Area ret = new Area();
 		for( Area a : ShapeUtil.separate(shape.getShape(regression))){
@@ -79,7 +78,6 @@ public class RotatedShapeGrain implements Grain {
 		return ret;
 	}
 
-	@Override
 	public Area getSideView(Amount<Length> regression) {
 		Area a = new Area();
 		Area reg = shape.getShape(regression);
@@ -89,7 +87,6 @@ public class RotatedShapeGrain implements Grain {
 		return a;
 	}
 
-	@Override
 	public Amount<javax.measure.quantity.Area> surfaceArea(
 			Amount<Length> regression) {
 		Amount<javax.measure.quantity.Area> zero = Amount.valueOf(0, javax.measure.quantity.Area.UNIT);
@@ -112,7 +109,6 @@ public class RotatedShapeGrain implements Grain {
 
 	}
 
-	@Override
 	public Amount<Volume> volume(Amount<Length> regression) {
 		Area squared = new Area(square(shape.getShape(regression)));
 		Amount<javax.measure.quantity.Area> sum = Amount.valueOf(0, SI.SQUARE_METRE);
@@ -123,7 +119,6 @@ public class RotatedShapeGrain implements Grain {
 		return v;
 	}
 
-	@Override
 	public Amount<Length> webThickness() {
 		if (web != null)
 			return web;

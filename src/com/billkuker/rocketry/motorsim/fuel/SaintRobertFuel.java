@@ -37,7 +37,6 @@ public abstract class SaintRobertFuel implements Fuel {
 		this.t = t;
 	}
 
-	@Override
 	public Amount<Velocity> burnRate(Amount<Pressure> pressure) {
 
 		
@@ -56,7 +55,6 @@ public abstract class SaintRobertFuel implements Fuel {
 		return Amount.valueOf(0, Velocity.UNIT);
 	}
 
-	@Override
 	public abstract Amount<VolumetricDensity> idealDensity();
 
 }

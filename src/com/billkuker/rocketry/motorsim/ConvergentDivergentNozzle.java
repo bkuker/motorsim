@@ -23,7 +23,6 @@ public class ConvergentDivergentNozzle extends MotorPart implements Nozzle {
 	private double efficiency = 1.0;
 	
 	
-	@Override
 	public Amount<Area> throatArea() {
 		return throatDiameter.divide(2).pow(2).times(Math.PI).to(Area.UNIT);
 	}
@@ -60,7 +59,6 @@ public class ConvergentDivergentNozzle extends MotorPart implements Nozzle {
 		firePropertyChange("exitDiameter", old, exitDiameter);
 	}
 	
-	@Override
 	public Amount<Force> thrust(Amount<Pressure> Po, Amount<Pressure> Pe, Amount<Pressure> Patm, final double k ){
 		double cF = thrustCoefficient(Po, Pe, Patm, k);
 		return Po.times(throatArea()).times(cF).to(Force.UNIT);

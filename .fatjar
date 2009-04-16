@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Thu Apr 16 10:44:22 EDT 2009
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=MotorSim-0.1.jar
+manifest.mergeall=true
+manifest.mainclass=com.billkuker.rocketry.motorsim.visual.CrappyEditor
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=

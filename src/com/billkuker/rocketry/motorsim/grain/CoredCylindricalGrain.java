@@ -49,7 +49,6 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 		innerSurfaceInhibited = in;
 	}
 
-	@Override
 	public Amount<Area> surfaceArea(Amount<Length> regression) {
 		Amount<Length> zero = Amount.valueOf(0, SI.MILLIMETER);
 		if ( regression.isLessThan(zero) )
@@ -88,7 +87,6 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 		return total;
 	}
 
-	@Override
 	public Amount<Volume> volume(Amount<Length> regression) {
 		Amount<Length> zero = Amount.valueOf(0, SI.MILLIMETER);
 		
@@ -152,7 +150,6 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 		
 	}
 
-	@Override
 	public Amount<Length> webThickness() {
 		if ( innerSurfaceInhibited && outerSurfaceInhibited ){
 			return oD; //TODO gotta move this to the end
@@ -186,7 +183,6 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 		return iD;
 	}
 	
-	@Override
 	public java.awt.geom.Area getCrossSection(Amount<Length> regression){
 		Amount<Length> zero = Amount.valueOf(0, SI.MILLIMETER);
 		if ( regression.isLessThan(zero) )

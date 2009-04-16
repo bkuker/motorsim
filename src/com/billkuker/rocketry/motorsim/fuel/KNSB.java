@@ -27,26 +27,21 @@ public class KNSB extends PiecewiseSaintRobertFuel {
 		return Amount.valueOf(1841, 0, SI.KILOGRAM.divide(SI.METER.pow(3))).to(VolumetricDensity.UNIT);
 	}
 
-	@Override
 	public CombustionProduct getCombustionProduct() {
 		return new CombustionProduct(){
 			
-			@Override
 			public Amount<Temperature> idealCombustionTemperature() {
 				return Amount.valueOf(1600, SI.KELVIN);
 			}
 		
-			@Override
 			public Amount<MolarWeight> effectiveMolarWeight() {
 				return Amount.valueOf("39.9 kg/kmol").to(MolarWeight.UNIT);
 			}
 		
-			@Override
 			public double ratioOfSpecificHeats() {
 				return 1.1361;
 			}
 		
-			@Override
 			public double ratioOfSpecificHeats2Phase() {
 				return 1.042;
 			}

@@ -13,12 +13,10 @@ public class CylindricalChamber implements Chamber {
 	
 	private Amount<Length> iD;
 
-	@Override
 	public Amount<Pressure> burstPressure() {
 		return null;
 	}
 
-	@Override
 	public Amount<Volume> chamberVolume() {
 		return iD.divide(2).pow(2).times(Math.PI).times(length).to(SI.CUBIC_METRE);
 	}

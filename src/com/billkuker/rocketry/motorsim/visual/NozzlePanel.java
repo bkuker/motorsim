@@ -28,7 +28,6 @@ public class NozzlePanel extends JPanel {
 		
 		if ( n instanceof MotorPart ){
 			((MotorPart)n).addPropertyChangeListener(new PropertyChangeListener(){
-				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					repaint();
 				}
