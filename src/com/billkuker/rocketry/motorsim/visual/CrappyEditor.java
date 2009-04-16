@@ -37,6 +37,7 @@ public class CrappyEditor extends JFrame {
 	//JTextArea text = new JTextArea();
 	RSyntaxTextArea text;
 	public CrappyEditor(){
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e1) {
