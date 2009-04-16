@@ -131,7 +131,7 @@ public class BurnPanel extends JPanel {
 		}
 	}
 	
-	public void show(){
+	public void showAsWindow(){
 		JFrame f = new JFrame();
 		f.setTitle(burn.getMotor().getName());
 		f.setSize(1280,720);

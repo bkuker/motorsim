@@ -59,7 +59,7 @@ public class NozzlePanel extends JPanel {
 		g2d.draw( a );
 	}
 	
-	public void show(){
+	public void showAsWindow(){
 		JFrame f = new JFrame();
 		f.setSize(220,250);
 		f.setContentPane(this);

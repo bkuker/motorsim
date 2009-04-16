@@ -200,7 +200,7 @@ public class GrainPanel extends JPanel {
 		}
 	}
 	
-	public void show(){
+	public void showAsWindow(){
 		JFrame f = new JFrame();
 		f.setTitle(grain.getClass().getName());
 		f.setSize(1024,600);
