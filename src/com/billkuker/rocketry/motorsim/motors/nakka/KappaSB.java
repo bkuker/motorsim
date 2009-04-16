@@ -46,7 +46,7 @@ public class KappaSB extends Motor{
 	public static void main(String args[]) throws Exception{
 		KappaSB m = new KappaSB();
 		Burn b = new Burn(m);
-		new BurnPanel(b).show();
+		new BurnPanel(b).showAsWindow();
 	}
 
 }

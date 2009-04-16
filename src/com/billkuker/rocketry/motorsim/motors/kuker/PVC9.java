@@ -46,6 +46,6 @@ public class PVC9 extends Motor {
 	public static void main(String args[]) throws Exception{
 		PVC9 m = new PVC9();
 		Burn b = new Burn(m);
-		new BurnPanel(b).show();
+		new BurnPanel(b).showAsWindow();
 	}
 }
