@@ -1,5 +1,5 @@
 <object-stream>
-  <com.billkuker.rocketry.motorsim.Motor>
+  <com.billkuker.rocketry.motorsim.motors.kuker.PVC9>
     <chamber class="com.billkuker.rocketry.motorsim.CylindricalChamber">
       <length>200 mm</length>
       <iD>30 mm</iD>
@@ -27,6 +27,6 @@
     <fuel class="com.billkuker.rocketry.motorsim.fuel.KNSU">
       <t>English</t>
     </fuel>
-    <name>IOTestMotor</name>
-  </com.billkuker.rocketry.motorsim.Motor>
+    <name>PVC9</name>
+  </com.billkuker.rocketry.motorsim.motors.kuker.PVC9>
 </object-stream>

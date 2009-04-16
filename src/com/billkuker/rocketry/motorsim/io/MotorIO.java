@@ -1,12 +1,14 @@
 package com.billkuker.rocketry.motorsim.io;
 
+import java.beans.XMLDecoder;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 
 import org.jscience.physics.amount.Amount;
@@ -17,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.converters.javabean.JavaBeanConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -45,6 +48,7 @@ public class MotorIO {
 		
 	
 	}
+
 	
 	private static XStream getXStream(){
 		XStream xstream = new XStream();
@@ -52,6 +56,7 @@ public class MotorIO {
 		xstream.omitField(MotorPart.class, "pcs");
 		xstream.omitField(MotorPart.class, "vcs");
 		xstream.registerConverter(new AmountConverter());
+		xstream.registerConverter(new JavaBeanConverter(xstream.getClassMapper(), "class"), -20); 
 		return xstream;
 	}
 	
@@ -64,14 +69,35 @@ public class MotorIO {
 	}
 	
 	public static Motor readMotor(File f) throws IOException{
-		ObjectInputStream in = getXStream().createObjectInputStream(new FileReader(f));
+		FileReader fin = new FileReader(f);
+		ObjectInputStream in = getXStream().createObjectInputStream(fin);
 		Motor m;
 		try {
 			m = (Motor)in.readObject();
 		} catch (ClassNotFoundException e) {
-			throw new IOException("Can not read motor: Class not found.", e);
+			throw new IOException("Class not found", e);
 		}
 		return m;
 	}
 	
+	public static String writeMotor(Motor m) throws IOException{
+		StringWriter sout = new StringWriter();
+		ObjectOutputStream out = getXStream().createObjectOutputStream(sout);
+		out.writeObject(m);
+		out.close();
+		sout.close();
+		return sout.toString();
+	}
+	
+	public static Motor readMotor(String s) throws IOException{
+		StringReader sin = new StringReader(s);
+		ObjectInputStream in = getXStream().createObjectInputStream(sin);
+		Motor m;
+		try {
+			m = (Motor)in.readObject();
+		} catch (ClassNotFoundException e) {
+			throw new IOException("Class not found", e);
+		}
+		return m;
+	}
 }
