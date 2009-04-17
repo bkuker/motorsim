@@ -36,14 +36,15 @@ public class Burn {
 	private static double densityRatio = 0.96;
 	
 	public class Interval{
-		Amount<Duration> time;
+		public Amount<Duration> time;
+		public Amount<Duration> dt;
 		public Amount<Length> regression;
 		public Amount<Pressure> chamberPressure;
 		Amount<Mass> chamberProduct;
-		Amount<Force> thrust;
+		public Amount<Force> thrust;
 
 		public String toString(){
-			return time + " " + regression + " " + chamberPressure + " " + chamberProduct;
+			return time + " " + dt + " " + regression + " " + chamberPressure + " " + chamberProduct;
 		}
 	}
 	
@@ -76,6 +77,7 @@ public class Burn {
 		
 		Interval initial = new Interval();
 		initial.time = Amount.valueOf(0, SI.SECOND);
+		initial.dt = Amount.valueOf(0, SI.SECOND);
 		initial.regression = Amount.valueOf(0, SI.MILLIMETER);
 		initial.chamberPressure = atmosphereicPressure;
 		initial.chamberProduct = Amount.valueOf(0, SI.KILOGRAM);
@@ -95,6 +97,7 @@ public class Burn {
 			log.debug("Burn Rate: " + burnRate);
 			
 			Amount<Duration> dt = regStep.divide(burnRate).to(Duration.UNIT);
+			next.dt = dt;
 			
 			data.put(data.lastKey().plus(dt), next);
 			
@@ -193,7 +196,7 @@ public class Burn {
 				break;
 			}
 		}
-				
+
 	}
 	
 	@SuppressWarnings("unchecked")
