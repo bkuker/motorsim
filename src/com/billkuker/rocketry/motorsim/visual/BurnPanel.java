@@ -1,6 +1,8 @@
 package com.billkuker.rocketry.motorsim.visual;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.text.NumberFormat;
 
 import javax.measure.quantity.Duration;
@@ -10,6 +12,7 @@ import javax.measure.quantity.Velocity;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
@@ -20,6 +23,8 @@ import javax.swing.event.ChangeListener;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
+import com.billkuker.rocketry.motorsim.RocketScience;
+import com.billkuker.rocketry.motorsim.Burn.Interval;
 
 public class BurnPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -73,12 +78,57 @@ public class BurnPanel extends JPanel {
 			grains.setResizeWeight(.5);
 			
 			JSplitPane main = new JSplitPane(JSplitPane.VERTICAL_SPLIT, grains, tp);
+			Dimension minimumSize = new Dimension(800, 200);
+			grains.setMinimumSize(minimumSize);
+			tp.setMinimumSize(minimumSize);
 			main.setDividerLocation(.5);
 			main.setResizeWeight(.5);
 			
 			add( main, BorderLayout.CENTER );
 			
 			add( new SL(), BorderLayout.SOUTH);
+			
+			
+
+				Amount<RocketScience.Impulse> ns = Amount.valueOf(0, RocketScience.NEWTON_SECOND);
+				Amount<Force> averageThrust = Amount.valueOf(0, SI.NEWTON);
+				Amount<Force> maxThrust = Amount.valueOf(0, SI.NEWTON);
+				Amount<Pressure> maxPressure = Amount.valueOf(0, SI.MEGA(SI.PASCAL));
+				int thrustCount = 0;
+				
+				for( Interval i: burn.getData().values() ){
+					ns = ns.plus(i.dt.times(i.thrust));
+					if ( i.thrust.isGreaterThan(Amount.valueOf(0.01, SI.NEWTON))){
+						thrustCount++;
+						averageThrust = averageThrust.plus(i.thrust);
+					}
+					if ( i.thrust.isGreaterThan(maxThrust))
+						maxThrust = i.thrust;
+					if ( i.chamberPressure.isGreaterThan(maxPressure))
+						maxPressure = i.chamberPressure;
+				}
+				averageThrust = averageThrust.divide(thrustCount);
+
+				int cn = (int)(Math.log(ns.doubleValue(RocketScience.NEWTON_SECOND)/1.25) / Math.log(2));
+				char cl = (char)((int)'A' + cn);
+
+			
+			JPanel text = new JPanel(new GridLayout(2,5));
+
+			text.add(new JLabel("Rating"));
+			text.add(new JLabel("Total Impulse"));
+			text.add(new JLabel("Max Thrust"));
+			text.add(new JLabel("Average Thust"));
+			text.add(new JLabel("Max Pressure"));
+			
+			text.add(new JLabel(new String(new char[]{cl}) + "-" +Math.round(averageThrust.doubleValue(SI.NEWTON))));
+			text.add(new JLabel(approx(ns)));
+			text.add(new JLabel(approx(maxThrust)));
+			text.add(new JLabel(approx(averageThrust)));
+			text.add(new JLabel(approx(maxPressure)));
+			
+			add(text, BorderLayout.NORTH);
+			
 			
 		} catch (NoSuchMethodException e){
 			throw new Error(e);
@@ -87,9 +137,15 @@ public class BurnPanel extends JPanel {
 
 	}
 	
+	private String approx(Amount a){
+		double d = a.doubleValue(a.getUnit());
+		long i = Math.round(d);
+		return i + " " + a.getUnit().toString();
+	}
+	
 	private class SL extends JSlider implements ChangeListener{
 		private static final long serialVersionUID = 1L;
-		private static final int STEPS = 300;
+		private static final int STEPS = 80;
 		public SL(){
 			addChangeListener(this);
 			setMinimum(0);
