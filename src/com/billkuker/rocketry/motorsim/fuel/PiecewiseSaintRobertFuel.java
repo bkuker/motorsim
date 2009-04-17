@@ -17,11 +17,11 @@ public abstract class PiecewiseSaintRobertFuel extends SaintRobertFuel {
 	
 	private SortedMap<Amount<Pressure>, Entry> entries = new TreeMap<Amount<Pressure>, Entry>();
 	
-	public PiecewiseSaintRobertFuel(Type t) {
+	protected PiecewiseSaintRobertFuel(Type t) {
 		super(t);
 	}
 	
-	public void add(Amount<Pressure> p, final double _a, final double _n){
+	protected void add(Amount<Pressure> p, final double _a, final double _n){
 		entries.put(p, new Entry(){{a = _a; n = _n;}});
 	}
 
