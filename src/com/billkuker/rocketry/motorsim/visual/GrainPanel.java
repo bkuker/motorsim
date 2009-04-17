@@ -116,8 +116,19 @@ public class GrainPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 		Grain grain;
 		public XC(Grain g){
-			setMinimumSize(new Dimension(440,250));
 			grain = g;
+			java.awt.geom.Area unburnt = grain.getSideView(Amount.valueOf(0, SI.MILLIMETER));
+			
+			Rectangle bounds = unburnt.getBounds();
+			double max = bounds.getWidth();
+			if ( bounds.getHeight() > max )
+				max = bounds.getHeight();
+			int w = (int)(bounds.getWidth() * 200.0 / max);
+			if ( w < 40 )
+				w = 40;
+			
+			setMinimumSize(new Dimension(240+w,250));
+
 		}
 		public void paint(Graphics g){
 			super.paint(g);
