@@ -15,11 +15,11 @@ import com.billkuker.rocketry.motorsim.RocketScience;
 public abstract class SaintRobertFuel implements Fuel {
 	
 	protected enum Type{
-		Si(
-				SI.MILLIMETER.divide(SI.SECOND).asType(Velocity.class),
-				SI.MEGA(SI.PASCAL).asType(Pressure.class)),
-		English(
-				NonSI.INCH.divide(SI.SECOND).asType(Velocity.class),
+		SI(
+				javax.measure.unit.SI.MILLIMETER.divide(javax.measure.unit.SI.SECOND).asType(Velocity.class),
+				javax.measure.unit.SI.MEGA(javax.measure.unit.SI.PASCAL).asType(Pressure.class)),
+		NONSI(
+				NonSI.INCH.divide(javax.measure.unit.SI.SECOND).asType(Velocity.class),
 				RocketScience.PSI)
 		;
 		
@@ -32,20 +32,24 @@ public abstract class SaintRobertFuel implements Fuel {
 		}
 	}
 	
-	private Type t = Type.Si;
+	private Type t = Type.SI;
 	
 	public SaintRobertFuel(Type t){
 		this.t = t;
+	}
+	
+	protected Type getType(){
+		return t;
 	}
 
 	public Amount<Velocity> burnRate(Amount<Pressure> pressure) {
 
 		
-		double p = pressure.doubleValue(t.p);
+		double p = pressure.doubleValue(getType().p);
 		double a = burnrateCoefficient(pressure);
 		double n = burnrateExponent(pressure);
 		
-		return burnrateConstant().plus(Amount.valueOf( a*Math.pow(p,n), t.v ));
+		return burnrateConstant().plus(Amount.valueOf( a*Math.pow(p,n), getType().v ));
 	}
 	
 	protected abstract double burnrateCoefficient(Amount<Pressure> pressure);

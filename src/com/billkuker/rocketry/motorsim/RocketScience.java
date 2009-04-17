@@ -35,14 +35,14 @@ public class RocketScience {
 				javax.measure.unit.SI.MEGA(javax.measure.unit.SI.PASCAL),
 				NEWTON_SECOND
 		}),
-		NonSI(new Unit[]{
+		NONSI(new Unit[]{
 				javax.measure.unit.NonSI.INCH,
 				javax.measure.unit.NonSI.POUND_FORCE,
 				PSI,
 				NEWTON_SECOND
 		});
 		
-		public static UnitPreference preference = NonSI;
+		public static UnitPreference preference = NONSI;
 		
 		protected Set<Unit<?>> units = new HashSet<Unit<?>>();
 		

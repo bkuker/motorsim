@@ -12,7 +12,7 @@ import com.billkuker.rocketry.motorsim.RocketScience.MolarWeight;
 public class KNSU extends SaintRobertFuel {
 	
 	public KNSU(){
-		super(Type.English);
+		super(Type.NONSI);
 	}
 
 	//@Override 

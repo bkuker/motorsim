@@ -30,6 +30,7 @@ import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
+import com.billkuker.rocketry.motorsim.fuel.EditableFuel;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
@@ -94,7 +95,7 @@ public class CrappyEditor extends JFrame {
 			});
 			n.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent arg0) {
-					UnitPreference.preference = UnitPreference.NonSI;	
+					UnitPreference.preference = UnitPreference.NONSI;	
 				}
 			});
 		}
