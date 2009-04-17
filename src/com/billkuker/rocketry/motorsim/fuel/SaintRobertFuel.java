@@ -10,6 +10,7 @@ import javax.measure.unit.Unit;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Fuel;
+import com.billkuker.rocketry.motorsim.RocketScience;
 
 public abstract class SaintRobertFuel implements Fuel {
 	
@@ -19,7 +20,7 @@ public abstract class SaintRobertFuel implements Fuel {
 				SI.MEGA(SI.PASCAL).asType(Pressure.class)),
 		English(
 				NonSI.INCH.divide(SI.SECOND).asType(Velocity.class),
-				NonSI.POUND_FORCE.divide(NonSI.INCH.pow(2)).asType(Pressure.class))
+				RocketScience.PSI)
 		;
 		
 		private final Unit<Velocity> v;

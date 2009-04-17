@@ -11,6 +11,7 @@ import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
 import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
+import javax.measure.unit.Unit;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,7 +50,7 @@ public class BurnPanel extends JPanel {
 			
 			thrust = new Chart<Duration, Force>(
 					SI.SECOND,
-					NonSI.POUND_FORCE,//SI.NEWTON,
+					SI.NEWTON,
 					b,
 					"thrust");
 			thrust.setDomain(burn.getData().keySet());
@@ -138,9 +139,10 @@ public class BurnPanel extends JPanel {
 	}
 	
 	private String approx(Amount a){
-		double d = a.doubleValue(a.getUnit());
+		Unit u = RocketScience.UnitPreference.preference.getPreferredUnit(a.getUnit());
+		double d = a.doubleValue(u);
 		long i = Math.round(d);
-		return i + " " + a.getUnit().toString();
+		return i + " " + u.toString();
 	}
 	
 	private class SL extends JSlider implements ChangeListener{

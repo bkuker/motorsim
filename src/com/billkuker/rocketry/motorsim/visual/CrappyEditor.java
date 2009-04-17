@@ -8,9 +8,11 @@ import java.beans.PropertyVetoException;
 import java.io.IOException;
 
 import javax.measure.unit.SI;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
@@ -25,6 +27,8 @@ import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.Motor;
+import com.billkuker.rocketry.motorsim.RocketScience;
+import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
@@ -64,6 +68,7 @@ public class CrappyEditor extends JFrame {
 		editor.setLayout(new BorderLayout());
 		editor.add(text, BorderLayout.CENTER);
 		JPanel buttons = new JPanel(new FlowLayout());
+		
 		buttons.add(new JButton("Burn!"){
 			{
 				addActionListener(new ActionListener(){
@@ -73,7 +78,27 @@ public class CrappyEditor extends JFrame {
 				});
 			}
 		});
-			
+		
+		{
+			JRadioButton s, n;
+			buttons.add(s = new JRadioButton("SI"));
+			buttons.add(n = new JRadioButton("NonSI"));
+			ButtonGroup g = new ButtonGroup();
+			g.add(s);
+			g.add(n);
+			s.setSelected(true);
+			s.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0) {
+					UnitPreference.preference = UnitPreference.SI;	
+				}
+			});
+			n.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0) {
+					UnitPreference.preference = UnitPreference.NonSI;	
+				}
+			});
+		}
+		
 		editor.add(buttons, BorderLayout.SOUTH);
 		
 		tabs.addTab("Edit", editor);

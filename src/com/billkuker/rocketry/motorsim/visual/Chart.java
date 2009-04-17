@@ -24,6 +24,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 
 public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
@@ -92,12 +93,13 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 
 		dataset.addSeries(series);
 
-		this.xUnit = xUnit;
-		this.yUnit = yUnit;
+		this.xUnit = RocketScience.UnitPreference.preference.getPreferredUnit(xUnit);
+		this.yUnit = RocketScience.UnitPreference.preference.getPreferredUnit(yUnit);
+		
 		chart = ChartFactory.createXYLineChart(
 				method.substring(0,1).toUpperCase() + method.substring(1), // Title
-				xUnit.toString(), // x-axis Label
-				yUnit.toString(), // y-axis Label
+				this.xUnit.toString(), // x-axis Label
+				this.yUnit.toString(), // y-axis Label
 				dataset,
 				PlotOrientation.VERTICAL, // Plot Orientation
 				false, // Show Legend
