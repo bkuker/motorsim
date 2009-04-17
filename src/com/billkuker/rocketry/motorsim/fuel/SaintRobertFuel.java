@@ -56,6 +56,6 @@ public abstract class SaintRobertFuel implements Fuel {
 		return Amount.valueOf(0, Velocity.UNIT);
 	}
 
-	public abstract Amount<VolumetricDensity> idealDensity();
+	public abstract Amount<VolumetricDensity> getIdealDensity();
 
 }

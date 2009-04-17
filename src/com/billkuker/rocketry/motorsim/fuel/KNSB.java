@@ -23,26 +23,26 @@ public class KNSB extends PiecewiseSaintRobertFuel {
 	}
 
 	@Override
-	public Amount<VolumetricDensity> idealDensity() {
+	public Amount<VolumetricDensity> getIdealDensity() {
 		return Amount.valueOf(1841, 0, SI.KILOGRAM.divide(SI.METER.pow(3))).to(VolumetricDensity.UNIT);
 	}
 
 	public CombustionProduct getCombustionProduct() {
 		return new CombustionProduct(){
 			
-			public Amount<Temperature> idealCombustionTemperature() {
+			public Amount<Temperature> getIdealCombustionTemperature() {
 				return Amount.valueOf(1600, SI.KELVIN);
 			}
 		
-			public Amount<MolarWeight> effectiveMolarWeight() {
+			public Amount<MolarWeight> getEffectiveMolarWeight() {
 				return Amount.valueOf("39.9 kg/kmol").to(MolarWeight.UNIT);
 			}
 		
-			public double ratioOfSpecificHeats() {
+			public double getRatioOfSpecificHeats() {
 				return 1.1361;
 			}
 		
-			public double ratioOfSpecificHeats2Phase() {
+			public double getRatioOfSpecificHeats2Phase() {
 				return 1.042;
 			}
 		};
@@ -64,6 +64,14 @@ public class KNSB extends PiecewiseSaintRobertFuel {
 						));
 		
 		burnRate.show();
+	}
+
+	public double getCombustionEfficiency() {
+		return .97;
+	}
+
+	public double getDensityRatio() {
+		return .96;
 	}
 
 }

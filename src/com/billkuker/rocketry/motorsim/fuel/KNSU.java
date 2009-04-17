@@ -16,7 +16,7 @@ public class KNSU extends SaintRobertFuel {
 	}
 
 	//@Override 
-	public Amount<VolumetricDensity> idealDensity() {
+	public Amount<VolumetricDensity> getIdealDensity() {
 		//return Amount.valueOf(1.889, 0, SI.GRAM.divide(SI.CENTIMETER.pow(3))).to(VolumetricDensity.UNIT);
 		return Amount.valueOf(1889, 0, SI.KILOGRAM.divide(SI.METER.pow(3))).to(VolumetricDensity.UNIT);
 	}
@@ -34,22 +34,30 @@ public class KNSU extends SaintRobertFuel {
 	public CombustionProduct getCombustionProduct(){
 		return new CombustionProduct(){
 		
-			public Amount<Temperature> idealCombustionTemperature() {
+			public Amount<Temperature> getIdealCombustionTemperature() {
 				return Amount.valueOf(1720, SI.KELVIN);
 			}
 		
-			public Amount<MolarWeight> effectiveMolarWeight() {
+			public Amount<MolarWeight> getEffectiveMolarWeight() {
 				return Amount.valueOf("41.98 kg/kmol").to(MolarWeight.UNIT);
 			}
 		
-			public double ratioOfSpecificHeats() {
+			public double getRatioOfSpecificHeats() {
 				return 1.133;
 			}
 		
-			public double ratioOfSpecificHeats2Phase() {
+			public double getRatioOfSpecificHeats2Phase() {
 				return 1.044;
 			}
 		};
+	}
+
+	public double getCombustionEfficiency() {
+		return .97;
+	}
+
+	public double getDensityRatio() {
+		return .96;
 	}
 
 }

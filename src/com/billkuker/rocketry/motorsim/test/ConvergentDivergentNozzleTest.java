@@ -43,7 +43,7 @@ public class ConvergentDivergentNozzleTest extends RocketTest {
 
 		KNSU f = new KNSU();
 		
-		Amount<Force> t = n.thrust(Po, Pe, Patm, f.getCombustionProduct().ratioOfSpecificHeats2Phase());
+		Amount<Force> t = n.thrust(Po, Pe, Patm, f.getCombustionProduct().getRatioOfSpecificHeats2Phase());
 		
 		Amount<Force> expected = Amount.valueOf(87.2, .1, SI.NEWTON);
 		
@@ -60,7 +60,7 @@ public class ConvergentDivergentNozzleTest extends RocketTest {
 
 		KNSU f = new KNSU();
 		
-		double cF = n.thrustCoefficient(Po, Pe, Patm, f.getCombustionProduct().ratioOfSpecificHeats2Phase());
+		double cF = n.thrustCoefficient(Po, Pe, Patm, f.getCombustionProduct().getRatioOfSpecificHeats2Phase());
 		
 		
 		Assert.assertEquals(cF, 1.2454812344324655);

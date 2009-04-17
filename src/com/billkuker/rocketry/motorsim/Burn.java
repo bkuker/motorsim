@@ -118,12 +118,12 @@ public class Burn {
 			
 			log.info("Volume Burnt: " + volumeBurnt.to(SI.MILLIMETER.pow(3)));
 			
-			Amount<MassFlowRate> mGenRate = volumeBurnt.times(motor.getFuel().idealDensity().times(densityRatio)).divide(dt).to(MassFlowRate.UNIT);
+			Amount<MassFlowRate> mGenRate = volumeBurnt.times(motor.getFuel().getIdealDensity().times(motor.getFuel().getDensityRatio())).divide(dt).to(MassFlowRate.UNIT);
 			
 			log.debug("Mass Gen Rate: " + mGenRate);
 			
-			Amount specificGasConstant = Constants.R.divide(motor.getFuel().getCombustionProduct().effectiveMolarWeight());
-			Amount<Temperature> chamberTemp = motor.getFuel().getCombustionProduct().idealCombustionTemperature().times(combustionEfficency);
+			Amount specificGasConstant = Constants.R.divide(motor.getFuel().getCombustionProduct().getEffectiveMolarWeight());
+			Amount<Temperature> chamberTemp = motor.getFuel().getCombustionProduct().getIdealCombustionTemperature().times(motor.getFuel().getCombustionEfficiency());
 			
 			Amount<MassFlowRate> mNozzle;
 			{
@@ -135,7 +135,7 @@ public class Burn {
 				
 				Amount<Area> aStar = motor.getNozzle().throatArea();
 				
-				double k = motor.getFuel().getCombustionProduct().ratioOfSpecificHeats();
+				double k = motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats();
 				
 				log.debug("K: " + k);
 				
@@ -189,7 +189,7 @@ public class Burn {
 					next.chamberPressure.doubleValue(SI.PASCAL),
 					SI.PASCAL);
 			
-			next.thrust = motor.getNozzle().thrust(next.chamberPressure, atmosphereicPressure, atmosphereicPressure, motor.getFuel().getCombustionProduct().ratioOfSpecificHeats2Phase());
+			next.thrust = motor.getNozzle().thrust(next.chamberPressure, atmosphereicPressure, atmosphereicPressure, motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats2Phase());
 			
 			if ( next.chamberPressure.approximates(atmosphereicPressure)){
 				log.info("Pressure at Patm on step " + i);

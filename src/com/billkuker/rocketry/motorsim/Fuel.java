@@ -11,33 +11,24 @@ import com.billkuker.rocketry.motorsim.RocketScience.MolarWeight;
 
 public interface Fuel {
 
-	public Amount<VolumetricDensity> idealDensity();
+	public Amount<VolumetricDensity> getIdealDensity();
 
 	public Amount<Velocity> burnRate(Amount<Pressure> pressure);
 	
 	public CombustionProduct getCombustionProduct();
 	
 	public interface CombustionProduct {
-		public Amount<Temperature> idealCombustionTemperature();
+		public Amount<Temperature> getIdealCombustionTemperature();
 
-		public Amount<MolarWeight> effectiveMolarWeight();
+		public Amount<MolarWeight> getEffectiveMolarWeight();
 		
-		public double ratioOfSpecificHeats();
+		public double getRatioOfSpecificHeats();
 		
-		public double ratioOfSpecificHeats2Phase();
+		public double getRatioOfSpecificHeats2Phase();
 	}
 
-	/*
-	@Deprecated
-	public Amount<Temperature> idealCombustionTemperature();
-
-	@Deprecated
-	public Amount<MolarWeight> effectiveMolarWeight();
+	public double getDensityRatio();
 	
-	@Deprecated
-	public double ratioOfSpecificHeats();
-	
-	@Deprecated
-	public double ratioOfSpecificHeats2Phase();*/
+	public double getCombustionEfficiency();
 
 }

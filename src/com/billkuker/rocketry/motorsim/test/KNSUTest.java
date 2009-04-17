@@ -19,12 +19,12 @@ public class KNSUTest extends RocketTest {
 
 	@Test
 	public void testEffectiveMolarWeight(){
-		(new KNSU()).getCombustionProduct().effectiveMolarWeight();
+		(new KNSU()).getCombustionProduct().getEffectiveMolarWeight();
 	}
 	
 	@Test
 	public void testIdealDensity(){
-		System.out.println((new KNSU()).idealDensity());
-		System.out.println((new KNSU()).idealDensity().isExact());
+		System.out.println((new KNSU()).getIdealDensity());
+		System.out.println((new KNSU()).getIdealDensity().isExact());
 	}
 }
