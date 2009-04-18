@@ -115,67 +115,42 @@ public class Burn {
 			
 			//TODO Amount<Volume> volumeBurnt = motor.getGrain().volume(prev.regression).minus(motor.getGrain().volume(next.regression));
 			Amount<Volume> volumeBurnt = motor.getGrain().surfaceArea(prev.regression).times(regStep).to(Volume.UNIT);
-			
 			log.info("Volume Burnt: " + volumeBurnt.to(SI.MILLIMETER.pow(3)));
 			
 			Amount<MassFlowRate> mGenRate = volumeBurnt.times(motor.getFuel().getIdealDensity().times(motor.getFuel().getDensityRatio())).divide(dt).to(MassFlowRate.UNIT);
-			
 			log.debug("Mass Gen Rate: " + mGenRate);
 			
+			//Calculate specific gas constant
 			Amount specificGasConstant = Constants.R.divide(motor.getFuel().getCombustionProduct().getEffectiveMolarWeight());
+			//This unit conversion helps JScience to convert nozzle flow rate to
+			//kg/s a little later on I verified the conversion by hand and
+			//JScience checks it too.
+			specificGasConstant = convertSpecificGasConstantUnits(specificGasConstant);
+			
+			//Calculate chamber temperature
 			Amount<Temperature> chamberTemp = motor.getFuel().getCombustionProduct().getIdealCombustionTemperature().times(motor.getFuel().getCombustionEfficiency());
 			
 			Amount<MassFlowRate> mNozzle;
 			{
 				Amount<Pressure> pDiff = prev.chamberPressure.minus(atmosphereicPressure);
-				
-				//pDiff = Amount.valueOf(.7342, MPA).minus(atmosphereicPressure);
-				
 				log.debug("Pdiff: " + pDiff);
-				
 				Amount<Area> aStar = motor.getNozzle().throatArea();
-				
 				double k = motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats();
-				
-				log.debug("K: " + k);
-				
-				double kSide = Math.sqrt(k) * Math.pow((2/(k+1)) , (((k+1)/2)/(k-1))); //Math.pow(2/k+1, (k+1)/(2*(k-1)));
-				
-				log.debug("K-Part: (good)" + kSide);
-				
-				
-				
-				//This unit conversion helps JScience to convert nozzle flow rate to
-				//kg/s a little later on I verified the conversion by hand and
-				//JScience checks it too.
-				specificGasConstant = convertSpecificGasConstantUnits(specificGasConstant);
-				
-				log.debug("Specific Gas Constant: (good)" + specificGasConstant);
-				
+				double kSide = Math.sqrt(k) * Math.pow((2/(k+1)) , (((k+1)/2)/(k-1)));
 				Amount sqrtPart = specificGasConstant.times(chamberTemp).sqrt();
-
-				//Unit x = SI.JOULE.divide(SI.KILOGRAM).root(2);
-				
-				//sqrtPart = sqrtPart.times(Amount.valueOf(1, x));
-				
-				log.debug("Square Root Part: " + sqrtPart);
-				
 				mNozzle = pDiff.times(aStar).times(kSide).divide(sqrtPart).to(MassFlowRate.UNIT);
-				
-				log.debug("Nozzle Flow: " + mNozzle);
-				
-				log.debug("Nozzle Flow: " + mNozzle.to(MassFlowRate.UNIT));
-				
-				
-				
-				
+				log.debug("Mass Exit Rate: " + mNozzle.to(MassFlowRate.UNIT));		
 			}
 			
 			Amount<MassFlowRate> massStorageRate = mGenRate.minus(mNozzle);
 			
-			log.debug("Chamber Product rate: " + massStorageRate);
-			
+			log.debug("Mass Storage Rate: " + massStorageRate);
+
 			next.chamberProduct = prev.chamberProduct.plus(massStorageRate.times(dt));
+			
+			//Product can not go negative!
+			if ( next.chamberProduct.isLessThan(Amount.valueOf(0, SI.KILOGRAM)) )
+				next.chamberProduct = Amount.valueOf(0, SI.KILOGRAM);
 			
 			log.debug("Chamber Product: " + next.chamberProduct);
 			
@@ -191,7 +166,7 @@ public class Burn {
 			
 			next.thrust = motor.getNozzle().thrust(next.chamberPressure, atmosphereicPressure, atmosphereicPressure, motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats2Phase());
 			
-			if ( next.chamberPressure.approximates(atmosphereicPressure)){
+			if ( i > 100 && next.chamberPressure.approximates(atmosphereicPressure)){
 				log.info("Pressure at Patm on step " + i);
 				break;
 			}
