@@ -1,8 +1,6 @@
 package com.billkuker.rocketry.motorsim.io;
 
-import java.beans.XMLDecoder;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;

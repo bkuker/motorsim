@@ -30,11 +30,6 @@ public class Burn {
 	
 	private static final Amount<Pressure> atmosphereicPressure = Amount.valueOf(101000, SI.PASCAL);
 	
-	
-	private static double combustionEfficency = 0.97;
-	
-	private static double densityRatio = 0.96;
-	
 	public class Interval{
 		public Amount<Duration> time;
 		public Amount<Duration> dt;

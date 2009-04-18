@@ -4,7 +4,6 @@ import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.NonSI;
-import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 
 import org.jscience.physics.amount.Amount;

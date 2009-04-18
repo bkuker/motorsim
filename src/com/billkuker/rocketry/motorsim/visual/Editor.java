@@ -70,7 +70,7 @@ public class Editor extends PropertySheetPanel {
 		});
 	}
 
-	public void show() {
+	public void showAsWindow() {
 		JFrame f = new JFrame();
 		f.setTitle(obj.getClass().getName());
 		f.setSize(600, 400);

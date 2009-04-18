@@ -9,7 +9,6 @@ import javax.measure.quantity.Duration;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
-import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import javax.swing.JFrame;
@@ -139,6 +138,7 @@ public class BurnPanel extends JPanel {
 
 	}
 	
+	@SuppressWarnings("unchecked")
 	private String approx(Amount a){
 		Unit u = RocketScience.UnitPreference.preference.getPreferredUnit(a.getUnit());
 		double d = a.doubleValue(u);

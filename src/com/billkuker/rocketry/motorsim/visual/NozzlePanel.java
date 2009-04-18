@@ -70,7 +70,7 @@ public class NozzlePanel extends JPanel {
 		ConvergentDivergentNozzle n = new ConvergentDivergentNozzle();
 		n.setThroatDiameter(Amount.valueOf(5, SI.MILLIMETER));
 		n.setExitDiameter(Amount.valueOf(9, SI.MILLIMETER));
-		new Editor(n).show();
-		new NozzlePanel(n).show();
+		new Editor(n).showAsWindow();
+		new NozzlePanel(n).showAsWindow();
 	}
 }

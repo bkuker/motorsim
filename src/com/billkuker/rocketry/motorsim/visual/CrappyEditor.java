@@ -14,10 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.Border;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -27,14 +24,11 @@ import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.Motor;
-import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
-import com.billkuker.rocketry.motorsim.fuel.EditableFuel;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
-import com.billkuker.rocketry.motorsim.motors.kuker.PVC9;
 
 public class CrappyEditor extends JFrame {
 	JTabbedPane tabs;

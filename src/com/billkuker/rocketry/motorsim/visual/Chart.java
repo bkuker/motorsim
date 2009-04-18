@@ -83,6 +83,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 	Method f;
 
 
+	@SuppressWarnings("unchecked")
 	public Chart(Unit<X> xUnit, Unit<Y> yUnit, Object source, String method)
 			throws NoSuchMethodException {
 		super(new BorderLayout());

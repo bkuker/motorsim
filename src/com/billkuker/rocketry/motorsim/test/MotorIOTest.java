@@ -15,7 +15,6 @@ import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
-import com.billkuker.rocketry.motorsim.motors.kuker.PVC9;
 
 public class MotorIOTest {
 
