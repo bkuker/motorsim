@@ -108,7 +108,8 @@ public class BurnPanel extends JPanel {
 					if ( i.chamberPressure.isGreaterThan(maxPressure))
 						maxPressure = i.chamberPressure;
 				}
-				averageThrust = averageThrust.divide(thrustCount);
+				if ( thrustCount > 0)
+					averageThrust = averageThrust.divide(thrustCount);
 
 				int cn = (int)(Math.log(ns.doubleValue(RocketScience.NEWTON_SECOND)/1.25) / Math.log(2));
 				char cl = (char)((int)'A' + cn);
