@@ -42,7 +42,7 @@ public class RocketScience {
 				NEWTON_SECOND
 		});
 		
-		public static UnitPreference preference = NONSI;
+		public static UnitPreference preference = SI;
 		
 		protected Set<Unit<?>> units = new HashSet<Unit<?>>();
 		
