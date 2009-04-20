@@ -248,7 +248,7 @@ public class RotatedShapeGrain implements Grain {
 
 	public static void main(String args[]) throws Exception {
 		RotatedShapeGrain e = DEFAULT_GRAIN;
-		new Editor(e).show();
+		new Editor(e).showAsWindow();
 		new GrainPanel(e).showAsWindow();
 	}
 	

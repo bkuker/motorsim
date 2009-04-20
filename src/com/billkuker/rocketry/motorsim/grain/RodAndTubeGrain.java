@@ -101,7 +101,7 @@ public class RodAndTubeGrain extends CompoundGrain {
 
 	public static void main(String args[]) throws Exception {
 		Grain g = DEFAULT_GRAIN;
-		new Editor(g).show();
+		new Editor(g).showAsWindow();
 		new GrainPanel(g).showAsWindow();
 	}
 }

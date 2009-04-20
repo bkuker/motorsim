@@ -261,7 +261,7 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 
 	public static void main(String args[]) throws Exception {
 		CoredCylindricalGrain e = DEFAULT_GRAIN;
-		new Editor(e).show();
+		new Editor(e).showAsWindow();
 		new GrainPanel(e).showAsWindow();
 	}
 

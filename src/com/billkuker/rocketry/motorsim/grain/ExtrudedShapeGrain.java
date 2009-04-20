@@ -165,7 +165,7 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 	
 	public static void main(String args[]) throws Exception {
 		ExtrudedShapeGrain e = DEFAULT_GRAIN;
-		new Editor(e).show();
+		new Editor(e).showAsWindow();
 		new GrainPanel(e).showAsWindow();
 	}
 
