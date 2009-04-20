@@ -28,53 +28,44 @@ import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
+import com.billkuker.rocketry.motorsim.grain.RotatedShapeGrain;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 
 public class CrappyEditor extends JFrame {
-	JTabbedPane tabs;
-	JPanel editor;
-	//JTextArea text = new JTextArea();
-	RSyntaxTextArea text;
-	public CrappyEditor(){
+	JTabbedPane tabs = new JTabbedPane();
+
+	public CrappyEditor() {
+		setTitle("MotorSim v0.2");
+		setSize(1024, 768);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setContentPane(tabs);
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 
-		tabs = new JTabbedPane();
-		editor = new JPanel();
-		text = new RSyntaxTextArea();
-		
-		setTitle("MotorSim v0.1");
-		setSize(1024, 768);
-		
-		setContentPane(tabs);
-		
-		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
-		
-		try {
-			text.setText(MotorIO.writeMotor(defaultMotor()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		editor.setLayout(new BorderLayout());
-		editor.add(text, BorderLayout.CENTER);
-		JPanel buttons = new JPanel(new FlowLayout());
-		
-		buttons.add(new JButton("Burn!"){
-			{
-				addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent arg0) {
-						burn();
-					}
-				});
-			}
-		});
-		
-		{
+		tabs.addTab("Edit", new Editor(defaultMotor()));
+
+	}
+
+	private class Editor extends JPanel {
+		RSyntaxTextArea text = new RSyntaxTextArea();
+
+		Editor(Motor m) {
+			setLayout(new BorderLayout());
+			add(text, BorderLayout.CENTER);
+			JPanel buttons = new JPanel(new FlowLayout());
+			buttons.add(new JButton("Burn!") {
+				{
+					addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							burn();
+						}
+					});
+				}
+			});
 			JRadioButton s, n;
 			buttons.add(s = new JRadioButton("SI"));
 			buttons.add(n = new JRadioButton("NonSI"));
@@ -82,26 +73,39 @@ public class CrappyEditor extends JFrame {
 			g.add(s);
 			g.add(n);
 			s.setSelected(true);
-			s.addActionListener(new ActionListener(){
+			s.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					UnitPreference.preference = UnitPreference.SI;	
+					UnitPreference.preference = UnitPreference.SI;
 				}
 			});
-			n.addActionListener(new ActionListener(){
+			n.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					UnitPreference.preference = UnitPreference.NONSI;	
+					UnitPreference.preference = UnitPreference.NONSI;
 				}
 			});
+			add(buttons, BorderLayout.SOUTH);
+			text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
+
+			try {
+				text.setText(MotorIO.writeMotor(m));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 		}
-		
-		editor.add(buttons, BorderLayout.SOUTH);
-		
-		tabs.addTab("Edit", editor);
-		
-		
+
+		private void burn() {
+			try {
+				Motor m = MotorIO.readMotor(text.getText());
+				Burn b = new Burn(m);
+				tabs.addTab(m.getName() + " Output", new BurnPanel(b));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-	
-	private Motor defaultMotor(){
+
+	private Motor defaultMotor() {
 		Motor m = new Motor();
 		m.setName("PVC9");
 		m.setFuel(new KNSU());
@@ -127,21 +131,11 @@ public class CrappyEditor extends JFrame {
 		n.setExitDiameter(Amount.valueOf(13.79, SI.MILLIMETER));
 		n.setEfficiency(.85);
 		m.setNozzle(n);
-		
+
 		return m;
 	}
-	
-	private void burn(){
-		try {
-			Motor m = MotorIO.readMotor(text.getText());
-			Burn b = new Burn(m);
-			tabs.addTab(m.getName() + " Output", new BurnPanel(b));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void main(String args[]){
+
+	public static void main(String args[]) {
 		new CrappyEditor().show();
 	}
 }
