@@ -124,7 +124,7 @@ public class RotatedShapeGrain implements Grain {
 		if (web != null)
 			return web;
 
-		java.awt.geom.Area a = getCrossSection(Amount.valueOf(0, SI.MILLIMETER));
+		java.awt.geom.Area a = shape.getShape(Amount.valueOf(0, SI.MILLIMETER));
 		Rectangle r = a.getBounds();
 		double max = r.getWidth() < r.getHeight() ? r.getHeight() : r
 				.getWidth(); // The max size
@@ -133,7 +133,7 @@ public class RotatedShapeGrain implements Grain {
 		while (true) {
 			guess = min + (max - min) / 2; // Guess halfway through
 			log.debug("Min: " + min + " Guess: " + guess + " Max: " + max);
-			a = getCrossSection(Amount.valueOf(guess, SI.MILLIMETER));
+			a = shape.getShape(Amount.valueOf(guess, SI.MILLIMETER));
 			if (a.isEmpty()) {
 				// guess is too big
 				max = guess;
