@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Iterator;
 
 import javax.measure.quantity.Area;
@@ -124,17 +125,22 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 
 	@SuppressWarnings("unchecked")
 	public void setDomain(Iterable<Amount<X>> d) {
-
-		//double low = d.low.doubleValue(xUnit);
-		//double high = d.high.doubleValue(xUnit);
-		//double step = (high - low) / 50;
-		//for (double x = low; x < high; x += step) {
-			//Amount<X> ax = Amount.valueOf(x, xUnit);
+		int skip = 1;
+		int sz = 0;
+		if ( d instanceof Collection ){
+			sz = ((Collection)d).size();
+			if ( sz > 200 )
+				skip = sz / 200;
+		}
 		series.clear();
+		int cnt = 0;
 		for( Amount<X> ax: d){
 			try {
-				Amount<Y> y = (Amount<Y>)f.invoke(source, ax);
-				add(ax, y);
+				if ( cnt % skip == 0 || cnt == sz-1 ){
+					Amount<Y> y = (Amount<Y>)f.invoke(source, ax);
+					add(ax, y);
+				}
+				cnt++;
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
