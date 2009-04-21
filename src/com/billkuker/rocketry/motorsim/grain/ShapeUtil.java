@@ -1,4 +1,5 @@
 package com.billkuker.rocketry.motorsim.grain;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
@@ -22,7 +23,7 @@ public class ShapeUtil {
 	 * According to http://www.geog.ubc.ca/courses/klink/gis.notes/ncgia/u33.html
 	 * this algorithm works OK with holes, and it seems to (see test)
 	 */
-	public static Amount<Area> area(java.awt.geom.Area a) {
+	public static Amount<Area> area(Shape a) {
 		//if ( !a.isSingular() )
 			//throw new IllegalArgumentException("Can not calculate area of non-singular shape!");
 		PathIterator i = a.getPathIterator(new AffineTransform(), .001);

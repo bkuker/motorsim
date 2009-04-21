@@ -104,16 +104,16 @@ public class Burn {
 			
 			next.time = prev.time.plus(dt);
 			
-			log.debug("Vold: " + motor.getGrain().volume(prev.regression).to(SI.MILLIMETER.pow(3)));
+			//log.debug("Vold: " + motor.getGrain().volume(prev.regression).to(SI.MILLIMETER.pow(3)));
 			
-			log.debug("Vnew: " + motor.getGrain().volume(next.regression).to(SI.MILLIMETER.pow(3)));
+			//log.debug("Vnew: " + motor.getGrain().volume(next.regression).to(SI.MILLIMETER.pow(3)));
 			
 			//TODO Amount<Volume> volumeBurnt = motor.getGrain().volume(prev.regression).minus(motor.getGrain().volume(next.regression));
 			Amount<Volume> volumeBurnt = motor.getGrain().surfaceArea(prev.regression).times(regStep).to(Volume.UNIT);
-			log.info("Volume Burnt: " + volumeBurnt.to(SI.MILLIMETER.pow(3)));
+			//log.info("Volume Burnt: " + volumeBurnt.to(SI.MILLIMETER.pow(3)));
 			
 			Amount<MassFlowRate> mGenRate = volumeBurnt.times(motor.getFuel().getIdealDensity().times(motor.getFuel().getDensityRatio())).divide(dt).to(MassFlowRate.UNIT);
-			log.debug("Mass Gen Rate: " + mGenRate);
+			//log.debug("Mass Gen Rate: " + mGenRate);
 			
 			//Calculate specific gas constant
 			Amount specificGasConstant = Constants.R.divide(motor.getFuel().getCombustionProduct().getEffectiveMolarWeight());
@@ -128,18 +128,18 @@ public class Burn {
 			Amount<MassFlowRate> mNozzle;
 			{
 				Amount<Pressure> pDiff = prev.chamberPressure.minus(atmosphereicPressure);
-				log.debug("Pdiff: " + pDiff);
+				//log.debug("Pdiff: " + pDiff);
 				Amount<Area> aStar = motor.getNozzle().throatArea();
 				double k = motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats();
 				double kSide = Math.sqrt(k) * Math.pow((2/(k+1)) , (((k+1)/2)/(k-1)));
 				Amount sqrtPart = specificGasConstant.times(chamberTemp).sqrt();
 				mNozzle = pDiff.times(aStar).times(kSide).divide(sqrtPart).to(MassFlowRate.UNIT);
-				log.debug("Mass Exit Rate: " + mNozzle.to(MassFlowRate.UNIT));		
+				//log.debug("Mass Exit Rate: " + mNozzle.to(MassFlowRate.UNIT));		
 			}
 			
 			Amount<MassFlowRate> massStorageRate = mGenRate.minus(mNozzle);
 			
-			log.debug("Mass Storage Rate: " + massStorageRate);
+			//log.debug("Mass Storage Rate: " + massStorageRate);
 
 			next.chamberProduct = prev.chamberProduct.plus(massStorageRate.times(dt));
 			
@@ -147,7 +147,7 @@ public class Burn {
 			if ( next.chamberProduct.isLessThan(Amount.valueOf(0, SI.KILOGRAM)) )
 				next.chamberProduct = Amount.valueOf(0, SI.KILOGRAM);
 			
-			log.debug("Chamber Product: " + next.chamberProduct);
+			//log.debug("Chamber Product: " + next.chamberProduct);
 			
 			Amount<VolumetricDensity> combustionProductDensity = next.chamberProduct.divide(motor.getChamber().chamberVolume().minus(motor.getGrain().volume(next.regression))).to(VolumetricDensity.UNIT);
 			

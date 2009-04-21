@@ -30,8 +30,8 @@ public class RotatedShapeGrain implements Grain {
 				Shape outside = new Rectangle2D.Double(0,0,15,70);
 				shape.add( outside );
 				shape.inhibit( outside );
-				shape.subtract( new Rectangle2D.Double(0,0,5,70));
-				shape.subtract(new Rectangle2D.Double(0, -10, 15, 10));
+				shape.subtract( new Rectangle2D.Double(0,50,5,70));
+				//shape.subtract(new Rectangle2D.Double(0, -10, 15, 10));
 				shape.subtract(new Rectangle2D.Double(0, 70, 15, 10));
 			} catch ( Exception e ){
 				throw new Error(e);
@@ -111,11 +111,12 @@ public class RotatedShapeGrain implements Grain {
 	}
 
 	public Amount<Volume> volume(Amount<Length> regression) {
-		Area squared = new Area(square(shape.getShape(regression)));
+		Shape squared = square(shape.getShape(regression));
 		Amount<javax.measure.quantity.Area> sum = Amount.valueOf(0, SI.SQUARE_METRE);
-		for( Area a: ShapeUtil.separate(squared) ){
-			sum = sum.plus( ShapeUtil.area(a) );
-		}
+		//for( Area a: ShapeUtil.separate(squared) ){
+		//	sum = sum.plus( ShapeUtil.area(a) );
+		//}
+		sum = ShapeUtil.area(squared);
 		Amount<Volume> v = sum.times(Amount.valueOf(Math.PI, SI.MILLIMETER)).to(Volume.UNIT);
 		return v;
 	}
@@ -150,7 +151,7 @@ public class RotatedShapeGrain implements Grain {
 
 	}
 
-	private Shape square(java.awt.geom.Area a) {
+	private Shape square(Shape a) {
 		PathIterator i = a.getPathIterator(new AffineTransform(), quality.squareFlatteningError);
 		GeneralPath cur = new GeneralPath();
 
@@ -191,7 +192,7 @@ public class RotatedShapeGrain implements Grain {
 		return cur;
 	}
 	
-	private double yRotatedSurfaceArea(java.awt.geom.Area a) {
+	private double yRotatedSurfaceArea(Shape a) {
 		PathIterator i = a.getPathIterator(new AffineTransform(), quality.areaFlatteningError);
 		double x = 0, y = 0;
 		double mx = 0, my = 0;

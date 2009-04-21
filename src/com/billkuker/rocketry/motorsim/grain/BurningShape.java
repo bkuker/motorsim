@@ -1,6 +1,7 @@
 package com.billkuker.rocketry.motorsim.grain;
 
 import java.awt.Shape;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
@@ -28,27 +29,28 @@ public class BurningShape {
 		inhibited.add(s);
 	}
 
+	/*
+	 * 9 times out of 10 we get asked for the same thing
+	 * 2x in a row, for volume and for area
+	 */
+	private Amount<Length> lastRegression = null;
+	private Area lastArea = null;
+	
 	public java.awt.geom.Area getShape(Amount<Length> regression) {
-		java.awt.geom.Area res = getPlus(regression);
-		res.subtract(getMinus(regression));
-		return res;
-	}
-	
-	
-	private java.awt.geom.Area getPlus(Amount<Length> regression) {
+		if ( regression.equals(lastRegression) ){
+			return lastArea;
+		}
+		lastRegression = regression;
+
 		java.awt.geom.Area a = new java.awt.geom.Area();
 		for (Shape s : plus)
 			a.add(new java.awt.geom.Area(regress(s, regression
 					.doubleValue(SI.MILLIMETER), true)));
-		return a;
-	}
-	
-	private java.awt.geom.Area getMinus(Amount<Length> regression) {
-		java.awt.geom.Area a = new java.awt.geom.Area();
 		for (Shape s : minus)
-			a.add(new java.awt.geom.Area(regress(s, regression
+			a.subtract(new java.awt.geom.Area(regress(s, regression
 					.doubleValue(SI.MILLIMETER), false)));
-		return a;
+		
+		return lastArea = a;
 	}
 	
 	private Shape regress(Shape s, double mm, boolean plus) {
