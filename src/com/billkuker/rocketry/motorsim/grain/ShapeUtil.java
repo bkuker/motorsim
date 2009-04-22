@@ -75,7 +75,7 @@ public class ShapeUtil {
 		return Amount.valueOf(area, SI.MILLIMETER.pow(2)).to(Area.UNIT);
 	}
 
-	public static Amount<Length> perimeter(java.awt.geom.Area a) {
+	public static Amount<Length> perimeter(Shape a) {
 		//TODO: I think I need to handle seg_close!!
 		PathIterator i = a.getPathIterator(new AffineTransform(), .001);
 		double x = 0, y = 0;
