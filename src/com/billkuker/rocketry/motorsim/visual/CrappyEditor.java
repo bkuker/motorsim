@@ -28,24 +28,26 @@ import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
-import com.billkuker.rocketry.motorsim.grain.RotatedShapeGrain;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
+import com.billkuker.rocketry.motorsim.motors.example.CSlot;
+import com.billkuker.rocketry.motorsim.motors.example.EndBurner;
 
 public class CrappyEditor extends JFrame {
-	JTabbedPane tabs = new JTabbedPane();
+	JTabbedPane tabs;
 
 	public CrappyEditor() {
 		setTitle("MotorSim v0.2");
 		setSize(1024, 768);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setContentPane(tabs);
+
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-
+		tabs = new JTabbedPane();
+		setContentPane(tabs);
 		tabs.addTab("Edit", new Editor(defaultMotor()));
 
 	}
@@ -57,6 +59,7 @@ public class CrappyEditor extends JFrame {
 			setLayout(new BorderLayout());
 			add(text, BorderLayout.CENTER);
 			JPanel buttons = new JPanel(new FlowLayout());
+
 			buttons.add(new JButton("Burn!") {
 				{
 					addActionListener(new ActionListener() {
@@ -66,6 +69,8 @@ public class CrappyEditor extends JFrame {
 					});
 				}
 			});
+
+
 			JRadioButton s, n;
 			buttons.add(s = new JRadioButton("SI"));
 			buttons.add(n = new JRadioButton("NonSI"));
@@ -83,6 +88,27 @@ public class CrappyEditor extends JFrame {
 					UnitPreference.preference = UnitPreference.NONSI;
 				}
 			});
+			
+			buttons.add(new JButton("End Burner Example") {
+				{
+					addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+								tabs.addTab(getText(), new BurnPanel(new Burn(new EndBurner())));
+						}
+					});
+				}
+			});
+			
+			buttons.add(new JButton("C-Slot Example") {
+				{
+					addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+								tabs.addTab(getText(), new BurnPanel(new Burn(new CSlot())));
+						}
+					});
+				}
+			});
+			
 			add(buttons, BorderLayout.SOUTH);
 			text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
 
@@ -134,6 +160,7 @@ public class CrappyEditor extends JFrame {
 
 		return m;
 	}
+	
 
 	public static void main(String args[]) {
 		new CrappyEditor().show();
