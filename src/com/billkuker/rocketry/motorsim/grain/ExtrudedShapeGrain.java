@@ -13,12 +13,14 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
 import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.MotorPart;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
-public class ExtrudedShapeGrain extends MotorPart implements Grain {
+public class ExtrudedShapeGrain extends ExtrudedGrain {
 	
 	public static ExtrudedShapeGrain DEFAULT_GRAIN = new ExtrudedShapeGrain(){
 		{
@@ -28,7 +30,8 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 				xsection.inhibit(outside);
 				xsection.subtract(new Ellipse2D.Double(10,10, 10, 10));
 				setLength(Amount.valueOf(70, SI.MILLIMETER));
-				setEndSurfaceInhibited(false);
+				setForeEndInhibited(false);
+				setAftEndInhibited(false);
 			} catch ( Exception e ){
 				throw new Error(e);
 			}
@@ -36,11 +39,7 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 	};
 
 	protected BurningShape xsection = new BurningShape();
-
-	Amount<Length> length = Amount.valueOf(25, SI.MILLIMETER);
 	
-	boolean endSurfaceInhibited = false;
-
 	Amount<Length> rStep;
 
 	Amount<Length> webThickness;
@@ -51,9 +50,7 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 		if (regression.isGreaterThan(webThickness()))
 			return zero;
 		
-		Amount<Length> rLen = length;
-		if ( !endSurfaceInhibited ) //Regress length if uninhibited
-			rLen = length.minus(regression.times(2));
+		Amount<Length> rLen = regressedLength(regression);
 		
 		if (rLen.isLessThan(Amount.valueOf(0, SI.MILLIMETER)))
 			return zero;
@@ -67,17 +64,18 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 				SI.MILLIMETER))));
 	
 		Amount<Area> xSection = ShapeUtil.area(xsection.getShape(regression));
+		
+		Amount<Area> sides = ShapeUtil.perimeter(burn).divide(2).times(rLen).to(Area.UNIT);
+		Amount<Area> ends = xSection.times(numberOfBurningEnds(regression));
+		
+		return sides.plus(ends);
 
-		return ShapeUtil.perimeter(burn).divide(2).times(rLen).plus(
-				xSection.times(2)).to(Area.UNIT);
 	}
 
 	public Amount<Volume> volume(Amount<Length> regression) {
 		Amount<Volume> zero = Amount.valueOf(0, Volume.UNIT);
 		
-		Amount<Length> rLen = length;
-		if ( !endSurfaceInhibited ) //Regress length if uninhibited
-			rLen = length.minus(regression.times(2));
+		Amount<Length> rLen = regressedLength(regression);
 		
 		if (rLen.isLessThan(Amount.valueOf(0, SI.MILLIMETER)))
 			return zero;
@@ -114,8 +112,11 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 				break;
 		}
 		webThickness = Amount.valueOf(guess, SI.MILLIMETER);
-		if (webThickness.isGreaterThan(length.divide(2)))
-			webThickness = length.divide(2);
+		
+		//TODO Need to check # of burning ends!
+		if (webThickness.isGreaterThan(getLength().divide(2)))
+			webThickness = getLength().divide(2);
+		
 		return webThickness;
 	}
 
@@ -126,12 +127,11 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 	public java.awt.geom.Area getSideView(Amount<Length> regression) {
 		java.awt.geom.Area res = new java.awt.geom.Area();
 		
-		Amount<Length> rLen = length;
-		if ( !endSurfaceInhibited ) //Regress length if uninhibited
-			rLen = length.minus(regression.times(2));
+		Amount<Length> rLen = regressedLength(regression);
 		
 		double rLenmm = rLen.doubleValue(SI.MILLIMETER);
 		
+		//TODO Shift up or down based on burning ends
 		for( java.awt.geom.Area a : ShapeUtil.separate(getCrossSection(regression))){
 			Rectangle2D bounds = a.getBounds2D();
 			Rectangle2D side = new Rectangle2D.Double(bounds.getMinX(), -rLenmm/2.0, bounds.getWidth(), rLenmm);
@@ -139,29 +139,6 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 		}
 		return res;
 	}
-
-	public Amount<Length> getLength() {
-		return length;
-	}
-
-	public void setLength(Amount<Length> length) throws PropertyVetoException {
-		fireVetoableChange("length", this.length, length);
-		Amount<Length> old = this.length;
-		this.length = length;
-		firePropertyChange("length", old, length);
-	}
-
-	public boolean isEndSurfaceInhibited() {
-		return endSurfaceInhibited;
-	}
-
-	public void setEndSurfaceInhibited(boolean endSurfaceInhibited) throws PropertyVetoException {
-		fireVetoableChange("endSurfaceInhibited", this.endSurfaceInhibited, endSurfaceInhibited);
-		boolean old = this.endSurfaceInhibited;
-		this.endSurfaceInhibited = endSurfaceInhibited;
-		firePropertyChange("endSurfaceInhibited", old, endSurfaceInhibited);
-	}
-
 	
 	public static void main(String args[]) throws Exception {
 		ExtrudedShapeGrain e = DEFAULT_GRAIN;
