@@ -4,6 +4,7 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -82,26 +83,15 @@ public class BurningShape {
 				java.awt.geom.Area a = new java.awt.geom.Area();
 				double d = 2 * mm;
 				
-				//Make it wider
-				double w = r.getWidth() + d;
-				double h = r.getHeight();
-				double x = r.getX() - d / 2;
-				double y = r.getY();
-				a.add( new java.awt.geom.Area(new Rectangle2D.Double(x, y, w, h)));
-				
-				//Make it taller
-				w = r.getWidth();
-				h = r.getHeight() + d;
-				x = r.getX();
-				y = r.getY() - d / 2;
-				a.add( new java.awt.geom.Area(new Rectangle2D.Double(x, y, w, h)));
-				
-				//Add rounded corners
-				a.add( new java.awt.geom.Area(new Ellipse2D.Double(r.getX()-mm, r.getY()-mm, mm*2, mm*2)));
-				a.add( new java.awt.geom.Area(new Ellipse2D.Double(r.getX()+r.getWidth()-mm, r.getY()-mm, mm*2, mm*2)));
-				a.add( new java.awt.geom.Area(new Ellipse2D.Double(r.getX()+r.getWidth()-mm, r.getY()+r.getHeight()-mm, mm*2, mm*2)));
-				a.add( new java.awt.geom.Area(new Ellipse2D.Double(r.getX()-mm, r.getY()+r.getHeight()-mm, mm*2, mm*2)));
-				
+				a.add(new Area(new RoundRectangle2D.Double(
+						r.getX() - d / 2,
+						r.getY() - d / 2,
+						r.getWidth() + d,
+						r.getHeight() + d,
+						d,
+						d
+						)));
+
 				return a;
 			}
 
