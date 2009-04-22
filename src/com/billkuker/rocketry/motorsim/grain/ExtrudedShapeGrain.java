@@ -35,7 +35,7 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 		}
 	};
 
-	BurningShape xsection = new BurningShape();
+	protected BurningShape xsection = new BurningShape();
 
 	Amount<Length> length = Amount.valueOf(25, SI.MILLIMETER);
 	
@@ -48,7 +48,7 @@ public class ExtrudedShapeGrain extends MotorPart implements Grain {
 	public Amount<Area> surfaceArea(Amount<Length> regression) {
 		Amount<Area> zero = Amount.valueOf(0, Area.UNIT);
 		
-		if (regression.isGreaterThan(webThickness))
+		if (regression.isGreaterThan(webThickness()))
 			return zero;
 		
 		Amount<Length> rLen = length;

@@ -30,14 +30,16 @@ public class RotatedShapeGrain implements Grain {
 				Shape outside = new Rectangle2D.Double(0,0,15,70);
 				shape.add( outside );
 				shape.inhibit( outside );
-				shape.subtract( new Rectangle2D.Double(0,50,5,70));
-				//shape.subtract(new Rectangle2D.Double(0, -10, 15, 10));
+				shape.subtract( new Rectangle2D.Double(0,0,5,70));
+				shape.subtract(new Rectangle2D.Double(0, -10, 15, 10));
 				shape.subtract(new Rectangle2D.Double(0, 70, 15, 10));
 			} catch ( Exception e ){
 				throw new Error(e);
 			}
 		}
 	};
+	
+
 	
 	public enum Quality {
 		High()
@@ -62,7 +64,7 @@ public class RotatedShapeGrain implements Grain {
 	
 	Quality quality = Quality.Low;
 	
-	BurningShape shape = new BurningShape();
+	protected BurningShape shape = new BurningShape();
 	
 	Amount<Length> web = null;
 	
