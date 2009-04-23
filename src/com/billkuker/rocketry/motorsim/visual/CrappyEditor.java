@@ -40,7 +40,6 @@ public class CrappyEditor extends JFrame {
 		setSize(1024, 768);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e1) {
@@ -133,7 +132,7 @@ public class CrappyEditor extends JFrame {
 
 	private Motor defaultMotor() {
 		Motor m = new Motor();
-		m.setName("PVC9");
+		m.setName("Example Motor");
 		m.setFuel(new KNSU());
 
 		CylindricalChamber c = new CylindricalChamber();

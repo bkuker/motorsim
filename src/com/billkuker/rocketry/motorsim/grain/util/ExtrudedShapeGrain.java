@@ -97,8 +97,8 @@ public abstract class ExtrudedShapeGrain extends ExtrudedGrain {
 		double guess;
 		while (true) {
 			guess = min + (max - min) / 2; // Guess halfway through
-			System.out.println("Min: " + min + " Guess: " + guess + " Max: "
-					+ max);
+			//System.out.println("Min: " + min + " Guess: " + guess + " Max: "
+					//+ max);
 			a = getCrossSection(Amount.valueOf(guess, SI.MILLIMETER));
 			if (a.isEmpty()) {
 				// guess is too big
