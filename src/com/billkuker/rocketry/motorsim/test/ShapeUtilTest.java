@@ -7,7 +7,7 @@ import java.awt.geom.Rectangle2D;
 import org.jscience.physics.amount.Amount;
 import org.junit.Test;
 
-import com.billkuker.rocketry.motorsim.grain.ShapeUtil;
+import com.billkuker.rocketry.motorsim.grain.util.ShapeUtil;
 
 
 public class ShapeUtilTest extends RocketTest{

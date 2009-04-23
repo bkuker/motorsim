@@ -13,7 +13,7 @@ import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
-import com.billkuker.rocketry.motorsim.grain.ExtrudedShapeGrain;
+import com.billkuker.rocketry.motorsim.grain.util.ExtrudedShapeGrain;
 
 public class CSlot extends Motor {
 	public CSlot() {

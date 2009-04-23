@@ -11,7 +11,7 @@ import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
-import com.billkuker.rocketry.motorsim.grain.RotatedShapeGrain;
+import com.billkuker.rocketry.motorsim.grain.util.RotatedShapeGrain;
 
 public class EndBurner extends Motor {
 	public EndBurner() {

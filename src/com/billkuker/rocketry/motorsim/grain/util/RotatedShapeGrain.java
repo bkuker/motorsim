@@ -1,4 +1,4 @@
-package com.billkuker.rocketry.motorsim.grain;
+package com.billkuker.rocketry.motorsim.grain.util;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -20,7 +20,7 @@ import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
-public class RotatedShapeGrain implements Grain {
+public abstract class RotatedShapeGrain implements Grain {
 	
 	private static Logger log = Logger.getLogger(RotatedShapeGrain.class);
 	

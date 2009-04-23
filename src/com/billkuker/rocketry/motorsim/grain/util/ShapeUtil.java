@@ -1,4 +1,4 @@
-package com.billkuker.rocketry.motorsim.grain;
+package com.billkuker.rocketry.motorsim.grain.util;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;

@@ -1,4 +1,4 @@
-package com.billkuker.rocketry.motorsim.grain;
+package com.billkuker.rocketry.motorsim.grain.util;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -17,10 +17,11 @@ import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.MotorPart;
+import com.billkuker.rocketry.motorsim.grain.ExtrudedGrain;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
-public class ExtrudedShapeGrain extends ExtrudedGrain {
+public abstract class ExtrudedShapeGrain extends ExtrudedGrain {
 	
 	public static ExtrudedShapeGrain DEFAULT_GRAIN = new ExtrudedShapeGrain(){
 		{
@@ -39,10 +40,8 @@ public class ExtrudedShapeGrain extends ExtrudedGrain {
 	};
 
 	protected BurningShape xsection = new BurningShape();
-	
-	Amount<Length> rStep;
 
-	Amount<Length> webThickness;
+	protected Amount<Length> webThickness;
 
 	public Amount<Area> surfaceArea(Amount<Length> regression) {
 		Amount<Area> zero = Amount.valueOf(0, Area.UNIT);
