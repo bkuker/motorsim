@@ -36,7 +36,7 @@ public class CrappyEditor extends JFrame {
 	JTabbedPane tabs;
 
 	public CrappyEditor() {
-		setTitle("MotorSim v0.2");
+		setTitle("MotorSim v0.3");
 		setSize(1024, 768);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -150,6 +150,7 @@ public class CrappyEditor extends JFrame {
 		}
 
 		m.setGrain(new MultiGrain(g, 2));
+
 
 		ConvergentDivergentNozzle n = new ConvergentDivergentNozzle();
 		n.setThroatDiameter(Amount.valueOf(7.962, SI.MILLIMETER));
