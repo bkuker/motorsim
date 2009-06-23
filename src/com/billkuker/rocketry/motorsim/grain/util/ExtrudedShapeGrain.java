@@ -4,7 +4,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyVetoException;
 
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
@@ -13,10 +12,6 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
-
-import com.billkuker.rocketry.motorsim.Grain;
-import com.billkuker.rocketry.motorsim.MotorPart;
 import com.billkuker.rocketry.motorsim.grain.ExtrudedGrain;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
