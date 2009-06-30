@@ -61,4 +61,7 @@ public abstract class SaintRobertFuel implements Fuel {
 
 	public abstract Amount<VolumetricDensity> getIdealDensity();
 
+	public String getName(){
+		return this.getClass().getSimpleName();
+	}
 }

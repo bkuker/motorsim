@@ -10,6 +10,8 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.RocketScience.MolarWeight;
 
 public interface Fuel {
+	
+	public String getName();
 
 	public Amount<VolumetricDensity> getIdealDensity();
 
