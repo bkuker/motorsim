@@ -10,6 +10,7 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.RocketScience.MolarWeight;
 
+//TODO Implement MotorPart
 public class EditableFuel extends SaintRobertFuel {
 	private String name;
 	private double a = 0.0665;
