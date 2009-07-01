@@ -35,6 +35,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 	
 	private static ExecutorService fast = Executors.newFixedThreadPool(2) ;
 	private static ExecutorService slow = Executors.newFixedThreadPool(2);
+	private boolean stop = false;
 
 	public class IntervalDomain implements Iterable<Amount<X>>{
 		
@@ -131,13 +132,16 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 
 	public void setDomain(final Iterable<Amount<X>> d) {
 		series.clear();
+		stop = true;
 		fill(d, 100);
 		fast.submit(new Thread(){
 			public void run(){
-				fill(d, 10);
+				if ( !stop )
+					fill(d, 10);
 				slow.submit(new Thread(){
 					public void run(){
-						fill(d, 1);
+						if ( !stop )
+							fill(d, 1);
 					}
 				});
 			}
@@ -145,7 +149,8 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void fill(Iterable<Amount<X>> d, int skip) {
+	private synchronized void fill(Iterable<Amount<X>> d, int skip) {
+		stop = false;
 		int sz = 0;
 		if (d instanceof Collection) {
 			sz = ((Collection) d).size();
@@ -159,6 +164,10 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 		try {
 			Amount<X> last = null;
 			for (Amount<X> ax : d) {
+				if ( stop ){
+					System.out.println("Stopping early " + skip);
+					return;
+				}
 				last = ax;
 				if (cnt % skip == 0) {
 					Amount<Y> y = (Amount<Y>) f.invoke(source, ax);
