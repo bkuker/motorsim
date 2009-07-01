@@ -135,11 +135,11 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 		fast.submit(new Thread(){
 			public void run(){
 				fill(d, 10);
-			}
-		});
-		slow.submit(new Thread(){
-			public void run(){
-				fill(d, 1);
+				slow.submit(new Thread(){
+					public void run(){
+						fill(d, 1);
+					}
+				});
 			}
 		});
 	}
