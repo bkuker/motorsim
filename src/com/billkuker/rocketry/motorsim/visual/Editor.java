@@ -28,9 +28,7 @@ public class Editor extends PropertySheetPanel {
 
 	private Object obj;
 
-	public Editor(Object o) throws IntrospectionException,
-			IllegalArgumentException, IllegalAccessException,
-			InvocationTargetException {
+	public Editor(Object o) {
 		obj = o;
 
 		PropertyEditorManager.registerEditor(Amount.class,
@@ -38,8 +36,13 @@ public class Editor extends PropertySheetPanel {
 
 		// Build the list of properties we want it to edit
 		//final PropertySheetPanel ps = new PropertySheetPanel();
-		PropertyDescriptor props[] = Introspector.getBeanInfo(obj.getClass())
-				.getPropertyDescriptors();
+		PropertyDescriptor props[];
+		try {
+			props = Introspector.getBeanInfo(obj.getClass())
+					.getPropertyDescriptors();
+		} catch (IntrospectionException e) {
+			throw new Error(e);
+		}
 		Vector<PropertyDescriptor> v = new Vector<PropertyDescriptor>();
 		for (int i = 0; i < props.length; i++) {
 			if (props[i].getName().equals("class"))
