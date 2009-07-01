@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
@@ -30,6 +32,9 @@ import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 
 public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 	private static final long serialVersionUID = 1L;
+	
+	private static ExecutorService fast = Executors.newFixedThreadPool(2) ;
+	private static ExecutorService slow = Executors.newFixedThreadPool(2);
 
 	public class IntervalDomain implements Iterable<Amount<X>>{
 		
@@ -123,34 +128,55 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public void setDomain(Iterable<Amount<X>> d) {
-		int skip = 1;
-		int sz = 0;
-		if ( d instanceof Collection ){
-			sz = ((Collection)d).size();
-			if ( sz > 200 )
-				skip = sz / 200;
-		}
+
+	public void setDomain(final Iterable<Amount<X>> d) {
 		series.clear();
+		fill(d, 100);
+		fast.submit(new Thread(){
+			public void run(){
+				fill(d, 10);
+			}
+		});
+		slow.submit(new Thread(){
+			public void run(){
+				fill(d, 1);
+			}
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void fill(Iterable<Amount<X>> d, int skip) {
+		int sz = 0;
+		if (d instanceof Collection) {
+			sz = ((Collection) d).size();
+			int sk2 = sz / 200;
+			if (skip < sk2)
+				skip = sk2;
+		}
+		// series.clear();
 		int cnt = 0;
-		for( Amount<X> ax: d){
-			try {
-				if ( cnt % skip == 0 || cnt == sz-1 ){
-					Amount<Y> y = (Amount<Y>)f.invoke(source, ax);
+
+		try {
+			Amount<X> last = null;
+			for (Amount<X> ax : d) {
+				last = ax;
+				if (cnt % skip == 0) {
+					Amount<Y> y = (Amount<Y>) f.invoke(source, ax);
 					add(ax, y);
 				}
 				cnt++;
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
+			Amount<Y> y = (Amount<Y>) f.invoke(source, last);
+			add(last, y);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
