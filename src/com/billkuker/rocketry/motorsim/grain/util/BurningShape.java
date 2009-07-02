@@ -170,10 +170,11 @@ public class BurningShape {
 	private Area lastArea = null;
 	
 	public java.awt.geom.Area getShape(Amount<Length> regression) {
-		if ( regression.equals(lastRegression) ){
-			return lastArea;
+		synchronized(this){
+			if ( regression.equals(lastRegression) ){
+				return lastArea;
+			}
 		}
-		lastRegression = regression;
 
 		java.awt.geom.Area a = new java.awt.geom.Area();
 		for (ShapeAndTrans st : plus){
@@ -195,7 +196,11 @@ public class BurningShape {
 			a.subtract(new java.awt.geom.Area(s));
 		}
 		
-		return lastArea = a;
+		synchronized(this){
+			lastRegression = regression;
+			lastArea = a;
+		}
+		return a;
 	}
 	
 	private Shape regress(Shape s, double mm, boolean plus) {
