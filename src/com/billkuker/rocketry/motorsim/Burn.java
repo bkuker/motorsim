@@ -26,6 +26,10 @@ import org.jscience.physics.amount.Amount;
 import org.jscience.physics.amount.Constants;
 
 public class Burn {
+	//Some constants to tune adaptive regression step
+	private static final double regStepIncreaseFactor = 1.01;
+	private static final double regStepDecreaseFactor = .5;
+	private static final Amount<Pressure> chamberPressureMaxDelta = Amount.valueOf(.5, SI.MEGA(SI.PASCAL));
 	
 	private static Logger log = Logger.getLogger(Burn.class);
 	protected final Motor motor;
@@ -82,7 +86,8 @@ public class Burn {
 		
 		step:
 		for ( int i = 0; i < 5000; i++ ) {
-			regStep = regStep.times(1.01);
+			assert(positive(regStep));
+			regStep = regStep.times(regStepIncreaseFactor);
 			
 			Interval prev = data.get(data.lastKey());
 			log.debug(prev);
@@ -155,7 +160,7 @@ public class Burn {
 			//Product can not go negative!
 			if ( !positive(next.chamberProduct) ){
 				log.warn("ChamberProduct Negative on step " + i + "!, Adjusting regstep down and repeating step!");
-				regStep = regStep.divide(2);
+				regStep = regStep.times(regStepDecreaseFactor);
 				continue step;
 			}
 			assert(positive(next.chamberProduct));
@@ -176,9 +181,9 @@ public class Burn {
 					SI.PASCAL);
 			
 			Amount<Pressure> dp = next.chamberPressure.minus(prev.chamberPressure);
-			if ( dp.abs().isGreaterThan(Amount.valueOf(.5, SI.MEGA(SI.PASCAL)))){
+			if ( dp.abs().isGreaterThan(chamberPressureMaxDelta)){
 				log.warn("DP " + dp + " too big!, Adjusting regstep down and repeating step!");
-				regStep = regStep.divide(2);
+				regStep = regStep.times(regStepDecreaseFactor);
 				continue step;
 			}
 			
@@ -191,8 +196,6 @@ public class Burn {
 			}
 			
 			data.put(data.lastKey().plus(dt), next);
-
-			assert(positive(regStep));
 		}
 
 		long time = new Date().getTime() - start;
