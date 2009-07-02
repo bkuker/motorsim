@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
@@ -33,8 +34,15 @@ import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 public class Chart<X extends Quantity, Y extends Quantity> extends JPanel  {
 	private static final long serialVersionUID = 1L;
 	
-	private static ExecutorService fast = Executors.newFixedThreadPool(2) ;
-	private static ExecutorService slow = Executors.newFixedThreadPool(2);
+	private static ThreadFactory tf = new ThreadFactory(){
+		public Thread newThread(Runnable r) {
+			Thread t = new Thread(r);
+			t.setDaemon(true);
+			return t;
+		}
+	};
+	private static ExecutorService fast = Executors.newFixedThreadPool(2, tf) ;
+	private static ExecutorService slow = Executors.newFixedThreadPool(2, tf);
 	private boolean stop = false;
 
 	public class IntervalDomain implements Iterable<Amount<X>>{
