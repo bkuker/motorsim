@@ -91,24 +91,25 @@ public class BurnPanel extends JPanel {
 			
 
 				Amount<RocketScience.Impulse> ns = Amount.valueOf(0, RocketScience.NEWTON_SECOND);
-				Amount<Force> averageThrust = Amount.valueOf(0, SI.NEWTON);
+				
+				Amount<Duration> thrustTime = Amount.valueOf(0, SI.SECOND);
 				Amount<Force> maxThrust = Amount.valueOf(0, SI.NEWTON);
 				Amount<Pressure> maxPressure = Amount.valueOf(0, SI.MEGA(SI.PASCAL));
-				int thrustCount = 0;
-				
+
 				for( Interval i: burn.getData().values() ){
 					ns = ns.plus(i.dt.times(i.thrust));
 					if ( i.thrust.isGreaterThan(Amount.valueOf(0.01, SI.NEWTON))){
-						thrustCount++;
-						averageThrust = averageThrust.plus(i.thrust);
+						thrustTime = thrustTime.plus(i.dt);
 					}
 					if ( i.thrust.isGreaterThan(maxThrust))
 						maxThrust = i.thrust;
 					if ( i.chamberPressure.isGreaterThan(maxPressure))
 						maxPressure = i.chamberPressure;
 				}
-				if ( thrustCount > 0)
-					averageThrust = averageThrust.divide(thrustCount);
+				
+				Amount<Force> averageThrust = Amount.valueOf(0, SI.NEWTON);
+				if ( thrustTime.isGreaterThan(Amount.valueOf(0, SI.SECOND)))
+					averageThrust = ns.divide(thrustTime).to(SI.NEWTON);
 
 				int cn = (int)(Math.log(ns.doubleValue(RocketScience.NEWTON_SECOND)/1.25) / Math.log(2));
 				char cl = (char)((int)'A' + cn);
