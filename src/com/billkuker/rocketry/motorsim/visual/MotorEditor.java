@@ -105,6 +105,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener, 
 								((MultiGrain) g).setGrain(ng);
 								p.remove(grainEditorIndex);
 								p.add(new Editor(ng), grainEditorIndex);
+								p.remove(0);
+								p.add(new Editor(g), 0);
 								System.out.println("Chose new grain");
 							}
 						}
