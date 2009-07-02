@@ -2,6 +2,7 @@ package com.billkuker.rocketry.motorsim;
 
 
 
+import java.util.Date;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -13,6 +14,7 @@ import javax.measure.quantity.Length;
 import javax.measure.quantity.Mass;
 import javax.measure.quantity.MassFlowRate;
 import javax.measure.quantity.Pressure;
+import javax.measure.quantity.Quantity;
 import javax.measure.quantity.Temperature;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.Volume;
@@ -64,8 +66,9 @@ public class Burn {
 	
 	private void burn(){
 		log.info("Starting burn...");
+		long start = new Date().getTime();
 		
-		Amount<Length> regStep = Amount.valueOf(0.0119904077, SI.MILLIMETER);
+		Amount<Length> regStep = Amount.valueOf(0.1, SI.MILLIMETER);
 
 		//if ( motor.getGrain() instanceof Grain.DiscreteRegression )
 			//regStep = ((Grain.DiscreteRegression)motor.getGrain()).optimalRegressionStep();
@@ -80,27 +83,32 @@ public class Burn {
 		
 		data.put(Amount.valueOf(0, SI.SECOND), initial);
 		
-		for ( int i = 0; i < 5000; i++ ){
-
+		step:
+		for ( int i = 0; i < 5000; i++ ) {
+			regStep = regStep.times(1.01);
+			
 			Interval prev = data.get(data.lastKey());
 			log.debug(prev);
 			log.debug("Step " + i + " ==============================");
 			Interval next = new Interval();
 			
 			Amount<Velocity> burnRate = motor.getFuel().burnRate(prev.chamberPressure);
+			assert(positive(burnRate));
 			
 			log.debug("Burn Rate: " + burnRate);
 			
 			Amount<Duration> dt = regStep.divide(burnRate).to(Duration.UNIT);
+			assert(positive(dt));
 			next.dt = dt;
 			
-			data.put(data.lastKey().plus(dt), next);
+
 			
 			log.debug("Dt: " + dt);
 			
 			next.regression = prev.regression.plus(regStep);
+			assert(positive(next.regression));
 			
-			log.info("Regression: " + next.regression);
+			log.debug("Regression: " + next.regression);
 			
 			next.time = prev.time.plus(dt);
 			
@@ -110,9 +118,12 @@ public class Burn {
 			
 			//TODO Amount<Volume> volumeBurnt = motor.getGrain().volume(prev.regression).minus(motor.getGrain().volume(next.regression));
 			Amount<Volume> volumeBurnt = motor.getGrain().surfaceArea(prev.regression).times(regStep).to(Volume.UNIT);
+			assert(positive(volumeBurnt));
 			//log.info("Volume Burnt: " + volumeBurnt.to(SI.MILLIMETER.pow(3)));
 			
 			Amount<MassFlowRate> mGenRate = volumeBurnt.times(motor.getFuel().getIdealDensity().times(motor.getFuel().getDensityRatio())).divide(dt).to(MassFlowRate.UNIT);
+			assert(positive(mGenRate));
+			
 			//log.debug("Mass Gen Rate: " + mGenRate);
 			
 			//Calculate specific gas constant
@@ -136,6 +147,7 @@ public class Burn {
 				mNozzle = pDiff.times(aStar).times(kSide).divide(sqrtPart).to(MassFlowRate.UNIT);
 				//log.debug("Mass Exit Rate: " + mNozzle.to(MassFlowRate.UNIT));		
 			}
+			assert(positive(mNozzle));
 			
 			Amount<MassFlowRate> massStorageRate = mGenRate.minus(mNozzle);
 			
@@ -144,6 +156,12 @@ public class Burn {
 			next.chamberProduct = prev.chamberProduct.plus(massStorageRate.times(dt));
 			
 			//Product can not go negative!
+			if ( !positive(next.chamberProduct) ){
+				log.warn("ChamberProduct Negative on step " + i + "!, Adjusting regstep down and repeating step!");
+				regStep = regStep.divide(2);
+				continue step;
+			}
+			assert(positive(next.chamberProduct));
 			if ( next.chamberProduct.isLessThan(Amount.valueOf(0, SI.KILOGRAM)) )
 				next.chamberProduct = Amount.valueOf(0, SI.KILOGRAM);
 			
@@ -154,19 +172,34 @@ public class Burn {
 			log.debug("Product Density: " + combustionProductDensity);
 			
 			next.chamberPressure = combustionProductDensity.times(specificGasConstant).times(chamberTemp).plus(atmosphereicPressure).to(Pressure.UNIT);
+			assert(positive(next.chamberPressure));
 			
 			next.chamberPressure = Amount.valueOf(
 					next.chamberPressure.doubleValue(SI.PASCAL),
 					SI.PASCAL);
 			
+			Amount<Pressure> dp = next.chamberPressure.minus(prev.chamberPressure);
+			if ( dp.abs().isGreaterThan(Amount.valueOf(.5, SI.MEGA(SI.PASCAL)))){
+				log.warn("DP " + dp + " too big!, Adjusting regstep down and repeating step!");
+				regStep = regStep.divide(2);
+				continue step;
+			}
+			
 			next.thrust = motor.getNozzle().thrust(next.chamberPressure, atmosphereicPressure, atmosphereicPressure, motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats2Phase());
+			assert(positive(next.thrust));
 			
 			if ( i > 100 && next.chamberPressure.approximates(atmosphereicPressure)){
 				log.info("Pressure at Patm on step " + i);
 				break;
 			}
+			
+			data.put(data.lastKey().plus(dt), next);
+
+			assert(positive(regStep));
 		}
 
+		long time = new Date().getTime() - start;
+		log.info("Burn took " + time + " millis.");
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -192,4 +225,9 @@ public class Burn {
 		return motor.getGrain().surfaceArea(regression).divide(motor.getNozzle().throatArea()).to(Dimensionless.UNIT);
 	}
 	
+	
+	private <Q extends Quantity> boolean positive(Amount<Q> a){
+		return ( a.isGreaterThan(a.minus(a)) || a.equals(a.minus(a)));
+	}
+
 }
