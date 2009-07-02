@@ -34,9 +34,14 @@ public class RodAndTubeGrain extends CompoundGrain {
 			rod.setID(Amount.valueOf(0, SI.MILLIMETER));
 			rod.setInnerSurfaceInhibited(true);
 			rod.setOuterSurfaceInhibited(false);
-			
 			tube = new CoredCylindricalGrain();
 			tube.setInnerSurfaceInhibited(false);
+			
+			setOd(Amount.valueOf(30, SI.MILLIMETER));
+			setTubeID(Amount.valueOf(20, SI.MILLIMETER));
+			setRodDiameter(Amount.valueOf(10, SI.MILLIMETER));
+			setForeEndInhibited(true);
+			setAftEndInhibited(true);
 		} catch ( PropertyVetoException v ){
 			v.printStackTrace();
 			//I know these values are OK
