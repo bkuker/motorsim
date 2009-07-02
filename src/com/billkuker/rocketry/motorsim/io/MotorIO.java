@@ -24,6 +24,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class MotorIO {
 	static class AmountConverter implements Converter{
 		
+		@SuppressWarnings("unchecked")
 		public void marshal(Object o, HierarchicalStreamWriter w, MarshallingContext c) {
 			Amount a = (Amount)o;
 			String text;
@@ -40,6 +41,7 @@ public class MotorIO {
 			return Amount.valueOf(text);
 		}
 
+		@SuppressWarnings("unchecked")
 		public boolean canConvert(Class c) {
 			return c.equals(Amount.class);
 		}
