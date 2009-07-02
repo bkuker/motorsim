@@ -2,8 +2,6 @@ package com.billkuker.rocketry.motorsim.visual;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
@@ -39,12 +37,10 @@ import com.billkuker.rocketry.motorsim.Nozzle;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.Finocyl;
-import com.billkuker.rocketry.motorsim.grain.GrainSet;
 import com.billkuker.rocketry.motorsim.grain.Moonburner;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.grain.RodAndTubeGrain;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
-import com.billkuker.rocketry.motorsim.visual.Chart.IntervalDomain;
 
 public class MotorEditor extends JTabbedPane implements PropertyChangeListener, DocumentListener{
 	RSyntaxTextArea text = new RSyntaxTextArea();

@@ -8,7 +8,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 
 import javax.measure.unit.Unit;
