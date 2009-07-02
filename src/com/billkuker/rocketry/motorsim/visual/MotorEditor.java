@@ -43,17 +43,21 @@ import com.billkuker.rocketry.motorsim.grain.RodAndTubeGrain;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 
 public class MotorEditor extends JTabbedPane implements PropertyChangeListener, DocumentListener{
+	private static final long serialVersionUID = 1L;
 	RSyntaxTextArea text = new RSyntaxTextArea();
 	Motor motor;
 	GrainEditor grainEditor;
 	
 	private class GrainChooser extends JPanel{
+		private static final long serialVersionUID = 1L;
+		@SuppressWarnings("unchecked")
 		private Class[] types = {
 					CoredCylindricalGrain.class,
 					Finocyl.class,
 					Moonburner.class,
 					RodAndTubeGrain.class
 				};
+		@SuppressWarnings("unchecked")
 		public GrainChooser(){
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			for ( final Class c : types ){
@@ -78,6 +82,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener, 
 	}
 	
 	private class GrainEditor extends JSplitPane{
+		private static final long serialVersionUID = 1L;
+
 		public GrainEditor(final Grain g){
 			super(JSplitPane.HORIZONTAL_SPLIT);
 			setRightComponent(new GrainPanel(g));
@@ -88,6 +94,11 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener, 
 				for ( Grain gg : ((Grain.Composite)g).getGrains() ){
 					final int grainEditorIndex = p.getComponentCount() + 1;
 					p.add(new GrainChooser(){
+						/**
+						 * 
+						 */
+						private static final long serialVersionUID = 1L;
+
 						@Override
 						protected void grainChosen(Grain ng){
 							if ( g instanceof MultiGrain ){
@@ -116,6 +127,11 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener, 
 	}
 	
 	private class FuelEditor extends JSplitPane{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public FuelEditor(Fuel f){
 			super(JSplitPane.HORIZONTAL_SPLIT);
 			Chart<Pressure, Velocity> burnRate;
@@ -146,6 +162,11 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener, 
 	}
 	
 	private class CaseEditor extends JSplitPane{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		public CaseEditor(Nozzle n, Chamber c){
 			super(JSplitPane.HORIZONTAL_SPLIT, 
