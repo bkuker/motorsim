@@ -14,10 +14,6 @@ public interface Grain {
 	public java.awt.geom.Area getCrossSection(Amount<Length> regression);
 	public java.awt.geom.Area getSideView(Amount<Length> regression);
 	
-	public interface DiscreteRegression{
-		public Amount<Length> optimalRegressionStep();
-	}
-	
 	public interface Composite {
 		public List<Grain> getGrains();
 	}

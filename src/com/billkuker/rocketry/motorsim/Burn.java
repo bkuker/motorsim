@@ -68,11 +68,8 @@ public class Burn {
 		log.info("Starting burn...");
 		long start = new Date().getTime();
 		
-		Amount<Length> regStep = Amount.valueOf(0.1, SI.MILLIMETER);
+		Amount<Length> regStep = Amount.valueOf(0.01, SI.MILLIMETER);
 
-		//if ( motor.getGrain() instanceof Grain.DiscreteRegression )
-			//regStep = ((Grain.DiscreteRegression)motor.getGrain()).optimalRegressionStep();
-		
 		Interval initial = new Interval();
 		initial.time = Amount.valueOf(0, SI.SECOND);
 		initial.dt = Amount.valueOf(0, SI.SECOND);
