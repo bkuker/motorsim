@@ -46,11 +46,13 @@ public class RocketScience {
 		
 		protected Set<Unit<?>> units = new HashSet<Unit<?>>();
 		
+		@SuppressWarnings("unchecked")
 		UnitPreference( Unit u[] ){
 			for ( Unit uu : u )
 				units.add(uu);
 		}
 		
+		@SuppressWarnings("unchecked")
 		public Unit getPreferredUnit(Unit u){
 			if ( units.contains(u) )
 				return u;
