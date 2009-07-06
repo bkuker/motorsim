@@ -107,7 +107,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener, 
 								p.add(new Editor(ng), grainEditorIndex);
 								p.remove(0);
 								p.add(new Editor(g), 0);
-								System.out.println("Chose new grain");
+								//System.out.println("Chose new grain");
 							}
 						}
 					});
@@ -223,7 +223,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener, 
 	}
 	
 	@Deprecated
-	private static Motor defaultMotor() {
+	public static Motor defaultMotor() {
 		Motor m = new Motor();
 		m.setName("Example Motor");
 		m.setFuel(new KNSU());
