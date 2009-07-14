@@ -2,6 +2,7 @@ package com.billkuker.rocketry.motorsim.visual;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -82,20 +83,39 @@ public class GrainPanel extends JPanel {
 			e.printStackTrace();
 		}
 		
-		
-		JSplitPane charts = new JSplitPane(JSplitPane.VERTICAL_SPLIT, area, volume);
-		charts.setDividerLocation(.5);
-		charts.setResizeWeight(.5);
-		
-		JPanel left = new JPanel(new BorderLayout());
-		
-		add(xc = new XC(grain), BorderLayout.CENTER);
-		left.add(xc);
-
-		left.add(l, BorderLayout.NORTH);
-		left.add( new SL(), BorderLayout.SOUTH);
+		addComponents(
+				xc = new XC(grain),
+				new SL(),
+				l,
+				area,
+				volume
+		);
+	}
 	
-		add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, charts));
+	protected void addComponents(
+			Component crossSection,
+			Component slider,
+			Component label,
+			Component area,
+			Component volume
+	){
+		
+		JSplitPane v = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		JSplitPane h = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		
+		JPanel graphics = new JPanel(new BorderLayout());
+		graphics.add(crossSection, BorderLayout.CENTER);
+		graphics.add(label, BorderLayout.NORTH);
+		graphics.add(slider, BorderLayout.SOUTH);
+	
+		v.setTopComponent(h);
+		v.setBottomComponent(area);
+		h.setLeftComponent(graphics);
+		h.setRightComponent(volume);
+		add(v);
+		
+		h.resetToPreferredSizes();
+		v.resetToPreferredSizes();
 
 	}
 	
@@ -127,8 +147,10 @@ public class GrainPanel extends JPanel {
 			if ( w < 40 )
 				w = 40;
 			
-			setMinimumSize(new Dimension(240+w,250));
-
+			Dimension sz = new Dimension(240+w, 250);
+			setMinimumSize(sz);
+			setPreferredSize(sz);
+			setMaximumSize(sz);
 		}
 		public void paint(Graphics g){
 			super.paint(g);
