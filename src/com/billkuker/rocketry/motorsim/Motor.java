@@ -33,7 +33,7 @@ public class Motor extends MotorPart{
 	}
 	
 	public void setNozzle(Nozzle nozzle) {
-		Nozzle old = nozzle;
+		Nozzle old = this.nozzle;
 		this.nozzle = nozzle;
 		firePropertyChange("Nozzle", old, nozzle);
 	}
@@ -43,7 +43,7 @@ public class Motor extends MotorPart{
 	}
 
 	public void setFuel(Fuel fuel) {
-		Fuel old = fuel;
+		Fuel old = this.fuel;
 		this.fuel = fuel;
 		firePropertyChange("Fuel", old, fuel);
 	}
@@ -53,7 +53,7 @@ public class Motor extends MotorPart{
 	}
 
 	public void setName(String name) {
-		String old = name;
+		String old = this.name;
 		this.name = name;
 		firePropertyChange("Name", old, name);
 	}
