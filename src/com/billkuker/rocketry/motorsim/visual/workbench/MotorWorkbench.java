@@ -1,4 +1,4 @@
-package com.billkuker.rocketry.motorsim.visual;
+package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -21,8 +21,6 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.billkuker.rocketry.motorsim.Motor;
-import com.billkuker.rocketry.motorsim.visual.workbench.WorkbenchTreeCellRenderer;
-import com.billkuker.rocketry.motorsim.visual.workbench.WorkbenchTreeModel;
 
 public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private static final long serialVersionUID = 1L;

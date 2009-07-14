@@ -1,4 +1,4 @@
-package com.billkuker.rocketry.motorsim.visual;
+package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -47,6 +47,12 @@ import com.billkuker.rocketry.motorsim.grain.Moonburner;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.grain.RodAndTubeGrain;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
+import com.billkuker.rocketry.motorsim.visual.BurnPanel;
+import com.billkuker.rocketry.motorsim.visual.Chart;
+import com.billkuker.rocketry.motorsim.visual.Editor;
+import com.billkuker.rocketry.motorsim.visual.GrainPanel;
+import com.billkuker.rocketry.motorsim.visual.NozzlePanel;
+import com.billkuker.rocketry.motorsim.visual.Chart.IntervalDomain;
 
 public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 		DocumentListener {
