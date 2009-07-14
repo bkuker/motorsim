@@ -2,11 +2,17 @@ package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -21,6 +27,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.billkuker.rocketry.motorsim.Motor;
+import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 
 public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private static final long serialVersionUID = 1L;
@@ -34,6 +41,8 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private HashMap<Motor, MotorEditor> m2e = new HashMap<Motor, MotorEditor>();
 
 	public MotorWorkbench() {
+		setTitle("MotorWorkbench");
+		addMenu();
 		setSize(1024, 768);
 		top = new JPanel(new BorderLayout());
 		setContentPane(top);
@@ -55,8 +64,8 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 
 		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(
 				tree), motors);
-		//split.setDividerLocation(.25);
-		//split.setResizeWeight(.25);
+		// split.setDividerLocation(.25);
+		// split.setResizeWeight(.25);
 		top.add(split, BorderLayout.CENTER);
 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -64,8 +73,43 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 
 		Motor mot = MotorEditor.defaultMotor();
 		addMotor(mot);
-		//mot = MotorEditor.defaultMotor();
-		//addMotor(mot);
+		// mot = MotorEditor.defaultMotor();
+		// addMotor(mot);
+
+	}
+
+	private void addMenu() {
+
+
+		setJMenuBar(new JMenuBar() {
+			{
+				add(new JMenu("File") {
+
+				});
+				add(new JMenu("Settings") {
+					{
+						ButtonGroup units = new ButtonGroup();
+						JRadioButtonMenuItem sci = new JRadioButtonMenuItem("SI");
+						JRadioButtonMenuItem nonsci = new JRadioButtonMenuItem("NonSI");
+						units.add(sci);
+						units.add(nonsci);
+						sci.setSelected(true);
+						sci.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent arg0) {
+								UnitPreference.preference = UnitPreference.SI;
+							}
+						});
+						nonsci.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent arg0) {
+								UnitPreference.preference = UnitPreference.NONSI;
+							}
+						});
+						add(sci);
+						add(nonsci);
+					}
+				});
+			}
+		});
 	}
 
 	public void addMotor(Motor m) {
@@ -76,7 +120,11 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	}
 
 	public static void main(String args[]) throws Exception {
+		
 		try {
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+			System.setProperty("com.apple.mrj.application.apple.menu.about.name",
+			"MotorWorkbench");
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -89,9 +137,10 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		Motor m = getMotor(e.getPath());
 
 		motors.setSelectedComponent(m2e.get(m));
-		
-		if ( e.getPath().getLastPathComponent() instanceof DefaultMutableTreeNode ){
-			Object o = ((DefaultMutableTreeNode)e.getPath().getLastPathComponent()).getUserObject();
+
+		if (e.getPath().getLastPathComponent() instanceof DefaultMutableTreeNode) {
+			Object o = ((DefaultMutableTreeNode) e.getPath()
+					.getLastPathComponent()).getUserObject();
 			m2e.get(m).focusOnObject(o);
 		}
 	}
