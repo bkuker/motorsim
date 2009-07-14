@@ -1,5 +1,6 @@
 package com.billkuker.rocketry.motorsim.visual;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -177,6 +178,7 @@ public class GrainPanel extends JPanel {
 				g2d.setColor(Color.GRAY);
 				g2d.fill(left);
 				//Draw the outline of the unburnt grain
+				g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
 				g2d.setColor(Color.BLACK);
 				g2d.draw(unburnt);
 				//untranslate
