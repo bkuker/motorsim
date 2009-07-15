@@ -269,7 +269,10 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 	}
 
 	private void setMotor(Motor m, boolean retext) {
+		if ( motor != null )
+			motor.removePropertyChangeListener(this);
 		motor = m;
+		motor.addPropertyChangeListener(this);
 		if (retext)
 			reText();
 		if (grainEditor != null)
