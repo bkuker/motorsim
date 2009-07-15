@@ -68,9 +68,11 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 	private static final int FUEL_TAB = 3;
 	private static final int BURN_TAB = 4;
 
+	@SuppressWarnings("unchecked")
 	private Class[] grainTypes = { CoredCylindricalGrain.class, Finocyl.class,
 			Moonburner.class, RodAndTubeGrain.class };
 
+	@SuppressWarnings("unchecked")
 	private Class[] fuelTypes = { KNSB.class, KNSU.class, KNER.class,
 			KNDX.class, EditableFuel.class };
 
@@ -102,6 +104,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 	}
 
 	private class BurnTab extends JPanel {
+		private static final long serialVersionUID = 1L;
 		public BurnTab() {
 			setLayout(new BorderLayout());
 			setName("Burn");
@@ -251,6 +254,10 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 		text.setName("XML");
 		add(text, XML_TAB);
 		setMotor(m, true);
+	}
+	
+	public Motor getMotor(){
+		return motor;
 	}
 
 	private void reText() {

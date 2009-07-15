@@ -2,9 +2,11 @@ package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Enumeration;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.MotorPart;
@@ -92,11 +94,28 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 		super(new DefaultMutableTreeNode(), true);
 	}
 	
+	@Override
+	public DefaultMutableTreeNode getRoot(){
+		return (DefaultMutableTreeNode)super.getRoot();
+	}
+	
 	public void addMotor(Motor m){
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode)getRoot();
+		DefaultMutableTreeNode root = getRoot();
 		root.add(new MotorNode(m));
 		nodesWereInserted(root, new int[]{root.getChildCount()-1});
 		
+	}
+	
+	public void removeMotor(Motor m){
+		Enumeration<TreeNode> e = getRoot().children();
+		while ( e.hasMoreElements() ){
+			TreeNode n = e.nextElement();
+			if ( n instanceof MotorNode ){
+				if ( ((MotorNode)n).getUserObject() == m ){
+					removeNodeFromParent((MotorNode)n);
+				}
+			}
+		}
 	}
 
 }
