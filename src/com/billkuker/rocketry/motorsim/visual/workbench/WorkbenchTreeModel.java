@@ -85,6 +85,8 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 				remove(3);
 				add(fn);
 				nodesChanged(this, new int[]{3});
+			} else {
+				nodeChanged(this);
 			}
 		}
 

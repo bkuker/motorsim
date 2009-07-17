@@ -258,23 +258,12 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		motors.addTab(title, e);
 	}
 
-	public static void main(String args[]) throws Exception {
-
-		try {
-			System.setProperty("apple.laf.useScreenMenuBar", "true");
-			System.setProperty(
-					"com.apple.mrj.application.apple.menu.about.name",
-					"MotorWorkbench");
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		new MotorWorkbench().setVisible(true);
-	}
-
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		Motor m = getMotor(e.getPath());
+		
+		if ( m == null )
+			return;
 
 		motors.setSelectedComponent(m2e.get(m));
 

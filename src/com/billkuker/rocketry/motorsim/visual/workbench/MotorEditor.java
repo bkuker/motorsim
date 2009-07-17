@@ -3,6 +3,8 @@ package com.billkuker.rocketry.motorsim.visual.workbench;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
@@ -11,15 +13,19 @@ import java.io.IOException;
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
 import javax.measure.unit.SI;
+import javax.media.jai.operator.AddDescriptor;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -231,6 +237,31 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 			setLeftComponent(parts);
 			setRightComponent(new NozzlePanel(n));
 
+			parts.add(new JTextField(motor.getName()){
+				{
+					final JTextField t = this;
+					addFocusListener(new FocusListener() {
+						
+						@Override
+						public void focusLost(FocusEvent e) {
+							String n = t.getText();
+							if ( !"".equals(n) && !n.equals(motor.getName()) ){
+								System.out.println("Name Changed");
+								motor.setName(n);
+							} else {
+								t.setText(motor.getName());
+							}
+						}
+						
+						@Override
+						public void focusGained(FocusEvent e) {
+						
+						}
+					});
+					
+				}
+			});
+			
 			parts.add(new Editor(c));
 			parts.add(new Editor(n));
 
@@ -345,7 +376,9 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		reText();
-		bt.reBurn();
+		//Dont re-burn for a name change!
+		if ( !evt.getPropertyName().equals("Name") )
+			bt.reBurn();
 	}
 
 	public void changedUpdate(DocumentEvent e) {
