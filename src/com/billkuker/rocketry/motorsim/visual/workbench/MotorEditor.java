@@ -13,7 +13,6 @@ import java.io.IOException;
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
 import javax.measure.unit.SI;
-import javax.media.jai.operator.AddDescriptor;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
