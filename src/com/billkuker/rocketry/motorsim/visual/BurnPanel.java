@@ -72,6 +72,7 @@ public class BurnPanel extends JPanel {
 			tp.setResizeWeight(.5);
 			
 			grain = new GrainPanel(burn.getMotor().getGrain()){
+				private static final long serialVersionUID = 1L;
 				@Override protected void addComponents(java.awt.Component crossSection, java.awt.Component slider, java.awt.Component label, java.awt.Component area, java.awt.Component volume) {
 					JSplitPane h = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, crossSection, area);	
 					add(h, BorderLayout.CENTER);

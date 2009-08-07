@@ -146,7 +146,7 @@ public class Burn {
 			//log.debug("Mass Gen Rate: " + mGenRate);
 			
 			//Calculate specific gas constant
-			Amount specificGasConstant = Constants.R.divide(motor.getFuel().getCombustionProduct().getEffectiveMolarWeight());
+			Amount<?> specificGasConstant = Constants.R.divide(motor.getFuel().getCombustionProduct().getEffectiveMolarWeight());
 			//This unit conversion helps JScience to convert nozzle flow rate to
 			//kg/s a little later on I verified the conversion by hand and
 			//JScience checks it too.
@@ -162,7 +162,7 @@ public class Burn {
 				Amount<Area> aStar = motor.getNozzle().throatArea();
 				double k = motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats();
 				double kSide = Math.sqrt(k) * Math.pow((2/(k+1)) , (((k+1)/2)/(k-1)));
-				Amount sqrtPart = specificGasConstant.times(chamberTemp).sqrt();
+				Amount<?> sqrtPart = specificGasConstant.times(chamberTemp).sqrt();
 				mNozzle = pDiff.times(aStar).times(kSide).divide(sqrtPart).to(MassFlowRate.UNIT);
 				//log.debug("Mass Exit Rate: " + mNozzle.to(MassFlowRate.UNIT));		
 			}

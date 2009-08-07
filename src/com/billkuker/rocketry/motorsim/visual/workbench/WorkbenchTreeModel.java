@@ -108,6 +108,7 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void removeMotor(Motor m){
 		Enumeration<TreeNode> e = getRoot().children();
 		while ( e.hasMoreElements() ){

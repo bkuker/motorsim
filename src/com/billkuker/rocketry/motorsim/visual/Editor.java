@@ -83,7 +83,7 @@ public class Editor extends PropertySheetPanel {
 
 	public static class AmountPropertyEditor extends PropertyEditorSupport {
 		JTextField editor = new JTextField();
-		Unit oldUnit;
+		Unit<?> oldUnit;
 
 		@Override
 		public boolean supportsCustomEditor() {

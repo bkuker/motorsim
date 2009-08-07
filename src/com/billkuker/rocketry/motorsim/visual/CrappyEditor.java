@@ -33,6 +33,7 @@ import com.billkuker.rocketry.motorsim.motors.example.CSlot;
 import com.billkuker.rocketry.motorsim.motors.example.EndBurner;
 
 public class CrappyEditor extends JFrame {
+	private static final long serialVersionUID = 1L;
 	JTabbedPane tabs;
 
 	public CrappyEditor() {
@@ -52,6 +53,7 @@ public class CrappyEditor extends JFrame {
 	}
 
 	private class Editor extends JPanel {
+		private static final long serialVersionUID = 1L;
 		RSyntaxTextArea text = new RSyntaxTextArea();
 
 		Editor(Motor m) {
@@ -60,6 +62,7 @@ public class CrappyEditor extends JFrame {
 			JPanel buttons = new JPanel(new FlowLayout());
 
 			buttons.add(new JButton("Burn!") {
+				private static final long serialVersionUID = 1L;
 				{
 					addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
@@ -89,6 +92,7 @@ public class CrappyEditor extends JFrame {
 			});
 			
 			buttons.add(new JButton("End Burner Example") {
+				private static final long serialVersionUID = 1L;
 				{
 					addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
@@ -99,6 +103,7 @@ public class CrappyEditor extends JFrame {
 			});
 			
 			buttons.add(new JButton("C-Slot Example") {
+				private static final long serialVersionUID = 1L;
 				{
 					addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
@@ -163,6 +168,6 @@ public class CrappyEditor extends JFrame {
 	
 
 	public static void main(String args[]) {
-		new CrappyEditor().show();
+		new CrappyEditor().setVisible(true);
 	}
 }

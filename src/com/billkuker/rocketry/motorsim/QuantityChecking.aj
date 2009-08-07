@@ -18,6 +18,7 @@ public aspect QuantityChecking {
 
 	declare parents: Motor || Grain || Chamber || Nozzle || Fuel extends Checked;
 
+	@SuppressWarnings("unchecked")
 	void around(Checked c, Amount amt):
 	        execution(void Checked+.set*(Amount)) && target(c) && args(amt) {
 		System.out.println(thisJoinPointStaticPart.getSignature().getName()

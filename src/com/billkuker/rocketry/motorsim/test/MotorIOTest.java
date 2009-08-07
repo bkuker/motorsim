@@ -50,7 +50,7 @@ public class MotorIOTest {
 
 		MotorIO.writeMotor(m, f);
 
-		Motor r = MotorIO.readMotor(f);
+		MotorIO.readMotor(f);
 
 	}
 }

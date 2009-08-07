@@ -204,6 +204,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 
 			p.add(new Chooser<Fuel>(fuelTypes) {
+				private static final long serialVersionUID = 1L;
 				@Override
 				protected void choiceMade(Fuel o) {
 					motor.setFuel(o);
@@ -242,6 +243,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			setRightComponent(new NozzlePanel(n));
 
 			parts.add(new JTextField(motor.getName()){
+				private static final long serialVersionUID = 1L;
 				{
 					final JTextField t = this;
 					addFocusListener(new FocusListener() {
