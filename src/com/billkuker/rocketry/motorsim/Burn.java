@@ -34,6 +34,12 @@ public class Burn {
 	private static Logger log = Logger.getLogger(Burn.class);
 	protected final Motor motor;
 	
+	public interface BurnProgressListener{
+		public void setProgress(float p);
+	}
+	
+	private BurnProgressListener bpl = null;
+	
 	private static final Amount<Pressure> atmosphereicPressure = Amount.valueOf(101000, SI.PASCAL);
 	
 	public class Interval{
@@ -65,6 +71,12 @@ public class Burn {
 	
 	public Burn(Motor m){
 		motor = m;
+		burn();
+	}
+	
+	public Burn(Motor m, BurnProgressListener bpl){
+		motor = m;
+		this.bpl = bpl;
 		burn();
 	}
 	
@@ -111,6 +123,11 @@ public class Burn {
 			assert(positive(next.regression));
 			
 			log.debug("Regression: " + next.regression);
+			
+			if ( bpl != null ){
+				Amount<Dimensionless> a = next.regression.divide(motor.getGrain().webThickness()).to(Dimensionless.UNIT);
+				bpl.setProgress((float)a.doubleValue(Dimensionless.UNIT));
+			}
 			
 			next.time = prev.time.plus(dt);
 			

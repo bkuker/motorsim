@@ -41,7 +41,6 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private JSplitPane split;
 	private JTree tree;
 	private JTabbedPane motors;
-	private JToolBar bar;
 	private WorkbenchTreeModel tm;
 
 	private HashMap<MotorEditor, File> e2f = new HashMap<MotorEditor, File>();
@@ -55,10 +54,6 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		setSize(1024, 768);
 		top = new JPanel(new BorderLayout());
 		setContentPane(top);
-
-		bar = new JToolBar();
-		bar.add(new JButton("Burn"));
-		top.add(bar, BorderLayout.PAGE_START);
 
 		motors = new JTabbedPane();
 

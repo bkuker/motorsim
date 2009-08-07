@@ -17,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -119,11 +120,21 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			removeAll();
 			new Thread() {
 				public void run() {
-					final Burn b = new Burn(motor);
+					final JProgressBar bar = new JProgressBar(0,100);
+					add(bar);
+					final Burn b = new Burn(motor, new Burn.BurnProgressListener(){
+						@Override
+						public void setProgress(float f){
+							bar.setValue((int)(f*100));
+						}
+					});
 					final BurnPanel bp = new BurnPanel(b);
 					SwingUtilities.invokeLater(new Thread() {
 						public void run() {
+							remove(bar);
 							add(bp, BorderLayout.CENTER);
+							
+							revalidate();
 						}
 					});
 				}
