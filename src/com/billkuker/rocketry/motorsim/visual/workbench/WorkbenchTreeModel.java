@@ -8,8 +8,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
+import com.billkuker.rocketry.motorsim.ChangeListening;
 import com.billkuker.rocketry.motorsim.Motor;
-import com.billkuker.rocketry.motorsim.MotorPart;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 
 public class WorkbenchTreeModel extends DefaultTreeModel {
@@ -39,8 +39,8 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 
 		public PartNode(Object part) {
 			super(part, false);
-			if (part instanceof MotorPart) {
-				((MotorPart) part).addPropertyChangeListener(this);
+			if (part instanceof ChangeListening.Subject) {
+				((ChangeListening.Subject) part).addPropertyChangeListener(this);
 			}
 		}
 	
@@ -68,8 +68,8 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 			}
 			add(gn);
 			add( fn = new PartNode(m.getFuel()));
-			if (m instanceof MotorPart) {
-				((MotorPart) m).addPropertyChangeListener(this);
+			if (m instanceof ChangeListening.Subject) {
+				((ChangeListening.Subject) m).addPropertyChangeListener(this);
 			}
 		}
 		

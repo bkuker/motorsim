@@ -16,8 +16,8 @@ import javax.swing.WindowConstants;
 
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.ChangeListening;
 import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
-import com.billkuker.rocketry.motorsim.MotorPart;
 import com.billkuker.rocketry.motorsim.Nozzle;
 
 public class NozzlePanel extends JPanel {
@@ -26,8 +26,8 @@ public class NozzlePanel extends JPanel {
 	public NozzlePanel(Nozzle n){
 		nozzle = n;
 		
-		if ( n instanceof MotorPart ){
-			((MotorPart)n).addPropertyChangeListener(new PropertyChangeListener(){
+		if ( n instanceof ChangeListening.Subject ){
+			((ChangeListening.Subject)n).addPropertyChangeListener(new PropertyChangeListener(){
 				public void propertyChange(PropertyChangeEvent evt) {
 					repaint();
 				}

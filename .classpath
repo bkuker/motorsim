@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="xpp3_min-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="rsyntaxtextarea.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

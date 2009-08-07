@@ -36,11 +36,8 @@ public class Moonburner extends ExtrudedShapeGrain {
 	public void setOD(Amount<Length> od) throws PropertyVetoException {
 		if (od.equals(this.oD))
 			return;
-		fireVetoableChange("od", this.oD, od);
-		Amount<Length> old = this.oD;
 		this.oD = od;
 		generateGeometry();
-		firePropertyChange("OD", old, oD);
 	}
 
 	public Amount<Length> getID() {
@@ -50,11 +47,8 @@ public class Moonburner extends ExtrudedShapeGrain {
 	public void setID(Amount<Length> id) throws PropertyVetoException {
 		if (id.equals(this.iD))
 			return;
-		fireVetoableChange("id", this.iD, id);
-		Amount<Length> old = this.iD;
 		iD = id;
 		generateGeometry();
-		firePropertyChange("ID", old, iD);
 	}
 
 	public Amount<Length> getCoreOffset() {
@@ -65,11 +59,8 @@ public class Moonburner extends ExtrudedShapeGrain {
 			throws PropertyVetoException {
 		if (coreOffset.equals(this.coreOffset))
 			return;
-		fireVetoableChange("coreOffset", this.coreOffset, coreOffset);
-		Amount<Length> old = this.coreOffset;
 		this.coreOffset = coreOffset;
 		generateGeometry();
-		firePropertyChange("coreOffset", old, this.coreOffset);
 	}
 
 	private void generateGeometry() {

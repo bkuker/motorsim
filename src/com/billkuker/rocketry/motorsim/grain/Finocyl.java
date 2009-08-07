@@ -58,11 +58,8 @@ public class Finocyl extends ExtrudedShapeGrain {
 	public void setOD(Amount<Length> od) throws PropertyVetoException {
 		if (od.equals(this.oD))
 			return;
-		fireVetoableChange("od", this.oD, od);
-		Amount<Length> old = this.oD;
 		this.oD = od;
 		generateGeometry();
-		firePropertyChange("OD", old, oD);
 	}
 
 	public Amount<Length> getID() {
@@ -72,11 +69,8 @@ public class Finocyl extends ExtrudedShapeGrain {
 	public void setID(Amount<Length> id) throws PropertyVetoException {
 		if (id.equals(this.iD))
 			return;
-		fireVetoableChange("id", this.iD, id);
-		Amount<Length> old = this.iD;
 		iD = id;
 		generateGeometry();
-		firePropertyChange("ID", old, iD);
 	}
 	
 	public Amount<Length> getFinWidth() {
@@ -86,11 +80,8 @@ public class Finocyl extends ExtrudedShapeGrain {
 	public void setFinWidth(Amount<Length> finWidth) throws PropertyVetoException {
 		if (finWidth.equals(this.finWidth))
 			return;
-		fireVetoableChange("finWidth", this.finWidth, finWidth);
-		Amount<Length> old = this.finWidth;
 		this.finWidth = finWidth;
 		generateGeometry();
-		firePropertyChange("finWidth", old, finWidth);
 	}
 	
 	
@@ -101,11 +92,8 @@ public class Finocyl extends ExtrudedShapeGrain {
 	public void setFinDiameter(Amount<Length> finDiameter) throws PropertyVetoException {
 		if (finDiameter.equals(this.finDiameter))
 			return;
-		fireVetoableChange("finDiameter", this.finDiameter, finDiameter);
-		Amount<Length> old = this.finDiameter;
 		this.finDiameter = finDiameter;
 		generateGeometry();
-		firePropertyChange("finDiameter", old, finDiameter);
 	}
 	
 	
@@ -116,11 +104,8 @@ public class Finocyl extends ExtrudedShapeGrain {
 	public void setFinCount(int finCount) throws PropertyVetoException {
 		if (finCount==this.finCount)
 			return;
-		fireVetoableChange("finCount", this.finCount, finCount);
-		int old = this.finCount;
 		this.finCount = finCount;
 		generateGeometry();
-		firePropertyChange("finCount", old, finCount);
 	}
 	
 	public static void main(String args[]) throws Exception {

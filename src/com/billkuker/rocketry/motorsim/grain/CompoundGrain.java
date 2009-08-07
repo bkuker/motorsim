@@ -11,10 +11,10 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.ChangeListening;
 import com.billkuker.rocketry.motorsim.Grain;
-import com.billkuker.rocketry.motorsim.MotorPart;
 
-public class CompoundGrain extends MotorPart implements Grain {
+public class CompoundGrain implements Grain {
 	
 	private Set<Grain> grains = new HashSet<Grain>();
 	
@@ -28,14 +28,14 @@ public class CompoundGrain extends MotorPart implements Grain {
 	
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		for ( Grain g : grains )
-			if ( g instanceof MotorPart )
-				((MotorPart)g).addPropertyChangeListener(listener);
+			if ( g instanceof ChangeListening.Subject )
+				((ChangeListening.Subject)g).addPropertyChangeListener(listener);
 	}
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		for ( Grain g : grains )
-			if ( g instanceof MotorPart )
-				((MotorPart)g).removePropertyChangeListener(listener);
+			if ( g instanceof ChangeListening.Subject )
+				((ChangeListening.Subject)g).removePropertyChangeListener(listener);
 	}
 
 	public Area getCrossSection(Amount<Length> regression) {

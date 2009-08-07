@@ -12,7 +12,6 @@ import java.io.StringWriter;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Motor;
-import com.billkuker.rocketry.motorsim.MotorPart;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -53,8 +52,6 @@ public class MotorIO {
 	private static XStream getXStream(){
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
-		xstream.omitField(MotorPart.class, "pcs");
-		xstream.omitField(MotorPart.class, "vcs");
 		xstream.registerConverter(new AmountConverter());
 		xstream.registerConverter(new JavaBeanConverter(xstream.getClassMapper(), "class"), -20); 
 		return xstream;

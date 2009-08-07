@@ -14,7 +14,7 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
-public class ConvergentDivergentNozzle extends MotorPart implements Nozzle {
+public class ConvergentDivergentNozzle implements Nozzle {
 
 	private Amount<Length> throatDiameter;
 	
@@ -40,9 +40,7 @@ public class ConvergentDivergentNozzle extends MotorPart implements Nozzle {
 	public void setThroatDiameter(Amount<Length> throatDiameter) {
 		if ( exitDiameter != null && throatDiameter.isGreaterThan(exitDiameter))
 			throw new IllegalArgumentException("Throat > Exit");
-		Amount<Length> old = this.throatDiameter;
 		this.throatDiameter = throatDiameter;
-		firePropertyChange("throatDiameter", old, throatDiameter);
 	}
 	
 
@@ -54,9 +52,7 @@ public class ConvergentDivergentNozzle extends MotorPart implements Nozzle {
 	public void setExitDiameter(Amount<Length> exitDiameter) {
 		if ( throatDiameter != null && exitDiameter.isLessThan(throatDiameter))
 			throw new IllegalArgumentException("Throat > Exit");
-		Amount<Length> old = this.exitDiameter;
 		this.exitDiameter = exitDiameter;
-		firePropertyChange("exitDiameter", old, exitDiameter);
 	}
 	
 	public Amount<Force> thrust(Amount<Pressure> Po, Amount<Pressure> Pe, Amount<Pressure> Patm, final double k ){
@@ -87,9 +83,7 @@ public class ConvergentDivergentNozzle extends MotorPart implements Nozzle {
 	}
 
 	public void setEfficiency(double efficiency) {
-		double old = this.efficiency;
 		this.efficiency = efficiency;
-		firePropertyChange("efficiency", old, efficiency);
 	}
 
 	public Shape nozzleShape(Amount<Length> chamberDiameter){

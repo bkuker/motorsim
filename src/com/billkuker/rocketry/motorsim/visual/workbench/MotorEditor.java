@@ -34,12 +34,12 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.Chamber;
+import com.billkuker.rocketry.motorsim.ChangeListening;
 import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.Motor;
-import com.billkuker.rocketry.motorsim.MotorPart;
 import com.billkuker.rocketry.motorsim.Nozzle;
 import com.billkuker.rocketry.motorsim.fuel.EditableFuel;
 import com.billkuker.rocketry.motorsim.fuel.KNDX;
@@ -59,8 +59,7 @@ import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 import com.billkuker.rocketry.motorsim.visual.NozzlePanel;
 import com.billkuker.rocketry.motorsim.visual.Chart.IntervalDomain;
 
-public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
-		DocumentListener {
+public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
 	RSyntaxTextArea text = new RSyntaxTextArea();
 	Motor motor;
@@ -161,8 +160,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 						}
 					});
 					p.add(new Editor(gg));
-					if (gg instanceof MotorPart) {
-						((MotorPart) gg)
+					if (gg instanceof ChangeListening.Subject) {
+						((ChangeListening.Subject) gg)
 								.addPropertyChangeListener(MotorEditor.this);
 					}
 				}
@@ -172,8 +171,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 			}
 			// setDividerLocation(.25);
 			// setResizeWeight(.25);
-			if (g instanceof MotorPart) {
-				((MotorPart) g).addPropertyChangeListener(MotorEditor.this);
+			if (g instanceof ChangeListening.Subject) {
+				((ChangeListening.Subject) g).addPropertyChangeListener(MotorEditor.this);
 			}
 		}
 	}
@@ -219,8 +218,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 			setRightComponent(burnRate);
 			// setDividerLocation(.25);
 			// setResizeWeight(.25);
-			if (f instanceof MotorPart) {
-				((MotorPart) f).addPropertyChangeListener(MotorEditor.this);
+			if (f instanceof ChangeListening.Subject) {
+				((ChangeListening.Subject) f).addPropertyChangeListener(MotorEditor.this);
 			}
 		}
 	}
@@ -264,11 +263,11 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 			parts.add(new Editor(c));
 			parts.add(new Editor(n));
 
-			if (n instanceof MotorPart) {
-				((MotorPart) n).addPropertyChangeListener(MotorEditor.this);
+			if (n instanceof ChangeListening.Subject) {
+				((ChangeListening.Subject) n).addPropertyChangeListener(MotorEditor.this);
 			}
-			if (c instanceof MotorPart) {
-				((MotorPart) c).addPropertyChangeListener(MotorEditor.this);
+			if (c instanceof ChangeListening.Subject) {
+				((ChangeListening.Subject) c).addPropertyChangeListener(MotorEditor.this);
 			}
 		}
 	}
@@ -280,8 +279,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 
 	public MotorEditor(Motor m) {
 		super(JTabbedPane.BOTTOM);
-		text.getDocument().addDocumentListener(this);
 		text.setName("XML");
+		text.setEditable(false);
 		add(text, XML_TAB);
 		setMotor(m, true);
 	}
@@ -380,25 +379,4 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener,
 			bt.reBurn();
 	}
 
-	public void changedUpdate(DocumentEvent e) {
-		try {
-			final Motor m = MotorIO.readMotor(text.getText());
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					setMotor(m, false);
-				}
-			});
-			System.out.println("Motor Updated");
-		} catch (Throwable e1) {
-			// Leave blank, motor might be broken
-		}
-	}
-
-	public void insertUpdate(DocumentEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	public void removeUpdate(DocumentEvent e) {
-		// TODO Auto-generated method stub
-	}
 }

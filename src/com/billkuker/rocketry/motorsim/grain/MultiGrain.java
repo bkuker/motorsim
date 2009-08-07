@@ -15,10 +15,10 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.ChangeListening;
 import com.billkuker.rocketry.motorsim.Grain;
-import com.billkuker.rocketry.motorsim.MotorPart;
 
-public class MultiGrain extends MotorPart implements Grain, Grain.Composite, PropertyChangeListener {
+public class MultiGrain implements Grain, Grain.Composite, PropertyChangeListener {
 	
 	private Grain grain = null;
 	private int count = 1;
@@ -28,18 +28,17 @@ public class MultiGrain extends MotorPart implements Grain, Grain.Composite, Pro
 	}
 
 	public void setCount(int count) {
-		int old = this.count;
 		this.count = count;
-		firePropertyChange("Count", old, count );
 	}
 	
 	public void setGrain(Grain g){
-		Grain old = grain;
-		grain = g;
-		if ( g instanceof MotorPart ){
-			((MotorPart)g).addPropertyChangeListener(this);
+		if ( grain instanceof ChangeListening.Subject ){
+			((ChangeListening.Subject)grain).addPropertyChangeListener(this);
 		}
-		firePropertyChange("Grain", old, grain);
+		grain = g;
+		if ( g instanceof ChangeListening.Subject ){
+			((ChangeListening.Subject)g).addPropertyChangeListener(this);
+		}
 	}
 	
 	public Grain getGrain(){

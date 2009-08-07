@@ -28,8 +28,8 @@ import javax.swing.event.ChangeListener;
 
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.ChangeListening;
 import com.billkuker.rocketry.motorsim.Grain;
-import com.billkuker.rocketry.motorsim.MotorPart;
 
 public class GrainPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -45,8 +45,8 @@ public class GrainPanel extends JPanel {
 
 		grain = g;
 		
-		if ( g instanceof MotorPart ){
-			((MotorPart)g).addPropertyChangeListener(new PropertyChangeListener(){
+		if ( g instanceof ChangeListening.Subject ){
+			((ChangeListening.Subject)g).addPropertyChangeListener(new PropertyChangeListener(){
 				public void propertyChange(PropertyChangeEvent evt) {
 					repaint();
 					area.setDomain(area.new IntervalDomain(Amount.valueOf(0, SI.MILLIMETER), grain.webThickness()));

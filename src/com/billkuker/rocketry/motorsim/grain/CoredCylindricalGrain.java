@@ -12,12 +12,11 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
-import com.billkuker.rocketry.motorsim.MotorPart;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 
-public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Validating {
+public class CoredCylindricalGrain extends ExtrudedGrain {
 
 	private Amount<Length> oD, iD;
 	private boolean outerSurfaceInhibited = true, innerSurfaceInhibited = false;
@@ -122,19 +121,14 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 	}
 
 	public void setOD(Amount<Length> od) throws PropertyVetoException {
-		fireVetoableChange("od", this.oD, od);
-		Amount<Length> old = this.oD;
 		this.oD = od;
-		firePropertyChange("OD", old, oD);
 	}
 
 	public void setID(Amount<Length> id) throws PropertyVetoException {
-		fireVetoableChange("id", this.iD, id);
-		Amount<Length> old = this.iD;
 		iD = id;
-		firePropertyChange("ID", old, iD);
 	}
 	
+	/*
 	public void checkValidity() throws ValidationException{
 		if ( iD.equals(Amount.ZERO) )
 			throw new ValidationException(this, "Invalid iD");
@@ -149,6 +143,7 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 			throw new ValidationException(this, "No exposed grain surface");
 		
 	}
+	*/
 
 	public Amount<Length> webThickness() {
 		if ( innerSurfaceInhibited && outerSurfaceInhibited ){
@@ -240,10 +235,7 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 
 
 	public void setOuterSurfaceInhibited(boolean outerSurfaceInhibited) throws PropertyVetoException {
-		fireVetoableChange("outerSurfaceInhibited", this.outerSurfaceInhibited, outerSurfaceInhibited);
-		boolean old = this.outerSurfaceInhibited;
 		this.outerSurfaceInhibited = outerSurfaceInhibited;
-		firePropertyChange("outerSurfaceInhibited", old, outerSurfaceInhibited);
 	}
 
 
@@ -253,10 +245,7 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements MotorPart.Va
 
 
 	public void setInnerSurfaceInhibited(boolean innerSurfaceInhibited)  throws PropertyVetoException {
-		fireVetoableChange("innerSurfaceInhibited", this.innerSurfaceInhibited, innerSurfaceInhibited);
-		boolean old = this.innerSurfaceInhibited;
 		this.innerSurfaceInhibited = innerSurfaceInhibited;
-		firePropertyChange("innerSurfaceInhibited", old, innerSurfaceInhibited);
 	}
 
 	public static void main(String args[]) throws Exception {

@@ -1,6 +1,6 @@
 package com.billkuker.rocketry.motorsim;
 
-public class Motor extends MotorPart{
+public class Motor {
 	private Chamber chamber;
 	private Grain grain;
 	private Nozzle nozzle;
@@ -13,9 +13,7 @@ public class Motor extends MotorPart{
 	}
 	
 	public void setChamber(Chamber chamber) {
-		Chamber old = this.chamber;
 		this.chamber = chamber;
-		firePropertyChange("Chamber", old, chamber);
 	}
 	
 	public Grain getGrain() {
@@ -23,9 +21,7 @@ public class Motor extends MotorPart{
 	}
 	
 	public void setGrain(Grain grain) {
-		Grain old = this.grain;
 		this.grain = grain;
-		firePropertyChange("Grain", old, grain);
 	}
 	
 	public Nozzle getNozzle() {
@@ -33,9 +29,7 @@ public class Motor extends MotorPart{
 	}
 	
 	public void setNozzle(Nozzle nozzle) {
-		Nozzle old = this.nozzle;
 		this.nozzle = nozzle;
-		firePropertyChange("Nozzle", old, nozzle);
 	}
 
 	public Fuel getFuel() {
@@ -43,9 +37,7 @@ public class Motor extends MotorPart{
 	}
 
 	public void setFuel(Fuel fuel) {
-		Fuel old = this.fuel;
 		this.fuel = fuel;
-		firePropertyChange("Fuel", old, fuel);
 	}
 
 	public String getName() {
@@ -53,8 +45,6 @@ public class Motor extends MotorPart{
 	}
 
 	public void setName(String name) {
-		String old = this.name;
 		this.name = name;
-		firePropertyChange("Name", old, name);
 	}
 }
