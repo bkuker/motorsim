@@ -3,7 +3,6 @@ package com.billkuker.rocketry.motorsim;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.beans.PropertyVetoException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -11,8 +10,6 @@ import java.lang.reflect.Type;
 import javax.measure.unit.Unit;
 
 import org.jscience.physics.amount.Amount;
-import com.billkuker.rocketry.motorsim.ChangeListening.Subject;
-import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 
 public aspect QuantityChecking {
 

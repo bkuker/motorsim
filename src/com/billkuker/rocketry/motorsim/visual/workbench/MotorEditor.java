@@ -24,10 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -58,7 +54,6 @@ import com.billkuker.rocketry.motorsim.visual.Chart;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 import com.billkuker.rocketry.motorsim.visual.NozzlePanel;
-import com.billkuker.rocketry.motorsim.visual.Chart.IntervalDomain;
 
 public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;

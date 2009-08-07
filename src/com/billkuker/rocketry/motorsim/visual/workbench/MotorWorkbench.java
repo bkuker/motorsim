@@ -8,7 +8,6 @@ import java.io.File;
 import java.util.HashMap;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -21,9 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JToolBar;
 import javax.swing.JTree;
-import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;

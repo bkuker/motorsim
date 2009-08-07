@@ -5,10 +5,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Method;
 
-import javax.swing.event.ChangeListener;
-
-import com.billkuker.rocketry.motorsim.grain.MultiGrain;
-
 public aspect ChangeListening {
 
 	public interface Subject {
