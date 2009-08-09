@@ -11,12 +11,14 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.Validating;
+import com.billkuker.rocketry.motorsim.Validating.ValidationException;
 import com.billkuker.rocketry.motorsim.grain.util.BurningShape;
 import com.billkuker.rocketry.motorsim.grain.util.ExtrudedShapeGrain;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
-public class Finocyl extends ExtrudedShapeGrain {
+public class Finocyl extends ExtrudedShapeGrain implements Validating {
 	private Amount<Length> oD = Amount.valueOf(30, SI.MILLIMETER);
 	private Amount<Length> iD = Amount.valueOf(10, SI.MILLIMETER);
 	private Amount<Length> finWidth = Amount.valueOf(2, SI.MILLIMETER);
@@ -112,5 +114,17 @@ public class Finocyl extends ExtrudedShapeGrain {
 		Finocyl e = new Finocyl();
 		new Editor(e).showAsWindow();
 		new GrainPanel(e).showAsWindow();
+	}
+	
+	@Override
+	public void validate() throws ValidationException{
+		if ( iD.equals(Amount.ZERO) )
+			throw new ValidationException(this, "Invalid iD");
+		if ( oD.equals(Amount.ZERO) )
+			throw new ValidationException(this, "Invalid oD");
+		if ( getLength().equals(Amount.ZERO) )
+			throw new ValidationException(this, "Invalid Length");
+		if ( iD.isGreaterThan(oD) )
+			throw new ValidationException(this, "iD > oD");		
 	}
 }

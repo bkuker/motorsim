@@ -14,7 +14,7 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
-public class ConvergentDivergentNozzle implements Nozzle {
+public class ConvergentDivergentNozzle implements Nozzle, Validating {
 
 	private Amount<Length> throatDiameter;
 	
@@ -38,8 +38,6 @@ public class ConvergentDivergentNozzle implements Nozzle {
 
 
 	public void setThroatDiameter(Amount<Length> throatDiameter) {
-		if ( exitDiameter != null && throatDiameter.isGreaterThan(exitDiameter))
-			throw new IllegalArgumentException("Throat > Exit");
 		this.throatDiameter = throatDiameter;
 	}
 	
@@ -50,8 +48,6 @@ public class ConvergentDivergentNozzle implements Nozzle {
 
 
 	public void setExitDiameter(Amount<Length> exitDiameter) {
-		if ( throatDiameter != null && exitDiameter.isLessThan(throatDiameter))
-			throw new IllegalArgumentException("Throat > Exit");
 		this.exitDiameter = exitDiameter;
 	}
 	
@@ -111,5 +107,11 @@ public class ConvergentDivergentNozzle implements Nozzle {
 		//a.add(new java.awt.geom.Area( new Ellipse2D.Double(0,0,5,5)));
 		
 		return s;
+	}
+
+	@Override
+	public void validate() throws ValidationException {
+		if ( exitDiameter != null && throatDiameter.isGreaterThan(exitDiameter))
+			throw new IllegalArgumentException("Throat > Exit");
 	}
 }

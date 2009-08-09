@@ -9,12 +9,14 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.Validating;
+import com.billkuker.rocketry.motorsim.Validating.ValidationException;
 import com.billkuker.rocketry.motorsim.grain.util.BurningShape;
 import com.billkuker.rocketry.motorsim.grain.util.ExtrudedShapeGrain;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
-public class Moonburner extends ExtrudedShapeGrain {
+public class Moonburner extends ExtrudedShapeGrain implements Validating {
 
 	private Amount<Length> oD = Amount.valueOf(30, SI.MILLIMETER);
 	private Amount<Length> iD = Amount.valueOf(10, SI.MILLIMETER);
@@ -72,7 +74,7 @@ public class Moonburner extends ExtrudedShapeGrain {
 		xsection.add(outside);
 		xsection.inhibit(outside);
 
-		xsection.subtract(new Ellipse2D.Double(odmm/2 - idmm/2 + offmm, odmm/2 - idmm/2 + offmm, idmm, idmm));
+		xsection.subtract(new Ellipse2D.Double(odmm/2 - idmm/2 + offmm, odmm/2 - idmm/2, idmm, idmm));
 		webThickness = null;
 	}
 	
@@ -80,6 +82,19 @@ public class Moonburner extends ExtrudedShapeGrain {
 		Moonburner e = new Moonburner();
 		new Editor(e).showAsWindow();
 		new GrainPanel(e).showAsWindow();
+	}
+	
+	public void validate() throws ValidationException{
+		if ( iD.equals(Amount.ZERO) )
+			throw new ValidationException(this, "Invalid iD");
+		if ( oD.equals(Amount.ZERO) )
+			throw new ValidationException(this, "Invalid oD");
+		if ( getLength().equals(Amount.ZERO) )
+			throw new ValidationException(this, "Invalid Length");
+		if ( iD.isGreaterThan(oD) )
+			throw new ValidationException(this, "iD > oD");
+		if ( coreOffset.isGreaterThan(iD.plus(oD).divide(2.0)))
+			throw new ValidationException(this, "Core offset too large");
 	}
 
 }

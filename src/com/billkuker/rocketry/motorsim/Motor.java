@@ -1,12 +1,30 @@
 package com.billkuker.rocketry.motorsim;
 
-public class Motor {
+import javax.measure.unit.SI;
+
+import org.jscience.physics.amount.Amount;
+import com.billkuker.rocketry.motorsim.Validating.ValidationException;
+
+public class Motor implements Validating{
 	private Chamber chamber;
 	private Grain grain;
 	private Nozzle nozzle;
 	private Fuel fuel;
 	private String name;
 	
+	public void validate() throws ValidationException {
+		if ( chamber.chamberVolume().isLessThan(grain.volume(Amount.valueOf(0, SI.MILLIMETER)))){
+			throw new ValidationException(this, "Fuel does not fit in chamber");
+		}
+		if ( chamber instanceof Validating )
+			((Validating)chamber).validate();
+		if ( grain instanceof Validating )
+			((Validating)grain).validate();
+		if ( nozzle instanceof Validating )
+			((Validating)nozzle).validate();
+		if ( fuel instanceof Validating )
+			((Validating)fuel).validate();
+	}
 	
 	public Chamber getChamber() {
 		return chamber;

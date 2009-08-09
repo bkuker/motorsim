@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -117,12 +118,14 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 				public void run() {
 					final JProgressBar bar = new JProgressBar(0,100);
 					add(bar);
+					try{
 					final Burn b = new Burn(motor, new Burn.BurnProgressListener(){
 						@Override
 						public void setProgress(float f){
 							bar.setValue((int)(f*100));
 						}
 					});
+				
 					final BurnPanel bp = new BurnPanel(b);
 					SwingUtilities.invokeLater(new Thread() {
 						public void run() {
@@ -132,6 +135,12 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 							revalidate();
 						}
 					});
+					} catch ( Exception e ){
+						remove(bar);
+						JTextArea t = new JTextArea(e.getMessage());
+						t.setEditable(false);
+						add(t);
+					}
 				}
 			}.start();
 		}

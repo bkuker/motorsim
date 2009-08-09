@@ -25,6 +25,8 @@ import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 import org.jscience.physics.amount.Constants;
 
+import com.billkuker.rocketry.motorsim.Validating.ValidationException;
+
 public class Burn {
 	//Some constants to tune adaptive regression step
 	private static final double regStepIncreaseFactor = 1.01;
@@ -70,11 +72,21 @@ public class Burn {
 	}
 	
 	public Burn(Motor m){
+		try {
+			m.validate();
+		} catch (ValidationException e) {
+			throw new IllegalArgumentException("Invalid Motor: " + e.getMessage());
+		}
 		motor = m;
 		burn();
 	}
 	
 	public Burn(Motor m, BurnProgressListener bpl){
+		try {
+			m.validate();
+		} catch (ValidationException e) {
+			throw new IllegalArgumentException("Invalid Motor: " + e.getMessage());
+		}
 		motor = m;
 		this.bpl = bpl;
 		burn();

@@ -51,13 +51,14 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 	
 	}
 	
-	public class MotorNode extends DefaultMutableTreeNode implements PropertyChangeListener {
+	public class MotorNode extends PartNode implements PropertyChangeListener {
 		private static final long serialVersionUID = 1L;
 		Motor motor;
 		PartNode cn, nn, gn, fn;
 
 		public MotorNode(Motor m) {
 			super(m);
+			setAllowsChildren(true);
 			motor = m;
 			add( cn = new PartNode(m.getChamber()));
 			add( nn = new PartNode(m.getNozzle()));
@@ -88,6 +89,7 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 			} else {
 				nodeChanged(this);
 			}
+			super.propertyChange(e);
 		}
 
 	}

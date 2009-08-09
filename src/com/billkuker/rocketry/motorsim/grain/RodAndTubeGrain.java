@@ -8,10 +8,11 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Grain;
+import com.billkuker.rocketry.motorsim.Validating;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
-public class RodAndTubeGrain extends CompoundGrain {
+public class RodAndTubeGrain extends CompoundGrain implements Validating {
 	CoredCylindricalGrain rod, tube;
 	
 	public static RodAndTubeGrain DEFAULT_GRAIN = new RodAndTubeGrain(){
@@ -108,5 +109,14 @@ public class RodAndTubeGrain extends CompoundGrain {
 		Grain g = DEFAULT_GRAIN;
 		new Editor(g).showAsWindow();
 		new GrainPanel(g).showAsWindow();
+	}
+
+	@Override
+	public void validate() throws ValidationException {
+		rod.validate();
+		tube.validate();
+		if ( rod.getOD().isGreaterThan(tube.getID()))
+			throw new ValidationException(this, "Rod does not fit inside tube");
+		
 	}
 }

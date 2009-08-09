@@ -12,11 +12,12 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.Validating;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 
-public class CoredCylindricalGrain extends ExtrudedGrain {
+public class CoredCylindricalGrain extends ExtrudedGrain implements Validating {
 
 	private Amount<Length> oD, iD;
 	private boolean outerSurfaceInhibited = true, innerSurfaceInhibited = false;
@@ -128,8 +129,8 @@ public class CoredCylindricalGrain extends ExtrudedGrain {
 		iD = id;
 	}
 	
-	/*
-	public void checkValidity() throws ValidationException{
+	@Override
+	public void validate() throws ValidationException{
 		if ( iD.equals(Amount.ZERO) )
 			throw new ValidationException(this, "Invalid iD");
 		if ( oD.equals(Amount.ZERO) )
@@ -143,7 +144,6 @@ public class CoredCylindricalGrain extends ExtrudedGrain {
 			throw new ValidationException(this, "No exposed grain surface");
 		
 	}
-	*/
 
 	public Amount<Length> webThickness() {
 		if ( innerSurfaceInhibited && outerSurfaceInhibited ){

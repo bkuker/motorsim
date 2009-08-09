@@ -17,8 +17,9 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.ChangeListening;
 import com.billkuker.rocketry.motorsim.Grain;
+import com.billkuker.rocketry.motorsim.Validating;
 
-public class MultiGrain implements Grain, Grain.Composite, PropertyChangeListener {
+public class MultiGrain implements Grain, Grain.Composite, PropertyChangeListener, Validating {
 	
 	private Grain grain = null;
 	private int count = 1;
@@ -28,6 +29,8 @@ public class MultiGrain implements Grain, Grain.Composite, PropertyChangeListene
 	}
 
 	public void setCount(int count) {
+		if ( count <= 0 )
+			throw new IllegalArgumentException("Must have at least 1 grain");
 		this.count = count;
 	}
 	
@@ -105,6 +108,12 @@ public class MultiGrain implements Grain, Grain.Composite, PropertyChangeListene
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		firePropertyChange(evt);
+	}
+
+	@Override
+	public void validate() throws ValidationException {
+		if ( grain instanceof Validating )
+			((Validating)grain).validate();
 	}
 
 }
