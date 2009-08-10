@@ -21,7 +21,7 @@ public class WorkbenchTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		String tip = null;
 		setTextNonSelectionColor(Color.black);
-		setTextSelectionColor(Color.black);
+		setTextSelectionColor(Color.white);
 		
 		Object part = null;
 		if (value instanceof DefaultMutableTreeNode) {
