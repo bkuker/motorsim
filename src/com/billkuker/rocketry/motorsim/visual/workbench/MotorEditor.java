@@ -1,6 +1,7 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -117,7 +118,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			new Thread() {
 				public void run() {
 					final JProgressBar bar = new JProgressBar(0,100);
-					add(bar);
+					add(bar, BorderLayout.NORTH);
 					try{
 					final Burn b = new Burn(motor, new Burn.BurnProgressListener(){
 						@Override
