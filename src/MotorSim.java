@@ -1,7 +1,7 @@
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-public class MotorWorkbench {
+public class MotorSim {
 
 	public static void main(String args[]) throws Exception {
 
@@ -9,7 +9,7 @@ public class MotorWorkbench {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
 			System.setProperty(
 					"com.apple.mrj.application.apple.menu.about.name",
-					"MotorWorkbench");
+					"MotorSim");
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e1) {
 			e1.printStackTrace();

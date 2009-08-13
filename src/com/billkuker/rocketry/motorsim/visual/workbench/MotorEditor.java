@@ -10,6 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
@@ -63,6 +64,9 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	Motor motor;
 	GrainEditor grainEditor;
 	BurnTab bt;
+	Burn burn;
+	
+	private Vector<BurnWatcher> burnWatchers = new Vector<BurnWatcher>();
 
 	private static final int XML_TAB = 0;
 	private static final int CASING_TAB = 1;
@@ -132,6 +136,10 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 						public void run() {
 							remove(bar);
 							add(bp, BorderLayout.CENTER);
+							
+							for( BurnWatcher bw : burnWatchers )
+								bw.replace(burn, b);
+							burn = b;
 							
 							revalidate();
 						}
@@ -370,6 +378,10 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			setSelectedIndex(CASING_TAB);
 		if (o instanceof Fuel || o instanceof Fuel.CombustionProduct)
 			setSelectedIndex(FUEL_TAB);
+	}
+	
+	public void addBurnWatcher(BurnWatcher bw){
+		burnWatchers.add(bw);
 	}
 
 	@Deprecated

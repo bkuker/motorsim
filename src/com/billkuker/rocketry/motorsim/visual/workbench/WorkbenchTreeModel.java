@@ -95,7 +95,7 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 	}
 
 	public WorkbenchTreeModel() {
-		super(new DefaultMutableTreeNode(), true);
+		super(new DefaultMutableTreeNode("All Motors"), true);
 	}
 	
 	@Override

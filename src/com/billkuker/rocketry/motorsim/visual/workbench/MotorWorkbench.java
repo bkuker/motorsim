@@ -39,6 +39,8 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private JTree tree;
 	private JTabbedPane motors;
 	private WorkbenchTreeModel tm;
+	private MultiBurnChart mb;
+	private JFrame allBurns;
 
 	private HashMap<MotorEditor, File> e2f = new HashMap<MotorEditor, File>();
 	private HashMap<File, MotorEditor> f2e = new HashMap<File, MotorEditor>();
@@ -46,12 +48,19 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private HashMap<Motor, MotorEditor> m2e = new HashMap<Motor, MotorEditor>();
 
 	public MotorWorkbench() {
-		setTitle("MotorWorkbench");
+		setTitle("MotorSim 1.0 RC1");
 		addMenu();
 		setSize(1024, 768);
 		top = new JPanel(new BorderLayout());
 		setContentPane(top);
-
+		
+		mb = new MultiBurnChart();
+		allBurns = new JFrame();
+		allBurns.setSize(800, 600);
+		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		allBurns.add(mb);
+		allBurns.setVisible(true);
+		
 		motors = new JTabbedPane();
 
 		tree = new JTree(tm = new WorkbenchTreeModel());
@@ -69,7 +78,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		// split.setResizeWeight(.25);
 		top.add(split, BorderLayout.CENTER);
 
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setVisible(true);
 
 	}
@@ -142,6 +151,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 										f2e.remove(e2f.get(e));
 										e2f.remove(e);
 										m2e.remove(e.getMotor());
+										mb.removeBurn(e.burn);
 									}
 								});
 							}
@@ -238,6 +248,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	public void addMotor(Motor m, File f) {
 		tm.addMotor(m);
 		MotorEditor e = new MotorEditor(m);
+		e.addBurnWatcher(mb);
 		String title;
 		if (f == null) {
 			title = "New Motor";
@@ -252,6 +263,11 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
+		if ( e.getPath().getLastPathComponent() == tm.getRoot() ){
+			allBurns.setVisible(true);
+			allBurns.toFront();
+		}
+		
 		Motor m = getMotor(e.getPath());
 		
 		if ( m == null )
@@ -264,6 +280,8 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 					.getLastPathComponent()).getUserObject();
 			m2e.get(m).focusOnObject(o);
 		}
+		
+
 	}
 
 	private Motor getMotor(TreePath p) {

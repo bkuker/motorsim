@@ -44,6 +44,8 @@ public class WorkbenchTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		if (part instanceof Motor) {
 			setText(((Motor) part).getName());
+		} else if ( part instanceof String ) {
+			setText((String)part);
 		} else if ( part == null ) {
 			setText("");
 		} else {
