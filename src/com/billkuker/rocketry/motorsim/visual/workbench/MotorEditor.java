@@ -65,7 +65,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	GrainEditor grainEditor;
 	BurnTab bt;
 	Burn burn;
-	
+
 	private Vector<BurnWatcher> burnWatchers = new Vector<BurnWatcher>();
 
 	private static final int XML_TAB = 0;
@@ -111,6 +111,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 	private class BurnTab extends JPanel {
 		private static final long serialVersionUID = 1L;
+
 		public BurnTab() {
 			setLayout(new BorderLayout());
 			setName("Burn");
@@ -121,30 +122,31 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			removeAll();
 			new Thread() {
 				public void run() {
-					final JProgressBar bar = new JProgressBar(0,100);
+					final JProgressBar bar = new JProgressBar(0, 100);
 					add(bar, BorderLayout.NORTH);
-					try{
-					final Burn b = new Burn(motor, new Burn.BurnProgressListener(){
-						@Override
-						public void setProgress(float f){
-							bar.setValue((int)(f*100));
-						}
-					});
-				
-					final BurnPanel bp = new BurnPanel(b);
-					SwingUtilities.invokeLater(new Thread() {
-						public void run() {
-							remove(bar);
-							add(bp, BorderLayout.CENTER);
-							
-							for( BurnWatcher bw : burnWatchers )
-								bw.replace(burn, b);
-							burn = b;
-							
-							revalidate();
-						}
-					});
-					} catch ( Exception e ){
+					try {
+						final Burn b = new Burn(motor,
+								new Burn.BurnProgressListener() {
+									@Override
+									public void setProgress(float f) {
+										bar.setValue((int) (f * 100));
+									}
+								});
+
+						final BurnPanel bp = new BurnPanel(b);
+						SwingUtilities.invokeLater(new Thread() {
+							public void run() {
+								remove(bar);
+								add(bp, BorderLayout.CENTER);
+
+								for (BurnWatcher bw : burnWatchers)
+									bw.replace(burn, b);
+								burn = b;
+
+								revalidate();
+							}
+						});
+					} catch (Exception e) {
 						remove(bar);
 						JTextArea t = new JTextArea(e.getMessage());
 						t.setEditable(false);
@@ -196,7 +198,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			// setDividerLocation(.25);
 			// setResizeWeight(.25);
 			if (g instanceof ChangeListening.Subject) {
-				((ChangeListening.Subject) g).addPropertyChangeListener(MotorEditor.this);
+				((ChangeListening.Subject) g)
+						.addPropertyChangeListener(MotorEditor.this);
 			}
 		}
 	}
@@ -223,6 +226,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 			p.add(new Chooser<Fuel>(fuelTypes) {
 				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected void choiceMade(Fuel o) {
 					motor.setFuel(o);
@@ -244,7 +248,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			// setDividerLocation(.25);
 			// setResizeWeight(.25);
 			if (f instanceof ChangeListening.Subject) {
-				((ChangeListening.Subject) f).addPropertyChangeListener(MotorEditor.this);
+				((ChangeListening.Subject) f)
+						.addPropertyChangeListener(MotorEditor.this);
 			}
 		}
 	}
@@ -260,40 +265,42 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			setLeftComponent(parts);
 			setRightComponent(new NozzlePanel(n));
 
-			parts.add(new JTextField(motor.getName()){
+			parts.add(new JTextField(motor.getName()) {
 				private static final long serialVersionUID = 1L;
 				{
 					final JTextField t = this;
 					addFocusListener(new FocusListener() {
-						
+
 						@Override
 						public void focusLost(FocusEvent e) {
 							String n = t.getText();
-							if ( !"".equals(n) && !n.equals(motor.getName()) ){
+							if (!"".equals(n) && !n.equals(motor.getName())) {
 								System.out.println("Name Changed");
 								motor.setName(n);
 							} else {
 								t.setText(motor.getName());
 							}
 						}
-						
+
 						@Override
 						public void focusGained(FocusEvent e) {
-						
+
 						}
 					});
-					
+
 				}
 			});
-			
+
 			parts.add(new Editor(c));
 			parts.add(new Editor(n));
 
 			if (n instanceof ChangeListening.Subject) {
-				((ChangeListening.Subject) n).addPropertyChangeListener(MotorEditor.this);
+				((ChangeListening.Subject) n)
+						.addPropertyChangeListener(MotorEditor.this);
 			}
 			if (c instanceof ChangeListening.Subject) {
-				((ChangeListening.Subject) c).addPropertyChangeListener(MotorEditor.this);
+				((ChangeListening.Subject) c)
+						.addPropertyChangeListener(MotorEditor.this);
 			}
 		}
 	}
@@ -310,8 +317,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		add(text, XML_TAB);
 		setMotor(m, true);
 	}
-	
-	public Motor getMotor(){
+
+	public Motor getMotor() {
 		return motor;
 	}
 
@@ -324,7 +331,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	}
 
 	private void setMotor(Motor m, boolean retext) {
-		if ( motor != null )
+		if (motor != null)
 			motor.removePropertyChangeListener(this);
 		motor = m;
 		motor.addPropertyChangeListener(this);
@@ -379,8 +386,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		if (o instanceof Fuel || o instanceof Fuel.CombustionProduct)
 			setSelectedIndex(FUEL_TAB);
 	}
-	
-	public void addBurnWatcher(BurnWatcher bw){
+
+	public void addBurnWatcher(BurnWatcher bw) {
 		burnWatchers.add(bw);
 	}
 
@@ -404,8 +411,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		reText();
-		//Dont re-burn for a name change!
-		if ( !evt.getPropertyName().equals("Name") )
+		// Dont re-burn for a name change!
+		if (!evt.getPropertyName().equals("Name"))
 			bt.reBurn();
 	}
 
