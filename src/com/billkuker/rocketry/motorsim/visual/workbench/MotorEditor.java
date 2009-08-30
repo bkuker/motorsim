@@ -111,17 +111,23 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 	private class BurnTab extends JPanel {
 		private static final long serialVersionUID = 1L;
-
+		private Thread currentThread;
+		
 		public BurnTab() {
 			setLayout(new BorderLayout());
 			setName("Burn");
 			reBurn();
 		}
+		
+		private class BurnCanceled extends RuntimeException{
+			private static final long serialVersionUID = 1L;
+		};
 
 		public void reBurn() {
 			removeAll();
-			new Thread() {
+			currentThread = new Thread() {
 				public void run() {
+					final Thread me = this;
 					final JProgressBar bar = new JProgressBar(0, 100);
 					add(bar, BorderLayout.NORTH);
 					try {
@@ -130,6 +136,9 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 									@Override
 									public void setProgress(float f) {
 										bar.setValue((int) (f * 100));
+										if ( currentThread != me ){
+											throw new BurnCanceled();
+										}
 									}
 								});
 
@@ -146,6 +155,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 								revalidate();
 							}
 						});
+					} catch (BurnCanceled c){
+						System.err.println("Burn Canceled!");
 					} catch (Exception e) {
 						remove(bar);
 						JTextArea t = new JTextArea(e.getMessage());
@@ -153,7 +164,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 						add(t);
 					}
 				}
-			}.start();
+			};
+			currentThread.start();
 		}
 	}
 
