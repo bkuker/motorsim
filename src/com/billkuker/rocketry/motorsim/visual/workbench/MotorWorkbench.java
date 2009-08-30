@@ -56,6 +56,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		
 		mb = new MultiBurnChart();
 		allBurns = new JFrame();
+		allBurns.setTitle("All Burns");
 		allBurns.setSize(800, 600);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		allBurns.add(mb);

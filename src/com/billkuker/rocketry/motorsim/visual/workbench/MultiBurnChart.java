@@ -42,7 +42,7 @@ public class MultiBurnChart extends JPanel implements BurnWatcher {
 		force = RocketScience.UnitPreference.preference
 				.getPreferredUnit(SI.NEWTON);
 		JFreeChart chart = ChartFactory.createXYLineChart(
-				"Burns", // Title
+				"", // Title
 				time.toString(), // x-axis Label
 				force.toString(), // y-axis Label
 				dataset, PlotOrientation.VERTICAL, // Plot Orientation
