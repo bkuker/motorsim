@@ -118,7 +118,10 @@ public class BurnPanel extends JPanel {
 				if ( thrustTime.isGreaterThan(Amount.valueOf(0, SI.SECOND)))
 					averageThrust = ns.divide(thrustTime).to(SI.NEWTON);
 
-				int cn = (int)(Math.log(ns.doubleValue(RocketScience.NEWTON_SECOND)/1.25) / Math.log(2));
+				float cnf = (float)(Math.log(ns.doubleValue(RocketScience.NEWTON_SECOND)/1.25) / Math.log(2));
+				int cn = (int)cnf;
+				float fraction = cnf - cn;
+				int percent = (int)(100 * fraction);
 				char cl = (char)((int)'A' + cn);
 
 			
@@ -130,7 +133,7 @@ public class BurnPanel extends JPanel {
 			text.add(new JLabel("Average Thust"));
 			text.add(new JLabel("Max Pressure"));
 			
-			text.add(new JLabel(new String(new char[]{cl}) + "-" +Math.round(averageThrust.doubleValue(SI.NEWTON))));
+			text.add(new JLabel(percent + "% " + new String(new char[]{cl}) + "-" +Math.round(averageThrust.doubleValue(SI.NEWTON))));
 			text.add(new JLabel(approx(ns)));
 			text.add(new JLabel(approx(maxThrust)));
 			text.add(new JLabel(approx(averageThrust)));
