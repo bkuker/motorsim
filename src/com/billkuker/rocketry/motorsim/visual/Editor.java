@@ -20,7 +20,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.text.TableView.TableCell;
 
 import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
@@ -177,7 +176,6 @@ public class Editor extends PropertySheetPanel {
 
 		@Override
 		public void setAsText(String text) throws IllegalArgumentException {
-			System.out.println("Setting text " + text);
 			editor.setText(text);
 		};
 

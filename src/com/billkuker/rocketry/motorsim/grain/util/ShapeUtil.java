@@ -84,19 +84,16 @@ public class ShapeUtil {
 			double coords[] = new double[6];
 			int type = i.currentSegment(coords);
 			if (type == PathIterator.SEG_LINETO) {
-				// System.out.println("Line");
 				double nx = coords[0];
 				double ny = coords[1];
-				// System.out.println(x+","+y+ " to " + nx+"," + ny);
 				len += Math.sqrt(Math.pow(x - nx, 2) + Math.pow(y - ny, 2));
 				x = nx;
 				y = ny;
 			} else if (type == PathIterator.SEG_MOVETO) {
-				// System.out.println("Move");
 				x = coords[0];
 				y = coords[1];
 			} else {
-				// System.err.println("Got " + type);
+			
 			}
 			i.next();
 		}

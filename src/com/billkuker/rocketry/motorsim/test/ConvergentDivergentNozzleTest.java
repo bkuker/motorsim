@@ -48,8 +48,6 @@ public class ConvergentDivergentNozzleTest extends RocketTest {
 		Amount<Force> expected = Amount.valueOf(87.2, .1, SI.NEWTON);
 		
 		assertApproximate(t, expected);
-		
-		System.out.println(t);
 	}
 
 	@Test

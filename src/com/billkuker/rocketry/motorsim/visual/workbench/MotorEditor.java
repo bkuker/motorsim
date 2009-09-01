@@ -1,7 +1,6 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -28,6 +27,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
+import org.apache.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.jscience.physics.amount.Amount;
@@ -60,6 +60,7 @@ import com.billkuker.rocketry.motorsim.visual.NozzlePanel;
 
 public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(MotorEditor.class);
 	RSyntaxTextArea text = new RSyntaxTextArea();
 	Motor motor;
 	GrainEditor grainEditor;
@@ -156,7 +157,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 							}
 						});
 					} catch (BurnCanceled c){
-						System.err.println("Burn Canceled!");
+						log.info("Burn Canceled!");
 					} catch (Exception e) {
 						remove(bar);
 						JTextArea t = new JTextArea(e.getMessage());
@@ -193,7 +194,6 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 								p.add(new Editor(ng), grainEditorIndex);
 								p.remove(0);
 								p.add(new Editor(g), 0);
-								// System.out.println("Chose new grain");
 							}
 						}
 					});
@@ -287,7 +287,6 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 						public void focusLost(FocusEvent e) {
 							String n = t.getText();
 							if (!"".equals(n) && !n.equals(motor.getName())) {
-								System.out.println("Name Changed");
 								motor.setName(n);
 							} else {
 								t.setText(motor.getName());

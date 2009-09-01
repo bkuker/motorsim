@@ -14,9 +14,12 @@ import java.util.Set;
 import javax.measure.quantity.Length;
 import javax.measure.unit.SI;
 
+import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
 public class BurningShape {
+	
+	private static final Logger log = Logger.getLogger(BurningShape.class);
 	
 	private static class RegressableShape {
 		private Area a;
@@ -244,7 +247,7 @@ public class BurningShape {
 
 		} else {
 			RegressableShape r = new RegressableShape(s);
-			System.err.println("Warning: Complex (non circle / square) geometry slows me down.");
+			log.warn("Warning: Complex (non circle / square) geometry slows me down.");
 			return r.getRegressedShape(mm * (plus?-1:1));
 		}
 

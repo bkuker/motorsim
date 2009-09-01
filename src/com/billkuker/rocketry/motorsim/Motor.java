@@ -3,7 +3,6 @@ package com.billkuker.rocketry.motorsim;
 import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
-import com.billkuker.rocketry.motorsim.Validating.ValidationException;
 
 public class Motor implements Validating{
 	private Chamber chamber;

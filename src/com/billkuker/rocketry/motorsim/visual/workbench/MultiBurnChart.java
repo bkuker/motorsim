@@ -10,7 +10,6 @@ import javax.measure.unit.Unit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
-import javax.swing.plaf.multi.MultiButtonUI;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -24,9 +23,9 @@ import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience;
-import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 
 public class MultiBurnChart extends JPanel implements BurnWatcher {
+	private static final long serialVersionUID = 1L;
 
 	private XYSeriesCollection dataset = new XYSeriesCollection();
 
@@ -61,7 +60,6 @@ public class MultiBurnChart extends JPanel implements BurnWatcher {
 
 	private XYSeries createSeries(Burn b) {
 		XYSeries s = new XYSeries(b.getMotor().getName());
-		Amount<Force> low = Amount.valueOf(1, SI.NEWTON);
 		for( Burn.Interval i : b.getData().values() ){
 			s.add(i.time.doubleValue(time), i.thrust.doubleValue(force));
 		}

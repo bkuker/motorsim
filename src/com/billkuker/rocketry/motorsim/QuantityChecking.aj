@@ -9,10 +9,12 @@ import java.lang.reflect.Type;
 
 import javax.measure.unit.Unit;
 
+import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
 public aspect QuantityChecking {
 
+	private static Logger log = Logger.getLogger(QuantityChecking.class);
 	public interface Checked {
 	};
 
@@ -21,8 +23,6 @@ public aspect QuantityChecking {
 	@SuppressWarnings("unchecked")
 	void around(Checked c, Amount amt):
 	        execution(void Checked+.set*(Amount)) && target(c) && args(amt) {
-		System.out.println(thisJoinPointStaticPart.getSignature().getName()
-				+ " set to " + amt);
 		try {
 			BeanInfo b = Introspector.getBeanInfo(c.getClass());
 			PropertyDescriptor ps[] = b.getPropertyDescriptors();
@@ -38,7 +38,7 @@ public aspect QuantityChecking {
 
 					Amount a = amt;
 					if (!a.getUnit().isCompatible(u)) {
-						System.err.println("Aspect Expected " + expected
+						log.warn("Aspect Expected " + expected
 								+ " got " + u);
 
 						throw new Error(ps[i].getShortDescription()

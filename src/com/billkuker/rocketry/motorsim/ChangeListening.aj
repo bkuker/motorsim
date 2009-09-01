@@ -5,8 +5,11 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Method;
 
+import org.apache.log4j.Logger;
+
 public aspect ChangeListening {
 
+	private static Logger log = Logger.getLogger(ChangeListening.class);
 	public interface Subject {
 		// public void addPropertyChangeListener(PropertyChangeListener l);
 	}
@@ -14,12 +17,10 @@ public aspect ChangeListening {
 	private PropertyChangeSupport Subject.pcs;
 
 	public void Subject.addPropertyChangeListener(PropertyChangeListener l) {
-		//System.out.println("PCS Added");
 		pcs.addPropertyChangeListener(l);
 	}
 	
 	public void Subject.removePropertyChangeListener(PropertyChangeListener l) {
-		//System.out.println("PCS Removed");
 		pcs.addPropertyChangeListener(l);
 	}
 	
@@ -31,7 +32,6 @@ public aspect ChangeListening {
 
 	void around(Subject s, Object newVal):
 	        execution(void Subject+.set*(..)) && target(s) && args(newVal) {
-		System.out.println(s);
 		String name = thisJoinPointStaticPart.getSignature().getName();
 		name = name.replaceFirst("set", "");
 		Object old = null;
@@ -43,12 +43,10 @@ public aspect ChangeListening {
 			old = m.invoke(s);
 
 		} catch (Throwable t) {
-			System.err.print("Error getting old value for " + name);
+			log.warn("Error getting old value for " + name);
 		}
 		proceed(s, newVal);
 		if (old != newVal) {
-			System.out.println(name + " changed from " + old + " to "
-					+ newVal);
 			s.pcs.firePropertyChange(name, old, newVal);
 		}
 	}

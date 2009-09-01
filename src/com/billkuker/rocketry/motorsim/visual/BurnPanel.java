@@ -183,7 +183,6 @@ public class BurnPanel extends JPanel {
 			
 			NumberFormat nf = NumberFormat.getInstance();
 			nf.setMaximumFractionDigits(2);
-			//System.out.println("Time: " + nf.format(displayedTime.doubleValue(SI.SECOND)) + "s");
 			
 			pressure.mark(displayedTime);
 			thrust.mark(displayedTime);

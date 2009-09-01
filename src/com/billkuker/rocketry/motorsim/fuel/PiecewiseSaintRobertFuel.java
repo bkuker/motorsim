@@ -6,9 +6,12 @@ import java.util.TreeMap;
 
 import javax.measure.quantity.Pressure;
 
+import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
 public abstract class PiecewiseSaintRobertFuel extends SaintRobertFuel {
+	
+	private static final Logger log = Logger.getLogger(PiecewiseSaintRobertFuel.class);
 
 	private class Entry{
 		double a;
@@ -32,7 +35,7 @@ public abstract class PiecewiseSaintRobertFuel extends SaintRobertFuel {
 			Entry e = entries.get(samplePressure);
 			return e.a;
 		} catch ( NoSuchElementException e ){
-			System.err.println("Pressure " + pressure + " is outside of expiermental range for " + this.getClass().getSimpleName());
+			log.warn("Pressure " + pressure + " is outside of expiermental range for " + this.getClass().getSimpleName());
 			return entries.get(entries.lastKey()).a;
 		}
 	}
@@ -44,7 +47,7 @@ public abstract class PiecewiseSaintRobertFuel extends SaintRobertFuel {
 			Entry e = entries.get(samplePressure);
 			return e.n;
 		} catch ( NoSuchElementException e ){
-			System.err.println("Pressure " + pressure + " is outside of expiermental range for " + this.getClass().getSimpleName());
+			log.warn("Pressure " + pressure + " is outside of expiermental range for " + this.getClass().getSimpleName());
 			return entries.get(entries.lastKey()).n;
 		}
 	}
