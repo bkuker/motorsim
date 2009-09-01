@@ -124,17 +124,24 @@ public class BurnPanel extends JPanel {
 				int percent = (int)(100 * fraction);
 				char cl = (char)((int)'A' + cn);
 
+				
+				Amount<Duration> isp = ns.divide(
+						b.getMotor().getGrain().volume(Amount.valueOf(0, SI.MILLIMETER))
+							.times(b.getMotor().getFuel().getIdealDensity().times(b.getMotor().getFuel().getDensityRatio()))
+						).to(SI.METERS_PER_SECOND).divide(Amount.valueOf(9.81, SI.METERS_PER_SQUARE_SECOND)).to(SI.SECOND);
 			
 			JPanel text = new JPanel(new GridLayout(2,5));
 
 			text.add(new JLabel("Rating"));
 			text.add(new JLabel("Total Impulse"));
+			text.add(new JLabel("ISP"));
 			text.add(new JLabel("Max Thrust"));
 			text.add(new JLabel("Average Thust"));
 			text.add(new JLabel("Max Pressure"));
 			
 			text.add(new JLabel(percent + "% " + new String(new char[]{cl}) + "-" +Math.round(averageThrust.doubleValue(SI.NEWTON))));
 			text.add(new JLabel(approx(ns)));
+			text.add(new JLabel(approx(isp)));			
 			text.add(new JLabel(approx(maxThrust)));
 			text.add(new JLabel(approx(averageThrust)));
 			text.add(new JLabel(approx(maxPressure)));
