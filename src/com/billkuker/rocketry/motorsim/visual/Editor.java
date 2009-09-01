@@ -8,22 +8,30 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Vector;
 
+import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.text.TableView.TableCell;
 
 import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 
 public class Editor extends PropertySheetPanel {
 	private static final long serialVersionUID = 1L;
-
-	private static Logger log = Logger.getLogger(Editor.class);
+	private static final NumberFormat nf = new DecimalFormat("##########.###");
+	private static final Logger log = Logger.getLogger(Editor.class);
 
 	private Object obj;
 
@@ -32,6 +40,8 @@ public class Editor extends PropertySheetPanel {
 
 		PropertyEditorManager.registerEditor(Amount.class,
 				AmountPropertyEditor.class);
+		
+		getRendererRegistry().registerRenderer(Amount.class, AmountRenderer.class);
 
 		// Build the list of properties we want it to edit
 		//final PropertySheetPanel ps = new PropertySheetPanel();
@@ -79,6 +89,25 @@ public class Editor extends PropertySheetPanel {
 		f.setContentPane(this);
 		f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
+	}
+	
+	public static void main(String args[]){
+		CylindricalChamber o = new CylindricalChamber();
+		o.setLength(Amount.valueOf(100.5, SI.MILLIMETER));
+		o.setID(Amount.valueOf(30, SI.MILLIMETER));
+		Editor e = new Editor(o);
+		e.showAsWindow();
+	}
+	
+	public static class AmountRenderer implements TableCellRenderer {
+		@Override
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			Amount a = (Amount)value;
+			return new JLabel(nf.format(a.doubleValue(a.getUnit())) + " " + a.getUnit() );
+		}
+		
 	}
 
 	public static class AmountPropertyEditor extends PropertyEditorSupport {
@@ -133,13 +162,14 @@ public class Editor extends PropertySheetPanel {
 			if (a.isExact())
 				text = a.getExactValue() + " " + a.getUnit();
 			else
-				text = a.doubleValue(a.getUnit()) + " " + a.getUnit();
+				text = nf.format(a.doubleValue(a.getUnit())) + " " + a.getUnit();
 
 			setAsText(text);
 		}
 
 		@Override
 		public void setAsText(String text) throws IllegalArgumentException {
+			System.out.println("Setting text " + text);
 			editor.setText(text);
 		};
 
