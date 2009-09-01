@@ -144,7 +144,13 @@ public class Editor extends PropertySheetPanel {
 				// Storing the old unit allows you to type 10 into a field
 				// that says 20 mm and get 10 mm, so you dont have to
 				// type the unit if they havn't changed.
-				Amount a = Amount.valueOf(editor.getText());
+				
+				//Amount wants a leading 0
+				if (text.startsWith(".")){
+					text = "0" + text;
+				}
+				
+				Amount a = Amount.valueOf(text);
 				oldUnit = a.getUnit();
 				return a;
 			}
