@@ -423,8 +423,12 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent evt) {
 		reText();
 		// Dont re-burn for a name change!
-		if (!evt.getPropertyName().equals("Name"))
+		if (!evt.getPropertyName().equals("Name")){
 			bt.reBurn();
+		} else {
+			for (BurnWatcher bw : burnWatchers)
+				bw.replace(burn, burn);
+		}
 	}
 
 }
