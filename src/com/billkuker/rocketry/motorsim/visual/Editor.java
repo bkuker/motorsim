@@ -61,6 +61,8 @@ public class Editor extends PropertySheetPanel {
 		setProperties(v.toArray(new PropertyDescriptor[v.size()]));
 
 		readFromObject(obj);
+		
+		getTable().setRowHeight(22);
 
 		addPropertySheetChangeListener(new PropertyChangeListener() {
 
