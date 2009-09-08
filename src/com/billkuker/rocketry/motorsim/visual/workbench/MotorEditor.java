@@ -367,14 +367,14 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 		CylindricalChamber c = new CylindricalChamber();
 		c.setLength(Amount.valueOf(200, SI.MILLIMETER));
-		c.setID(Amount.valueOf(25, SI.MILLIMETER));
+		c.setID(Amount.valueOf(30, SI.MILLIMETER));
 		m.setChamber(c);
 
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
 		try {
 			g.setLength(Amount.valueOf(70, SI.MILLIMETER));
-			g.setOD(Amount.valueOf(23.5, SI.MILLIMETER));
-			g.setID(Amount.valueOf(7.9375, SI.MILLIMETER));
+			g.setOD(Amount.valueOf(30, SI.MILLIMETER));
+			g.setID(Amount.valueOf(10, SI.MILLIMETER));
 		} catch (PropertyVetoException v) {
 			throw new Error(v);
 		}
