@@ -9,6 +9,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.measure.quantity.Pressure;
@@ -87,9 +89,12 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	private abstract class Chooser<T> extends JPanel {
 		private static final long serialVersionUID = 1L;
 		private Class<? extends T>[] types;
+		private Map<Class<? extends T>, T> old = new HashMap<Class<? extends T>, T>();
 
-		public Chooser(Class<? extends T>... ts) {
+		public Chooser(T initial, Class<? extends T>... ts) {
 			types = ts;
+			if ( initial != null )
+				old.put((Class<? extends T>)initial.getClass(), initial);
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			for (final Class<? extends T> c : types) {
 				JButton b = new JButton(c.getSimpleName());
@@ -97,7 +102,13 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 				b.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						try {
-							choiceMade(c.newInstance());
+							T val = old.get(c);
+							if ( val == null ){
+								System.err.println("CREATED NEW =========================");
+								val = c.newInstance();
+								old.put(c, val);
+							}
+							choiceMade(val);
 						} catch (InstantiationException e1) {
 							e1.printStackTrace();
 						} catch (IllegalAccessException e1) {
@@ -184,7 +195,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 				p.add(new Editor(g));
 				for (Grain gg : ((Grain.Composite) g).getGrains()) {
 					final int grainEditorIndex = p.getComponentCount() + 1;
-					p.add(new Chooser<Grain>(grainTypes) {
+					p.add(new Chooser<Grain>(gg, grainTypes) {
 						private static final long serialVersionUID = 1L;
 
 						@Override
@@ -237,7 +248,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			final JPanel p = new JPanel();
 			p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 
-			p.add(new Chooser<Fuel>(fuelTypes) {
+			p.add(new Chooser<Fuel>(null, fuelTypes) {
 				private static final long serialVersionUID = 1L;
 
 				@Override
