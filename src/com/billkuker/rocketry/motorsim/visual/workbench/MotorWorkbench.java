@@ -2,6 +2,7 @@ package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -115,11 +116,10 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 									@Override
 									public void actionPerformed(ActionEvent arg0) {
 
-										final JFileChooser fc = new JFileChooser();
-										int returnVal = fc
-												.showOpenDialog(MotorWorkbench.this);
-										if (returnVal == JFileChooser.APPROVE_OPTION) {
-											File file = fc.getSelectedFile();
+										final FileDialog fd = new FileDialog(MotorWorkbench.this, "Open Motor", FileDialog.LOAD);
+										fd.setVisible(true);
+										if ( fd.getFile() != null ) {
+											File file = new File(fd.getDirectory() + fd.getFile());
 											if (f2e.get(file) != null) {
 												motors.setSelectedComponent(f2e
 														.get(file));
@@ -181,11 +181,10 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 									@Override
 									public void actionPerformed(ActionEvent arg0) {
 
-										final JFileChooser fc = new JFileChooser();
-										int returnVal = fc
-												.showSaveDialog(MotorWorkbench.this);
-										if (returnVal == JFileChooser.APPROVE_OPTION) {
-											File file = fc.getSelectedFile();
+										final FileDialog fd = new FileDialog(MotorWorkbench.this, "Save Motor As", FileDialog.SAVE);
+										fd.setVisible(true);
+										if (fd.getFile() != null ) {
+											File file = new File(fd.getDirectory() + fd.getFile());
 											MotorEditor m = (MotorEditor) motors
 													.getSelectedComponent();
 											try {
