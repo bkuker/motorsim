@@ -1,6 +1,7 @@
 package com.billkuker.rocketry.motorsim.visual;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
@@ -39,6 +40,9 @@ public class Editor extends PropertySheetPanel {
 
 		PropertyEditorManager.registerEditor(Amount.class,
 				AmountPropertyEditor.class);
+		
+		setToolBarVisible(false);
+		setMinimumSize(new Dimension(150,200));
 		
 		getRendererRegistry().registerRenderer(Amount.class, AmountRenderer.class);
 
