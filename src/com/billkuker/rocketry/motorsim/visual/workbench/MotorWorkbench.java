@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
@@ -29,8 +30,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
+import com.billkuker.rocketry.motorsim.io.ENGExporter;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 
 public class MotorWorkbench extends JFrame implements TreeSelectionListener {
@@ -205,7 +208,33 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 								});
 							}
 						});
+						add(new JSeparator());
+						add(new JMenuItem("Export .ENG"){
+							private static final long serialVersionUID = 1L;
 
+							{
+								addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent arg0) {
+
+										final FileDialog fd = new FileDialog(MotorWorkbench.this, "Export .ENG File", FileDialog.SAVE);
+										fd.setFile("motorsim.eng");
+										fd.setVisible(true);
+										if (fd.getFile() != null ) {
+											File file = new File(fd.getDirectory() + fd.getFile());
+											Vector<Burn> bb = new Vector<Burn>();
+											for( MotorEditor me : m2e.values() )
+												bb.add(me.burn);
+											try{
+												ENGExporter.export(bb, file);
+											} catch ( Exception e ){
+												e.printStackTrace();
+											}
+										}
+									}
+								});
+							}
+						});
 					}
 				});
 				add(new JMenu("Settings") {
