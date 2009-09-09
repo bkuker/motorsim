@@ -9,9 +9,9 @@ import org.jscience.physics.amount.Amount;
 
 public class CylindricalChamber implements Chamber {
 	
-	private Amount<Length> length;
-	
-	private Amount<Length> iD;
+	private Amount<Length> length = Amount.valueOf(200, SI.MILLIMETER);
+	private Amount<Length> oD = Amount.valueOf(31, SI.MILLIMETER);
+	private Amount<Length> iD = Amount.valueOf(30, SI.MILLIMETER);
 
 	public Amount<Pressure> burstPressure() {
 		return null;
@@ -35,6 +35,14 @@ public class CylindricalChamber implements Chamber {
 
 	public void setID(Amount<Length> id) {
 		iD = id;
+	}
+	
+	public Amount<Length> getOD() {
+		return oD;
+	}
+
+	public void setOD(Amount<Length> oD) {
+		this.oD = oD;
 	}
 
 }
