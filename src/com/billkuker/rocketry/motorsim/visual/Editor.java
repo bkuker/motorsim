@@ -42,7 +42,7 @@ public class Editor extends PropertySheetPanel {
 				AmountPropertyEditor.class);
 		
 		setToolBarVisible(false);
-		setMinimumSize(new Dimension(150,200));
+		//setMinimumSize(new Dimension(150,200));
 		
 		getRendererRegistry().registerRenderer(Amount.class, AmountRenderer.class);
 
@@ -66,6 +66,10 @@ public class Editor extends PropertySheetPanel {
 		readFromObject(obj);
 		
 		getTable().setRowHeight(22);
+		
+		setMinimumSize(new Dimension(
+				getTable().getPreferredSize().width,
+				getTable().getPreferredSize().height + 10));
 
 		addPropertySheetChangeListener(new PropertyChangeListener() {
 
