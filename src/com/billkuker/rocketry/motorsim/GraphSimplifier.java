@@ -2,10 +2,13 @@ package com.billkuker.rocketry.motorsim;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.measure.quantity.Area;
@@ -26,15 +29,24 @@ public class GraphSimplifier<X extends Quantity, Y extends Quantity> {
 		Amount<Y> y;
 	}
 
-	private Map<Amount<X>, Amount<Y>> out = new HashMap<Amount<X>, Amount<Y>>();
-	private List<Amount<X>> outDomain = new Vector<Amount<X>>();
+	private class DDEntry implements Comparable<DDEntry> {
+		Amount<X> x;
+		Amount dd;
+
+		@Override
+		public int compareTo(DDEntry o) {
+			return dd.compareTo(o.dd);
+		}
+	}
+
+	private SortedMap<Amount<X>, Amount<Y>> out = new TreeMap<Amount<X>, Amount<Y>>();
 
 	public Amount<Y> value(Amount<X> x) {
 		return out.get(x);
 	}
 
 	public Iterable<Amount<X>> getDomain() {
-		return outDomain;
+		return out.keySet();
 	}
 
 	public GraphSimplifier(Object source, String method,
@@ -45,7 +57,6 @@ public class GraphSimplifier<X extends Quantity, Y extends Quantity> {
 
 		Vector<Entry> oldEntries = new Vector<Entry>();
 
-		Amount<Y> max = null, min = null, range = null, err = null;
 		while (domain.hasNext()) {
 			Amount<X> x = domain.next();
 			Amount<Y> y = (Amount<Y>) f.invoke(source, x);
@@ -53,54 +64,43 @@ public class GraphSimplifier<X extends Quantity, Y extends Quantity> {
 			e.x = x;
 			e.y = y;
 			oldEntries.add(e);
-
-			if (max == null || max.isLessThan(y))
-				max = y;
-			if (min == null || min.isGreaterThan(y))
-				min = y;
-		}
-		range = max.minus(min).abs();
-		err = range.divide(50);
-
-		for (int j = 0; j < 10 && oldEntries.size() > 30; j++) {
-			Vector<Entry> newEntries = new Vector<Entry>();
-			newEntries.add(oldEntries.firstElement());
-			for (int i = 1; i < oldEntries.size() - 1; i = i + 2) {
-				Entry low = oldEntries.elementAt(i - 1);
-				Entry middle = oldEntries.elementAt(i);
-				Entry high = oldEntries.elementAt(i + 1);
-
-				Amount<X> dx = high.x.minus(low.x);
-				Amount<Y> dy = high.y.minus(low.y);
-
-				Amount<X> ddx = middle.x.minus(low.x);
-				Amount<Y> lin = low.y.plus(dy.times(ddx.divide(dx)));
-
-				Amount<Y> dif = middle.y.minus(lin).abs();
-
-				// System.out.println(middle.x + "\t" + middle.y + "\t" + lin +
-				// "\t" + dif + "\t"
-				// + dy);
-
-				if (dif.isGreaterThan(err)) {
-					newEntries.add(middle);
-				}
-				newEntries.add(high);
-			}
-			newEntries.add(oldEntries.lastElement());
-
-			System.out.println("Size " + oldEntries.size() + " -> "
-					+ newEntries.size());
-
-			oldEntries = newEntries;
 		}
 
-		for (Entry ee : oldEntries) {
-			if (out.get(ee.x) == null) {
-				out.put(ee.x, ee.y);
-				outDomain.add(ee.x);
-			}
+		List<DDEntry> byDD = new Vector<DDEntry>();
+		Map<Amount<X>, Amount<Y>> byX = new HashMap<Amount<X>, Amount<Y>>();
+
+		for (int i = 1; i < oldEntries.size() - 1; i++) {
+			Entry low = oldEntries.elementAt(i - 1);
+			Entry middle = oldEntries.elementAt(i);
+			Entry high = oldEntries.elementAt(i + 1);
+
+			Amount<?> d1, d2, dd;
+
+			d1 = middle.y.minus(low.y).divide(middle.x.minus(low.x));
+			d2 = high.y.minus(middle.y).divide(high.x.minus(middle.x));
+			dd = d2.minus(d1).divide(high.x.minus(low.x));
+
+			DDEntry dde = new DDEntry();
+			dde.dd = dd.abs();
+			dde.x = middle.x;
+
+			byDD.add(dde);
+			byX.put(middle.x, middle.y);
+
 		}
+
+		Collections.sort(byDD);
+
+		out.put(oldEntries.elementAt(0).x, oldEntries.elementAt(0).y);
+		int count = 0;
+		for (DDEntry dde : byDD) {
+			out.put(dde.x, byX.get(dde.x));
+			if (++count >= 20)
+				break;
+		}
+		int last = oldEntries.size() - 1;
+		out.put(oldEntries.elementAt(last).x, oldEntries.elementAt(last).y);
+
 	}
 
 	public static void main(String args[]) throws Exception {

@@ -1,10 +1,13 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Vector;
@@ -35,6 +38,7 @@ import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.io.ENGExporter;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
+import com.billkuker.rocketry.motorsim.visual.workbench.WorkbenchTreeModel.FuelEditNode;
 
 public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private static final long serialVersionUID = 1L;
@@ -98,7 +102,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 					private static final long serialVersionUID = 1L;
 
 					{
-						add(new JMenuItem("New") {
+						add(new JMenuItem("New Motor") {
 							private static final long serialVersionUID = 1L;
 							{
 								addActionListener(new ActionListener() {
@@ -142,7 +146,10 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 								});
 							}
 						});
-						add(new JMenuItem("Close") {
+						
+						add(new JSeparator());
+						
+						add(new JMenuItem("Close Motor") {
 							private static final long serialVersionUID = 1L;
 							{
 								addActionListener(new ActionListener() {
@@ -160,8 +167,8 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 								});
 							}
 						});
-						add(new JSeparator());
-						add(new JMenuItem("Save") {
+						
+						add(new JMenuItem("Save Motor") {
 							private static final long serialVersionUID = 1L;
 							{
 								addActionListener(new ActionListener() {
@@ -177,7 +184,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 								});
 							}
 						});
-						add(new JMenuItem("Save As...") {
+						add(new JMenuItem("Save Motor As...") {
 							private static final long serialVersionUID = 1L;
 							{
 								addActionListener(new ActionListener() {
@@ -208,6 +215,22 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 								});
 							}
 						});
+						
+
+						add(new JSeparator());
+						add(new JMenuItem("New Fuel") {
+							private static final long serialVersionUID = 1L;
+							{
+								addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent arg0) {
+										addFuel();
+									}
+								});
+
+							}
+						});
+						add(new JMenuItem("Save Fuel") {});
 						add(new JSeparator());
 						add(new JMenuItem("Export .ENG"){
 							private static final long serialVersionUID = 1L;
@@ -265,6 +288,26 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 			}
 		});
 	}
+	
+	private void addFuel(){
+		final SRFuelEditor ed = new SRFuelEditor();
+		final FuelEditNode node = tm.new FuelEditNode(ed);
+		tm.getFuels().add(node);
+		tm.nodeStructureChanged(tm.getFuels());
+		motors.addTab(ed.getFuel().getName(), ed);
+		ed.getFuel().addPropertyChangeListener(new PropertyChangeListener(){
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if ( evt.getPropertyName().equals("Name")){
+					for ( int i = 0; i < motors.getTabCount(); i++ ){
+						if ( motors.getComponent(i) == ed ){
+							motors.setTitleAt(i, ed.getFuel().getName());
+							tm.nodeChanged(node);
+						}
+					}
+				}
+			}});
+	}
 
 	private void save(Motor m, File f) {
 		try {
@@ -292,9 +335,17 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		if ( e.getPath().getLastPathComponent() == tm.getRoot() ){
+		if ( e.getPath().getLastPathComponent() == tm.getMotors() ){
 			allBurns.setVisible(true);
 			allBurns.toFront();
+		}
+		
+		if ( e.getPath().getLastPathComponent() instanceof FuelEditNode ){
+			FuelEditNode fen = ((FuelEditNode)e.getPath().getLastPathComponent());
+			SRFuelEditor ed = fen.getUserObject();
+			for ( int i = 0 ; i < motors.getTabCount(); i++ ){
+				motors.setSelectedComponent(ed);
+			}
 		}
 		
 		Motor m = getMotor(e.getPath());

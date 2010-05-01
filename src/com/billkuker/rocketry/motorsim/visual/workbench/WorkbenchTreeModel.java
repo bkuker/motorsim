@@ -6,6 +6,7 @@ import java.util.Enumeration;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import com.billkuker.rocketry.motorsim.ChangeListening;
@@ -15,7 +16,11 @@ import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 public class WorkbenchTreeModel extends DefaultTreeModel {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	//TreeNode root = new DefaultMutableTreeNode("Root");
+	DefaultMutableTreeNode motors = new DefaultMutableTreeNode("All Motors");
+	DefaultMutableTreeNode fuel = new DefaultMutableTreeNode("Fuels");
+	
 	public class MultiGrainNode extends PartNode{
 		private static final long serialVersionUID = 1L;
 		public MultiGrainNode(MultiGrain part) {
@@ -31,6 +36,25 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 				nodesChanged(this, new int[]{0});
 			}
 			super.propertyChange(e);
+		}
+	}
+	
+	public class FuelEditNode extends DefaultMutableTreeNode {
+		private static final long serialVersionUID = 1L;
+
+		public FuelEditNode(SRFuelEditor sr){
+			super(sr, false);
+			sr.getFuel().addPropertyChangeListener(new PropertyChangeListener(){
+
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					nodeChanged(FuelEditNode.this);
+				}});
+		}
+		
+		@Override
+		public SRFuelEditor getUserObject(){
+			return (SRFuelEditor)super.getUserObject();
 		}
 	}
 
@@ -95,7 +119,9 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 	}
 
 	public WorkbenchTreeModel() {
-		super(new DefaultMutableTreeNode("All Motors"), true);
+		super(new DefaultMutableTreeNode("Root"), true);
+		getRoot().add(motors);
+		getRoot().add(fuel);
 	}
 	
 	@Override
@@ -103,16 +129,24 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 		return (DefaultMutableTreeNode)super.getRoot();
 	}
 	
+	public DefaultMutableTreeNode getMotors(){
+		return motors;
+	}
+	
+	public DefaultMutableTreeNode getFuels(){
+		return fuel;
+	}
+	
 	public void addMotor(Motor m){
 		DefaultMutableTreeNode root = getRoot();
-		root.add(new MotorNode(m));
-		nodesWereInserted(root, new int[]{root.getChildCount()-1});
+		motors.add(new MotorNode(m));
+		nodesWereInserted(motors, new int[]{motors.getChildCount()-1});
 		
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void removeMotor(Motor m){
-		Enumeration<TreeNode> e = getRoot().children();
+		Enumeration<TreeNode> e = motors.children();
 		while ( e.hasMoreElements() ){
 			TreeNode n = e.nextElement();
 			if ( n instanceof MotorNode ){
