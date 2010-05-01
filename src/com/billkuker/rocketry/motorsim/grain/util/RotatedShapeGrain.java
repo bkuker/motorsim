@@ -62,11 +62,11 @@ public abstract class RotatedShapeGrain implements Grain {
 		double areaFlatteningError = .001;
 	}
 	
-	Quality quality = Quality.Low;
+	protected Quality quality = Quality.Low;
 	
 	protected BurningShape shape = new BurningShape();
 	
-	Amount<Length> web = null;
+	protected Amount<Length> web = null;
 	
 	public Area getCrossSection(Amount<Length> regression) {
 		Area ret = new Area();

@@ -50,6 +50,7 @@ import com.billkuker.rocketry.motorsim.fuel.KNSB;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CSlot;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
+import com.billkuker.rocketry.motorsim.grain.EndBurner;
 import com.billkuker.rocketry.motorsim.grain.Finocyl;
 import com.billkuker.rocketry.motorsim.grain.Moonburner;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
@@ -80,7 +81,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 	@SuppressWarnings("unchecked")
 	private Class[] grainTypes = { CoredCylindricalGrain.class, Finocyl.class,
-			Moonburner.class, RodAndTubeGrain.class, CSlot.class };
+			Moonburner.class, RodAndTubeGrain.class, CSlot.class, EndBurner.class };
 
 	@SuppressWarnings("unchecked")
 	private Class[] fuelTypes = { KNSB.class, KNSU.class, KNER.class,
