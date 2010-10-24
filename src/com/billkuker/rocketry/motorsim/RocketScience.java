@@ -51,26 +51,24 @@ public class RocketScience {
 		
 		protected Set<Unit<?>> units = new HashSet<Unit<?>>();
 		
-		@SuppressWarnings("unchecked")
-		UnitPreference( Unit u[] ){
-			for ( Unit uu : u )
+		UnitPreference( Unit<?> u[] ){
+			for ( Unit<?> uu : u )
 				units.add(uu);
 		}
 		
 		@SuppressWarnings("unchecked")
-		public Unit getPreferredUnit(Unit u){
+		public <T extends Quantity> Unit<T> getPreferredUnit(Unit<T> u){
 			if ( units.contains(u) )
 				return u;
-			for( Unit ret : units ){
+			for( Unit<?> ret : units ){
 				if ( ret.isCompatible(u) ){
-					return ret;
+					return (Unit<T>) ret;
 				}
 			}
 			return u;
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T extends Quantity> String approx(Amount<T> a) {
 		if (a == null)
 			return "NULL";
