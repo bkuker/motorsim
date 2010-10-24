@@ -1,6 +1,7 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -15,6 +16,7 @@ import java.util.Vector;
 
 import javax.measure.quantity.Length;
 import javax.measure.unit.SI;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
@@ -234,17 +236,23 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		private static final long serialVersionUID = 1L;
 
 		public CaseEditor(Nozzle n, Chamber c) {
-			super(JSplitPane.HORIZONTAL_SPLIT);
+			super(JSplitPane.VERTICAL_SPLIT);
 			setName("General Parameters");
+			
 			JPanel parts = new JPanel();
-			parts.setLayout(new BoxLayout(parts, BoxLayout.Y_AXIS));
-			setLeftComponent(parts);
-			setRightComponent(new HardwarePanel(n, c));
+			parts.setLayout(new BoxLayout(parts, BoxLayout.X_AXIS));
+			setTopComponent(parts);
+			setBottomComponent(new HardwarePanel(n, c));
+			
+			JPanel nameAndFuel = new JPanel();
+			nameAndFuel.setLayout(new BoxLayout(nameAndFuel, BoxLayout.Y_AXIS));
 
-			parts.add(new JLabel("Name:"));
-			parts.add(new JTextField(motor.getName()) {
+			nameAndFuel.add(new JLabel("Name:"));
+			nameAndFuel.add(new JTextField(motor.getName()) {
 				private static final long serialVersionUID = 1L;
 				{
+					setMinimumSize(new Dimension(200, 20));
+					setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
 					final JTextField t = this;
 					addFocusListener(new FocusListener() {
 
@@ -266,8 +274,10 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 				}
 			});
-			parts.add(new JLabel("Fuel:"));
-			parts.add( new JComboBox(availableFuels){{
+			nameAndFuel.add(new JLabel("Fuel:"));
+			nameAndFuel.add( new JComboBox(availableFuels){{
+				setMinimumSize(new Dimension(200, 20));
+				setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
 				addActionListener(new ActionListener(){
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -275,10 +285,20 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 						System.out.println("FUEL CHANGED");
 					}});
 			}});
-			parts.add(new JLabel("Casing:"));
-			parts.add(new Editor(c));
-			parts.add(new JLabel("Nozzle:"));
-			parts.add(new Editor(n));
+			nameAndFuel.add(Box.createVerticalGlue());
+			parts.add(nameAndFuel);
+			
+			JPanel casing = new JPanel();
+			casing.setLayout(new BoxLayout(casing, BoxLayout.Y_AXIS));
+			casing.add(new JLabel("Casing:"));
+			casing.add(new Editor(c));
+			parts.add(casing);
+			
+			JPanel nozzle = new JPanel();
+			nozzle.setLayout(new BoxLayout(nozzle, BoxLayout.Y_AXIS));
+			nozzle.add(new JLabel("Nozzle:"));
+			nozzle.add(new Editor(n));
+			parts.add(nozzle);
 
 			if (n instanceof ChangeListening.Subject) {
 				((ChangeListening.Subject) n)

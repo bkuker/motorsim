@@ -64,17 +64,19 @@ public class HardwarePanel extends JPanel {
 		h = cb.getHeight() + nb.getHeight();
 		
 		double mw, mh;
-		mw = getWidth() - 10;
-		mh = getHeight() - 10;
+		mw = getHeight() - 10;
+		mh = getWidth() - 10;
 		
 		double sw, sh, s;
 		sw = mw / w;
 		sh = mh / h;
 		s = Math.min(sw, sh);
 		
+		g2d.rotate(-Math.PI / 2);
+		
 		g2d.translate(0, -cb.getY() - 5);
 		g2d.scale(s, s);
-		g2d.translate(-cb.getX(), 0);
+		g2d.translate(cb.getX(), 0);
 		
 		g2d.setStroke(new BasicStroke(1));
 		g2d.draw( c );
