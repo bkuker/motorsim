@@ -72,14 +72,17 @@ public class RocketScience {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends Quantity> String approx(Amount<T> a) {
+		if (a == null)
+			return "NULL";
 		Unit<T> u = RocketScience.UnitPreference.preference.getPreferredUnit(a
 				.getUnit());
 		double d = a.doubleValue(u);
 
 		DecimalFormat df;
+
 		if (Math.abs(d) < 10.0) {
 			df = new DecimalFormat("#.##");
-		} else if (Math.abs(d) < 10.0) {
+		} else if (Math.abs(d) < 100.0) {
 			df = new DecimalFormat("#.#");
 		} else {
 			df = new DecimalFormat("#");
