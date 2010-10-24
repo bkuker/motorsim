@@ -1,13 +1,9 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.TextListener;
 import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -21,33 +17,26 @@ import javax.measure.unit.SI;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.RocketScience;
-import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
+import com.billkuker.rocketry.motorsim.fuel.EditableFuel.EditableCombustionProduct;
 import com.billkuker.rocketry.motorsim.fuel.PiecewiseSaintRobertFuel;
 import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel;
-import com.billkuker.rocketry.motorsim.fuel.EditableFuel.EditableCombustionProduct;
 import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel.Type;
 import com.billkuker.rocketry.motorsim.visual.Chart;
 import com.billkuker.rocketry.motorsim.visual.Editor;
-import com.billkuker.rocketry.motorsim.visual.Chart.IntervalDomain;
 
 public class SRFuelEditor extends JSplitPane {
 	private static final NumberFormat nf = new DecimalFormat("##########.###");

@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Collection;
-import java.util.Set;
 
 import javax.measure.quantity.Duration;
 import javax.measure.quantity.Force;

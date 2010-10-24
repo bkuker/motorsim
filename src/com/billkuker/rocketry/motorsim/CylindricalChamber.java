@@ -3,8 +3,6 @@ package com.billkuker.rocketry.motorsim;
 import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Pressure;

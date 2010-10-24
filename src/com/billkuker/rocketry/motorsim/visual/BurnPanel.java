@@ -23,8 +23,8 @@ import javax.swing.event.ChangeListener;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
-import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.Burn.Interval;
+import com.billkuker.rocketry.motorsim.RocketScience;
 
 public class BurnPanel extends JPanel {
 	private static final long serialVersionUID = 1L;

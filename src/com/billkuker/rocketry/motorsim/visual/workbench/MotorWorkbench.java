@@ -1,7 +1,6 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
@@ -10,13 +9,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -40,7 +36,6 @@ import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
-import com.billkuker.rocketry.motorsim.fuel.EditableFuel;
 import com.billkuker.rocketry.motorsim.fuel.KNDX;
 import com.billkuker.rocketry.motorsim.fuel.KNER;
 import com.billkuker.rocketry.motorsim.fuel.KNSB;
