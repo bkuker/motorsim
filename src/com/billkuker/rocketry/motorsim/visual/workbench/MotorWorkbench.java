@@ -81,8 +81,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		allBurns.setSize(800, 600);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		allBurns.add(mb);
-		allBurns.setVisible(true);
-		
+
 		motors = new JTabbedPane();
 
 		tree = new JTree(tm = new WorkbenchTreeModel());
@@ -313,6 +312,23 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 						add(nonsci);
 					}
 				});
+				add(new JMenu("View") {
+					private static final long serialVersionUID = 1L;
+					{
+						add(new JMenuItem("Show All Motors Graph") {
+							private static final long serialVersionUID = 1L;
+							{
+								addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent arg0) {
+										allBurns.setVisible(true);
+										allBurns.toFront();
+									}
+								});
+							}
+						});
+					}
+				});
 			}
 		});
 	}
@@ -372,12 +388,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	}
 
 	@Override
-	public void valueChanged(TreeSelectionEvent e) {
-		if ( e.getPath().getLastPathComponent() == tm.getMotors() ){
-			allBurns.setVisible(true);
-			allBurns.toFront();
-		}
-		
+	public void valueChanged(TreeSelectionEvent e) {		
 		if ( e.getPath().getLastPathComponent() instanceof FuelNode ){
 			FuelNode fen = ((FuelNode)e.getPath().getLastPathComponent());
 				motors.setSelectedComponent(fen.getUserObject());			
