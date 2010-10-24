@@ -2,6 +2,7 @@ package com.billkuker.rocketry.motorsim.visual;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -29,6 +30,8 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.RectangleInsets;
+import org.jfree.ui.TextAnchor;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
@@ -100,7 +103,6 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 	Object source;
 	Method f;
 
-	@SuppressWarnings("unchecked")
 	public Chart(Unit<X> xUnit, Unit<Y> yUnit, Object source, String method)
 			throws NoSuchMethodException {
 		super(new BorderLayout());
@@ -136,7 +138,52 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 			marker = new ValueMarker(m.doubleValue(xUnit));
 			marker.setPaint(Color.blue);
 			marker.setAlpha(0.8f);
+			marker.setLabel(RocketScience.approx(getNear(m)));
+			
+			marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+			marker.setLabelOffset(new RectangleInsets(0,-5,0,0));
+			
+			marker.setLabelFont(new Font(Font.DIALOG, Font.BOLD, 12));
 			chart.getXYPlot().addDomainMarker(marker);
+		}
+	}
+	
+	/**
+	 * Get the Y value at or near a given X
+	 * For display use only!
+	 * 
+	 * @param ax
+	 * @return
+	 */
+	private Amount<Y> getNear(final Amount<X> ax){
+		if ( dataset.getSeriesCount() != 1 )
+			return null;
+		final XYSeries s = dataset.getSeries(0);
+		final double x = ax.doubleValue(xUnit);
+		int idx = s.getItemCount() / 2;
+		int delta = s.getItemCount() / 4;
+		while(true){
+			if ( s.getX(idx).doubleValue() < x ){
+				idx += delta;
+			} else {
+				idx -= delta;
+			}
+			delta = delta / 2;
+			if ( delta < 1 ){
+				int idxL = idx-1;
+				int idxH = idx;
+				final double lowerX = s.getX(idxL).doubleValue();
+				final double higherX = s.getX(idxH).doubleValue();
+				final double sampleXDiff = higherX - lowerX;
+				final double xDiff = x - lowerX;
+				final double dist = xDiff / sampleXDiff;
+				final double lowerY = s.getY(idxL).doubleValue();
+				final double higherY = s.getY(idxH).doubleValue();
+				final double y = lowerY + dist * (higherY - lowerY);
+				
+				
+				return Amount.valueOf( y, yUnit);
+			}
 		}
 	}
 
@@ -163,7 +210,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 		stop = false;
 		int sz = 0;
 		if (d instanceof Collection) {
-			sz = ((Collection) d).size();
+			sz = ((Collection<Amount<X>>) d).size();
 			int sk2 = sz / 200;
 			if (skip < sk2)
 				skip = sk2;
