@@ -1,5 +1,6 @@
 package com.billkuker.rocketry.motorsim;
 
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,6 +11,8 @@ import javax.measure.unit.ProductUnit;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import javax.measure.unit.UnitFormat;
+
+import org.jscience.physics.amount.Amount;
 
 public class RocketScience {
 	public static Unit<Pressure> PSI = new ProductUnit<Pressure>(NonSI.POUND_FORCE.divide(NonSI.INCH.pow(2)));
@@ -65,6 +68,24 @@ public class RocketScience {
 			}
 			return u;
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Quantity> String approx(Amount<T> a) {
+		Unit<T> u = RocketScience.UnitPreference.preference.getPreferredUnit(a
+				.getUnit());
+		double d = a.doubleValue(u);
+
+		DecimalFormat df;
+		if (Math.abs(d) < 10.0) {
+			df = new DecimalFormat("#.##");
+		} else if (Math.abs(d) < 10.0) {
+			df = new DecimalFormat("#.#");
+		} else {
+			df = new DecimalFormat("#");
+		}
+
+		return df.format(d) + " " + u.toString();
 	}
 
 }

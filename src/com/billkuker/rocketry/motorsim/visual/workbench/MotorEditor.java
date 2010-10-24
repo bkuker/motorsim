@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.measure.quantity.Length;
 import javax.measure.unit.SI;
 import javax.swing.BoxLayout;
 import javax.swing.ComboBoxModel;
@@ -44,6 +45,7 @@ import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.Nozzle;
+import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CSlot;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
@@ -136,12 +138,19 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 					final Thread me = this;
 					final JProgressBar bar = new JProgressBar(0, 100);
 					add(bar, BorderLayout.NORTH);
+					final JLabel progress = new JLabel();
+					add(progress, BorderLayout.CENTER);
 					try {
 						final Burn b = new Burn(motor,
 								new Burn.BurnProgressListener() {
 									@Override
 									public void setProgress(float f) {
-										bar.setValue((int) (f * 100));
+										int pct = (int)(f*100);
+										bar.setValue(pct);
+										Amount<Length> web = motor.getGrain().webThickness();
+										Amount<Length> remaining = web.times(1.0 - f);
+										
+										progress.setText("Progress: " + pct + "% (" + RocketScience.approx(remaining) + " web thickness remaining)");
 										if ( currentThread != me ){
 											throw new BurnCanceled();
 										}

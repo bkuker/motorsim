@@ -10,7 +10,6 @@ import javax.measure.quantity.Force;
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
 import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -140,11 +139,11 @@ public class BurnPanel extends JPanel {
 			text.add(new JLabel("Max Pressure"));
 			
 			text.add(new JLabel(percent + "% " + new String(new char[]{cl}) + "-" +Math.round(averageThrust.doubleValue(SI.NEWTON))));
-			text.add(new JLabel(approx(ns)));
-			text.add(new JLabel(approx(isp)));			
-			text.add(new JLabel(approx(maxThrust)));
-			text.add(new JLabel(approx(averageThrust)));
-			text.add(new JLabel(approx(maxPressure)));
+			text.add(new JLabel(RocketScience.approx(ns)));
+			text.add(new JLabel(RocketScience.approx(isp)));			
+			text.add(new JLabel(RocketScience.approx(maxThrust)));
+			text.add(new JLabel(RocketScience.approx(averageThrust)));
+			text.add(new JLabel(RocketScience.approx(maxPressure)));
 			
 			add(text, BorderLayout.NORTH);
 			
@@ -154,14 +153,6 @@ public class BurnPanel extends JPanel {
 		}
 		
 
-	}
-	
-	@SuppressWarnings("unchecked")
-	private String approx(Amount a){
-		Unit u = RocketScience.UnitPreference.preference.getPreferredUnit(a.getUnit());
-		double d = a.doubleValue(u);
-		long i = Math.round(d);
-		return i + " " + u.toString();
 	}
 	
 	private class SL extends JSlider implements ChangeListener{
