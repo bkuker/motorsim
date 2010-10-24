@@ -138,7 +138,10 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 			marker = new ValueMarker(m.doubleValue(xUnit));
 			marker.setPaint(Color.blue);
 			marker.setAlpha(0.8f);
-			marker.setLabel(RocketScience.approx(getNear(m)));
+			
+			Amount<Y> val = getNear(m);
+			if ( val != null )
+				marker.setLabel(RocketScience.approx(val));
 			
 			marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
 			marker.setLabelOffset(new RectangleInsets(0,-5,0,0));
@@ -180,7 +183,6 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 				final double lowerY = s.getY(idxL).doubleValue();
 				final double higherY = s.getY(idxH).doubleValue();
 				final double y = lowerY + dist * (higherY - lowerY);
-				
 				
 				return Amount.valueOf( y, yUnit);
 			}
