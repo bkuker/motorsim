@@ -111,9 +111,9 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 		this.source = source;
 
 
-		this.xUnit = RocketScience.UnitPreference.preference
+		this.xUnit = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(xUnit);
-		this.yUnit = RocketScience.UnitPreference.preference
+		this.yUnit = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(yUnit);
 
 		chart = ChartFactory.createXYLineChart(method.substring(0, 1)

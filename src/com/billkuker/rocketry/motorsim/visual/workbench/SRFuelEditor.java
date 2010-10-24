@@ -44,7 +44,7 @@ public class SRFuelEditor extends JSplitPane {
 	Chart<Pressure, Velocity> burnRate;
 
 	private class Entry implements Comparable<Entry> {
-		Amount<Pressure> p = Amount.valueOf(0, RocketScience.UnitPreference.preference.getPreferredUnit(RocketScience.PSI));
+		Amount<Pressure> p = Amount.valueOf(0, RocketScience.UnitPreference.getUnitPreference().getPreferredUnit(RocketScience.PSI));
 		double a;
 		double n;
 

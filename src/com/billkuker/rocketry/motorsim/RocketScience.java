@@ -3,6 +3,7 @@ package com.billkuker.rocketry.motorsim;
 import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.prefs.Preferences;
 
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Quantity;
@@ -47,7 +48,23 @@ public class RocketScience {
 				NEWTON_SECOND
 		});
 		
-		public static UnitPreference preference = SI;
+		private static UnitPreference preference = SI;
+
+		static {
+			Preferences prefs = Preferences.userNodeForPackage(RocketScience.class);
+			String p = prefs.get("PreferedUnits", "SI");
+			preference = UnitPreference.valueOf(p);
+		}
+		
+		public static UnitPreference getUnitPreference(){
+			return preference;
+		}
+		
+		public static void setUnitPreference( final UnitPreference up ){
+			preference = up;
+			Preferences prefs = Preferences.userNodeForPackage(RocketScience.class);
+			prefs.put("PreferedUnits", up.toString());
+		}
 		
 		protected Set<Unit<?>> units = new HashSet<Unit<?>>();
 		

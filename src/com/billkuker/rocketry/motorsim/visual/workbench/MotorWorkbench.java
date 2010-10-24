@@ -297,15 +297,18 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 								"NonSI");
 						units.add(sci);
 						units.add(nonsci);
-						sci.setSelected(true);
+						sci.setSelected(UnitPreference.getUnitPreference() == UnitPreference.SI);
+						nonsci.setSelected(UnitPreference.getUnitPreference() == UnitPreference.NONSI);
 						sci.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent arg0) {
-								UnitPreference.preference = UnitPreference.SI;
+								UnitPreference
+										.setUnitPreference(UnitPreference.SI);
 							}
 						});
 						nonsci.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent arg0) {
-								UnitPreference.preference = UnitPreference.NONSI;
+								UnitPreference
+										.setUnitPreference(UnitPreference.NONSI);
 							}
 						});
 						add(sci);

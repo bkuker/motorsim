@@ -36,9 +36,9 @@ public class MultiBurnChart extends JPanel implements BurnWatcher {
 	@SuppressWarnings("unchecked")
 	public MultiBurnChart() {
 		this.setLayout(new BorderLayout());
-		time = RocketScience.UnitPreference.preference
+		time = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(SI.SECOND);
-		force = RocketScience.UnitPreference.preference
+		force = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(SI.NEWTON);
 		JFreeChart chart = ChartFactory.createXYLineChart(
 				"", // Title
