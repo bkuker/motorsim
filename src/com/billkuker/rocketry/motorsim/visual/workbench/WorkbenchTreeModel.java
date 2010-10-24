@@ -1,5 +1,6 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Enumeration;
@@ -10,6 +11,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import com.billkuker.rocketry.motorsim.ChangeListening;
+import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 
@@ -39,11 +41,29 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 		}
 	}
 	
-	public class FuelEditNode extends DefaultMutableTreeNode {
+	public class FuelNode extends DefaultMutableTreeNode{
+		private static final long serialVersionUID = 1L;
+		Fuel f;
+		public FuelNode(Component c, Fuel f){
+			super(c, false);
+			this.f = f;
+		}
+		
+		@Override
+		public Component getUserObject(){
+			return (Component)super.getUserObject();
+		}
+		
+		public Fuel getFuel(){
+			return f;
+		}
+	}
+	
+	public class FuelEditNode extends FuelNode {
 		private static final long serialVersionUID = 1L;
 
 		public FuelEditNode(SRFuelEditor sr){
-			super(sr, false);
+			super(sr, sr.getFuel());
 			sr.getFuel().addPropertyChangeListener(new PropertyChangeListener(){
 
 				@Override
@@ -56,6 +76,7 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 		public SRFuelEditor getUserObject(){
 			return (SRFuelEditor)super.getUserObject();
 		}
+
 	}
 
 	public class PartNode extends DefaultMutableTreeNode implements PropertyChangeListener {
@@ -92,7 +113,6 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 				gn = new PartNode(m.getGrain());
 			}
 			add(gn);
-			add( fn = new PartNode(m.getFuel()));
 			if (m instanceof ChangeListening.Subject) {
 				((ChangeListening.Subject) m).addPropertyChangeListener(this);
 			}
@@ -105,14 +125,7 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 
 		@Override
 		public void propertyChange(PropertyChangeEvent e) {
-			if ( e.getPropertyName().equals("Fuel")){
-				fn = new PartNode(motor.getFuel());
-				remove(3);
-				add(fn);
-				nodesChanged(this, new int[]{3});
-			} else {
 				nodeChanged(this);
-			}
 			super.propertyChange(e);
 		}
 

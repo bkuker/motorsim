@@ -27,6 +27,10 @@ public abstract class PiecewiseSaintRobertFuel extends SaintRobertFuel {
 	protected void add(Amount<Pressure> p, final double _a, final double _n){
 		entries.put(p, new Entry(){{a = _a; n = _n;}});
 	}
+	
+	protected void clear(){
+		entries.clear();
+	}
 
 	@Override
 	protected double burnrateCoefficient(Amount<Pressure> pressure) {

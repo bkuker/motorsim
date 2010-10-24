@@ -99,11 +99,12 @@ public class ConvergentDivergentNozzle implements Nozzle, Validating {
 		s.append(new Line2D.Double(0,0,cDiff,-cDiff), true);
 		
 		s.transform(AffineTransform.getScaleInstance(-1, 1));
-		s.transform(AffineTransform.getTranslateInstance(-throatR, 0));
+		s.transform(AffineTransform.getTranslateInstance(-throatR * 2, 0));
 		
 		s.append(new Line2D.Double(0,0,diff,diff*3), false);
 		s.append(new Line2D.Double(0,0,cDiff,-cDiff), true);
 		
+		s.transform(AffineTransform.getTranslateInstance(throatR, cDiff));
 		//a.add(new java.awt.geom.Area( new Ellipse2D.Double(0,0,5,5)));
 		
 		return s;

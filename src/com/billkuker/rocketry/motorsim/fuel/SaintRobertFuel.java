@@ -34,10 +34,12 @@ public abstract class SaintRobertFuel implements Fuel {
 	private Type t = Type.SI;
 	
 	public SaintRobertFuel(Type t){
+		if ( t == null )
+			throw new IllegalArgumentException("Type must be non-null");
 		this.t = t;
 	}
 	
-	protected Type getType(){
+	public Type getType(){
 		return t;
 	}
 	
@@ -67,5 +69,9 @@ public abstract class SaintRobertFuel implements Fuel {
 
 	public String getName(){
 		return this.getClass().getSimpleName();
+	}
+	
+	public String toString(){
+		return getName();
 	}
 }

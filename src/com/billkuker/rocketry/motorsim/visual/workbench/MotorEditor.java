@@ -10,6 +10,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -17,8 +19,11 @@ import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
 import javax.measure.unit.SI;
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
@@ -28,6 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.event.ListDataListener;
 
 import org.apache.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -60,7 +66,7 @@ import com.billkuker.rocketry.motorsim.visual.BurnPanel;
 import com.billkuker.rocketry.motorsim.visual.Chart;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
-import com.billkuker.rocketry.motorsim.visual.NozzlePanel;
+import com.billkuker.rocketry.motorsim.visual.HardwarePanel;
 
 public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
@@ -72,20 +78,16 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	Burn burn;
 
 	private Vector<BurnWatcher> burnWatchers = new Vector<BurnWatcher>();
+	private ComboBoxModel availableFuels;
 
-	private static final int XML_TAB = 0;
-	private static final int CASING_TAB = 1;
-	private static final int GRAIN_TAB = 2;
-	private static final int FUEL_TAB = 3;
-	private static final int BURN_TAB = 4;
+	//private static final int XML_TAB = 0;
+	private static final int CASING_TAB = 0;
+	private static final int GRAIN_TAB = 1;
+	private static final int BURN_TAB = 2;
 
 	@SuppressWarnings("unchecked")
 	private Class[] grainTypes = { CoredCylindricalGrain.class, Finocyl.class,
 			Moonburner.class, RodAndTubeGrain.class, CSlot.class, EndBurner.class };
-
-	@SuppressWarnings("unchecked")
-	private Class[] fuelTypes = { KNSB.class, KNSU.class, KNER.class,
-			KNDX.class, EditableFuel.class };
 
 	private abstract class Chooser<T> extends JPanel {
 		private static final long serialVersionUID = 1L;
@@ -129,7 +131,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		
 		public BurnTab() {
 			setLayout(new BorderLayout());
-			setName("Burn");
+			setName("Simulation Results");
 			reBurn();
 		}
 		
@@ -188,7 +190,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 		public GrainEditor(final Grain g) {
 			super(JSplitPane.HORIZONTAL_SPLIT);
-			setName("Grain");
+			setName("Grain Geometry");
 			setRightComponent(new GrainPanel(g));
 			if (g instanceof Grain.Composite) {
 				final JPanel p = new JPanel();
@@ -229,67 +231,18 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		}
 	}
 
-	private class FuelEditor extends JSplitPane {
-		private static final long serialVersionUID = 1L;
-
-		public FuelEditor(Fuel f) {
-			super(JSplitPane.HORIZONTAL_SPLIT);
-			setName("Fuel");
-			Chart<Pressure, Velocity> burnRate;
-			try {
-				burnRate = new Chart<Pressure, Velocity>(SI.MEGA(SI.PASCAL),
-						SI.METERS_PER_SECOND, f, "burnRate");
-			} catch (NoSuchMethodException e) {
-				throw new Error(e);
-			}
-			burnRate.setDomain(burnRate.new IntervalDomain(Amount.valueOf(0, SI
-					.MEGA(SI.PASCAL)), Amount.valueOf(11, SI.MEGA(SI.PASCAL)),
-					20));
-
-			final JPanel p = new JPanel();
-			p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-
-			p.add(new Chooser<Fuel>(null, fuelTypes) {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				protected void choiceMade(Fuel o) {
-					motor.setFuel(o);
-					removeTabAt(FUEL_TAB);
-					MotorEditor.this.add(new FuelEditor(motor.getFuel()),
-							FUEL_TAB);
-					setSelectedIndex(FUEL_TAB);
-				}
-			});
-			p.add(new Editor(f));
-			try {
-				p.add(new Editor(f.getCombustionProduct()));
-			} catch (Exception e) {
-
-			}
-
-			setLeftComponent(p);
-			setRightComponent(burnRate);
-			// setDividerLocation(.25);
-			// setResizeWeight(.25);
-			if (f instanceof ChangeListening.Subject) {
-				((ChangeListening.Subject) f)
-						.addPropertyChangeListener(MotorEditor.this);
-			}
-		}
-	}
-
 	private class CaseEditor extends JSplitPane {
 		private static final long serialVersionUID = 1L;
 
 		public CaseEditor(Nozzle n, Chamber c) {
 			super(JSplitPane.HORIZONTAL_SPLIT);
-			setName("Casing");
+			setName("General Parameters");
 			JPanel parts = new JPanel();
 			parts.setLayout(new BoxLayout(parts, BoxLayout.Y_AXIS));
 			setLeftComponent(parts);
-			setRightComponent(new NozzlePanel(n));
+			setRightComponent(new HardwarePanel(n, c));
 
+			parts.add(new JLabel("Name:"));
 			parts.add(new JTextField(motor.getName()) {
 				private static final long serialVersionUID = 1L;
 				{
@@ -314,8 +267,18 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 				}
 			});
-
+			parts.add(new JLabel("Fuel:"));
+			parts.add( new JComboBox(availableFuels){{
+				addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						motor.setFuel((Fuel)getSelectedItem());
+						System.out.println("FUEL CHANGED");
+					}});
+			}});
+			parts.add(new JLabel("Casing:"));
 			parts.add(new Editor(c));
+			parts.add(new JLabel("Nozzle:"));
 			parts.add(new Editor(n));
 
 			if (n instanceof ChangeListening.Subject) {
@@ -334,11 +297,12 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 	}
 
-	public MotorEditor(Motor m) {
+	public MotorEditor(Motor m, ComboBoxModel fuels) {
 		super(JTabbedPane.BOTTOM);
+		this.availableFuels = fuels;
 		text.setName("XML");
 		text.setEditable(false);
-		add(text, XML_TAB);
+		//add(text, XML_TAB);
 		setMotor(m, true);
 	}
 
@@ -367,7 +331,6 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			removeTabAt(1);
 		add(new CaseEditor(motor.getNozzle(), motor.getChamber()), CASING_TAB);
 		add(new GrainEditor(motor.getGrain()), GRAIN_TAB);
-		add(new FuelEditor(motor.getFuel()), FUEL_TAB);
 		add(bt = new BurnTab(), BURN_TAB);
 	}
 
@@ -407,8 +370,6 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			setSelectedIndex(GRAIN_TAB);
 		if (o instanceof Chamber || o instanceof Nozzle)
 			setSelectedIndex(CASING_TAB);
-		if (o instanceof Fuel || o instanceof Fuel.CombustionProduct)
-			setSelectedIndex(FUEL_TAB);
 	}
 
 	public void addBurnWatcher(BurnWatcher bw) {
@@ -430,7 +391,9 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		new MotorEditor(defaultMotor()).showAsWindow();
+		Vector<Fuel> ff = new Vector<Fuel>();
+		ff.add(new KNSU());
+		//new MotorEditor(defaultMotor(), ff).showAsWindow();
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {

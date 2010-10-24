@@ -1,5 +1,7 @@
 package com.billkuker.rocketry.motorsim;
 
+import java.awt.Shape;
+
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Volume;
 
@@ -10,4 +12,5 @@ public interface Chamber {
 	
 	public Amount<Pressure> burstPressure();
 	
+	public Shape chamberShape();
 }

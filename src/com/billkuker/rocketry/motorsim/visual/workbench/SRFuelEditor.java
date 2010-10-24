@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.TextListener;
+import java.beans.PropertyChangeEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Collections;
@@ -64,7 +65,7 @@ public class SRFuelEditor extends JSplitPane {
 		}
 	}
 
-	public class EditablePSRFuel extends PiecewiseSaintRobertFuel {
+	public static class EditablePSRFuel extends PiecewiseSaintRobertFuel {
 
 		private Amount<VolumetricDensity> idealDensity = (Amount<VolumetricDensity>) Amount
 				.valueOf("1 g/mm^3");
@@ -76,6 +77,10 @@ public class SRFuelEditor extends JSplitPane {
 		public EditablePSRFuel(Type t) {
 			super(t);
 			cp = new EditableCombustionProduct();
+		}
+		
+		public void clear(){
+			super.clear();
 		}
 		
 		public void setType(Type t){
@@ -126,7 +131,7 @@ public class SRFuelEditor extends JSplitPane {
 
 	}
 
-	EditablePSRFuel f = new EditablePSRFuel(SaintRobertFuel.Type.SI);
+	final EditablePSRFuel f = new EditablePSRFuel(SaintRobertFuel.Type.SI);
 
 	private class TM extends AbstractTableModel {
 
@@ -195,10 +200,12 @@ public class SRFuelEditor extends JSplitPane {
 			}
 			Collections.sort(entries);
 			fireTableDataChanged();
-			f = new EditablePSRFuel(SaintRobertFuel.Type.NONSI);
+			//f = new EditablePSRFuel(SaintRobertFuel.Type.NONSI);
+			f.clear();
 			for (Entry en : entries) {
 				f.add(en.p, en.a, en.n);
 			}
+			f.firePropertyChange(new PropertyChangeEvent(f,"entries", null, null));
 
 			update();
 
@@ -302,11 +309,9 @@ public class SRFuelEditor extends JSplitPane {
 				if ( si.isSelected() ){
 					System.err.println("SI");
 					f.setType(Type.SI);
-					RocketScience.UnitPreference.preference = UnitPreference.SI;
 				} else {
 					System.err.println("NONSI");
 					f.setType(Type.NONSI);
-					RocketScience.UnitPreference.preference = UnitPreference.NONSI;
 				}
 				update();
 			}});

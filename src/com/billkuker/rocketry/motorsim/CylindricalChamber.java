@@ -1,5 +1,11 @@
 package com.billkuker.rocketry.motorsim;
 
+import java.awt.Shape;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Volume;
@@ -43,6 +49,23 @@ public class CylindricalChamber implements Chamber {
 
 	public void setOD(Amount<Length> oD) {
 		this.oD = oD;
+	}
+
+	@Override
+	public Shape chamberShape() {
+		double ir = iD.doubleValue(SI.MILLIMETER) / 2;
+		double or = oD.doubleValue(SI.MILLIMETER) / 2;
+		double lenmm = length.doubleValue(SI.MILLIMETER);
+		double thick = or-ir;
+
+		Rectangle2D.Double l,r,t;
+		l = new Rectangle2D.Double(-or,0,thick,lenmm);
+		r = new Rectangle2D.Double(ir, 0, thick, lenmm);
+		t = new Rectangle2D.Double(-or,0,or*2,thick);
+		Area a = new Area(l);
+		a.add(new Area(r));
+		a.add(new Area(t));
+		return a;
 	}
 
 }

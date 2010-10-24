@@ -10,6 +10,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.Validating;
 import com.billkuker.rocketry.motorsim.Validating.ValidationException;
+import com.billkuker.rocketry.motorsim.visual.workbench.WorkbenchTreeModel.FuelNode;
 
 public class WorkbenchTreeCellRenderer extends DefaultTreeCellRenderer {
 	private static final long serialVersionUID = 1L;
@@ -44,8 +45,8 @@ public class WorkbenchTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		if (part instanceof Motor) {
 			setText(((Motor) part).getName());
-		} else if ( part instanceof SRFuelEditor ){
-			setText(((SRFuelEditor)part).getFuel().getName());
+		} else if ( value instanceof FuelNode ){
+			setText(((FuelNode)value).getFuel().getName());
 		} else if ( part instanceof String ) {
 			setText((String)part);
 		} else if ( part == null ) {
