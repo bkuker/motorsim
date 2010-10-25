@@ -35,6 +35,7 @@ public class Editor extends PropertySheetPanel {
 
 	private Object obj;
 
+	@SuppressWarnings("deprecation")
 	public Editor(Object o) {
 		obj = o;
 
@@ -133,7 +134,6 @@ public class Editor extends PropertySheetPanel {
 			return editor.getText();
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
 		public Object getValue() {
 			String text = editor.getText().trim();
@@ -147,7 +147,7 @@ public class Editor extends PropertySheetPanel {
 				} catch (NumberFormatException e) {
 
 				}
-				Amount a = Amount.valueOf(Double.parseDouble(text), oldUnit);
+				Amount<?> a = Amount.valueOf(Double.parseDouble(text), oldUnit);
 				return a;
 			} catch (NumberFormatException e) {
 				// Storing the old unit allows you to type 10 into a field
@@ -159,7 +159,7 @@ public class Editor extends PropertySheetPanel {
 					text = "0" + text;
 				}
 				
-				Amount a = Amount.valueOf(text);
+				Amount<?> a = Amount.valueOf(text);
 				oldUnit = a.getUnit();
 				return a;
 			}
