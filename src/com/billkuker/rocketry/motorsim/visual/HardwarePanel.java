@@ -76,7 +76,7 @@ public class HardwarePanel extends JPanel {
 		
 		g2d.translate(0, -cb.getY() - 5);
 		g2d.scale(s, s);
-		g2d.translate(cb.getX(), 0);
+		g2d.translate(-(getHeight()/(s*2)), 0);
 		
 		g2d.setStroke(new BasicStroke(1));
 		g2d.draw( c );
