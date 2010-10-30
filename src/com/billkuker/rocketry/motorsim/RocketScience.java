@@ -87,7 +87,7 @@ public class RocketScience {
 		}
 	}
 
-	public static <T extends Quantity> String toString(Amount<T> a) {
+	public static <T extends Quantity> String ammountToString(Amount<T> a) {
 		final NumberFormat nf = new DecimalFormat("##########.###");
 		return nf.format(a.doubleValue(a.getUnit())) + " " + a.getUnit();
 	}
