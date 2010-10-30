@@ -11,6 +11,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -79,16 +80,23 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	private static final int GRAIN_TAB = 1;
 	private static final int BURN_TAB = 2;
 
-	@SuppressWarnings("unchecked")
-	private Class[] grainTypes = { CoredCylindricalGrain.class, Finocyl.class,
-			Moonburner.class, RodAndTubeGrain.class, CSlot.class, EndBurner.class };
+	private List<Class<? extends Grain>> grainTypes = new Vector<Class<? extends Grain>>();
+	{
+		grainTypes.add(CoredCylindricalGrain.class);
+		grainTypes.add(Finocyl.class);
+		grainTypes.add(Moonburner.class);
+		grainTypes.add(RodAndTubeGrain.class);
+		grainTypes.add(CSlot.class);
+		grainTypes.add(EndBurner.class);
+	}
 
 	private abstract class Chooser<T> extends JPanel {
 		private static final long serialVersionUID = 1L;
-		private Class<? extends T>[] types;
+		private List<Class<? extends T>> types;
 		private Map<Class<? extends T>, T> old = new HashMap<Class<? extends T>, T>();
 
-		public Chooser(T initial, Class<? extends T>... ts) {
+		@SuppressWarnings("unchecked")
+		public Chooser(T initial, List<Class<? extends T>> ts) {
 			types = ts;
 			if ( initial != null )
 				old.put((Class<? extends T>)initial.getClass(), initial);
@@ -275,16 +283,19 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 				}
 			});
 			nameAndFuel.add(new JLabel("Fuel:"));
-			nameAndFuel.add( new JComboBox(availableFuels){{
-				setMinimumSize(new Dimension(200, 20));
-				setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
-				addActionListener(new ActionListener(){
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						motor.setFuel((Fuel)getSelectedItem());
-						System.out.println("FUEL CHANGED");
-					}});
-			}});
+			nameAndFuel.add( new JComboBox(availableFuels){
+				private static final long serialVersionUID = 1L;
+				{
+					setMinimumSize(new Dimension(200, 20));
+					setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
+					addActionListener(new ActionListener(){
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							motor.setFuel((Fuel)getSelectedItem());
+							System.out.println("FUEL CHANGED");
+						}});
+				}
+			});
 			nameAndFuel.add(Box.createVerticalGlue());
 			parts.add(nameAndFuel);
 			
@@ -353,7 +364,6 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		add(bt = new BurnTab(), BURN_TAB);
 	}
 
-	@Deprecated
 	public static Motor defaultMotor() {
 		Motor m = new Motor();
 		m.setName("Example Motor");

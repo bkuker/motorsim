@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -49,9 +50,13 @@ import com.billkuker.rocketry.motorsim.visual.workbench.WorkbenchTreeModel.FuelN
 public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private static final long serialVersionUID = 1L;
 	
-	@SuppressWarnings("unchecked")
-	private Class[] fuelTypes = { KNSB.class, KNSU.class, KNER.class,
-			KNDX.class };
+	private List<Class<? extends Fuel>> fuelTypes = new Vector<Class<? extends Fuel>>();
+	{
+		fuelTypes.add(KNSB.class);
+		fuelTypes.add(KNSU.class);
+		fuelTypes.add(KNER.class);
+		fuelTypes.add(KNDX.class);
+	}
 	
 	private JPanel top;
 	private JSplitPane split;
@@ -102,7 +107,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		
 		top.add(split, BorderLayout.CENTER);
 		
-		for ( Class<Fuel> f : fuelTypes){
+		for ( Class<? extends Fuel> f : fuelTypes){
 			try {
 				addFuel(f.newInstance());
 			} catch (InstantiationException e) {
@@ -257,7 +262,9 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 
 							}
 						});
-						add(new JMenuItem("Save Fuel") {});
+						add(new JMenuItem("Save Fuel") {
+							private static final long serialVersionUID = 1L;
+						});
 						add(new JSeparator());
 						add(new JMenuItem("Export .ENG"){
 							private static final long serialVersionUID = 1L;
