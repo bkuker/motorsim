@@ -150,7 +150,6 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 	}
 	
 	public void addMotor(Motor m){
-		DefaultMutableTreeNode root = getRoot();
 		motors.add(new MotorNode(m));
 		nodesWereInserted(motors, new int[]{motors.getChildCount()-1});
 		
