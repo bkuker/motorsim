@@ -40,7 +40,6 @@ public class MotorIO {
 			return Amount.valueOf(text);
 		}
 
-		@SuppressWarnings("unchecked")
 		public boolean canConvert(Class c) {
 			return c.equals(Amount.class);
 		}
@@ -49,6 +48,7 @@ public class MotorIO {
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	private static XStream getXStream(){
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
