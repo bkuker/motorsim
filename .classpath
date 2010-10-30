@@ -5,15 +5,15 @@
 	<classpathentry kind="src" path="motors"/>
 	<classpathentry kind="src" path="gui"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="jscience.jar"/>
-	<classpathentry kind="lib" path="jfreechart-1.0.12.jar"/>
-	<classpathentry kind="lib" path="jcommon-1.0.15.jar"/>
-	<classpathentry kind="lib" path="log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="l2fprod-common-sheet.jar"/>
-	<classpathentry kind="lib" path="xstream-1.3.jar"/>
-	<classpathentry kind="lib" path="xpp3_min-1.1.4c.jar"/>
-	<classpathentry kind="lib" path="rsyntaxtextarea.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/gui/jcommon-1.0.15.jar"/>
+	<classpathentry kind="lib" path="lib/gui/jfreechart-1.0.12.jar"/>
+	<classpathentry kind="lib" path="lib/gui/l2fprod-common-sheet.jar"/>
+	<classpathentry kind="lib" path="lib/gui/rsyntaxtextarea.jar"/>
+	<classpathentry kind="lib" path="lib/jscience.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="lib/xpp3_min-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="lib/xstream-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

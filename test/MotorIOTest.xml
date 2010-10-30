@@ -1,28 +1,32 @@
 <object-stream>
   <com.billkuker.rocketry.motorsim.Motor>
     <chamber class="com.billkuker.rocketry.motorsim.CylindricalChamber">
-      <ID>30 mm</ID>
-      <OD>31 mm</OD>
       <length>200 mm</length>
+      <iD>30 mm</iD>
     </chamber>
-    <fuel class="com.billkuker.rocketry.motorsim.fuel.KNSU"/>
     <grain class="com.billkuker.rocketry.motorsim.grain.MultiGrain">
-      <count>2</count>
       <grain class="com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain">
-        <ID>8 mm</ID>
-        <OD>29 mm</OD>
-        <aftEndInhibited>false</aftEndInhibited>
         <foreEndInhibited>false</foreEndInhibited>
-        <innerSurfaceInhibited>false</innerSurfaceInhibited>
+        <aftEndInhibited>false</aftEndInhibited>
         <length>70 mm</length>
+        <endLight>0 mm</endLight>
+        <oD>29 mm</oD>
+        <iD>8 mm</iD>
         <outerSurfaceInhibited>true</outerSurfaceInhibited>
+        <innerSurfaceInhibited>false</innerSurfaceInhibited>
       </grain>
+      <count>2</count>
+      <flush>1.0</flush>
+      <delay>0 mm</delay>
     </grain>
-    <name>IOTestMotor</name>
     <nozzle class="com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle">
-      <efficiency>0.87</efficiency>
-      <exitDiameter>9 mm</exitDiameter>
       <throatDiameter>7.9 mm</throatDiameter>
+      <exitDiameter>9 mm</exitDiameter>
+      <efficiency>0.87</efficiency>
     </nozzle>
+    <fuel class="com.billkuker.rocketry.motorsim.fuel.KNSU">
+      <t>English</t>
+    </fuel>
+    <name>IOTestMotor</name>
   </com.billkuker.rocketry.motorsim.Motor>
 </object-stream>
