@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 
-public class KNSUTest extends RocketTest {
+public class KNSUTest extends AbstractRocketTest {
 
 	@Test
 	public void testBurnRate() {

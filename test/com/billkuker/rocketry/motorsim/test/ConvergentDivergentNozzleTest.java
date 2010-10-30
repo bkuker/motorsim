@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 
-public class ConvergentDivergentNozzleTest extends RocketTest {
+public class ConvergentDivergentNozzleTest extends AbstractRocketTest {
 	
 	ConvergentDivergentNozzle n = new ConvergentDivergentNozzle();
 	

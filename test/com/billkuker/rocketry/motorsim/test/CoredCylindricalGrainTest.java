@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 
-public class CoredCylindricalGrainTest extends RocketTest {
+public class CoredCylindricalGrainTest extends AbstractRocketTest {
 
 	@Test
 	public void testSurfaceArea() throws PropertyVetoException {

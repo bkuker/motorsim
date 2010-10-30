@@ -6,7 +6,7 @@ import javax.measure.unit.Unit;
 import org.jscience.physics.amount.Amount;
 import org.junit.Assert;
 
-public class RocketTest {
+public abstract class AbstractRocketTest {
 	
 	protected static final Unit<javax.measure.quantity.Area> sqMM = SI.MILLIMETER.pow(2).asType(javax.measure.quantity.Area.class);
 	

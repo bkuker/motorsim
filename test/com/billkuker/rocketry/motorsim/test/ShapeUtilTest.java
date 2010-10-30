@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.billkuker.rocketry.motorsim.grain.util.ShapeUtil;
 
 
-public class ShapeUtilTest extends RocketTest{
+public class ShapeUtilTest extends AbstractRocketTest{
 
 	Area tenByTen = new Area(new Rectangle2D.Double(-5, -5, 10, 10));
 	Area oneByOne = new Area(new Rectangle2D.Double(-.5, -.5, 1, 1));

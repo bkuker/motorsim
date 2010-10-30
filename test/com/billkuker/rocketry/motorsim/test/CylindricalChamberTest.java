@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
 
-public class CylindricalChamberTest extends RocketTest {
+public class CylindricalChamberTest extends AbstractRocketTest {
 
 	@Test
 	public void testBurstPressure() {
