@@ -39,6 +39,8 @@ import com.billkuker.rocketry.motorsim.visual.Chart;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 
 public class SRFuelEditor extends JSplitPane {
+	private static final long serialVersionUID = 1L;
+
 	private static final NumberFormat nf = new DecimalFormat("##########.###");
 
 	Chart<Pressure, Velocity> burnRate;
@@ -56,8 +58,10 @@ public class SRFuelEditor extends JSplitPane {
 
 	public static class EditablePSRFuel extends PiecewiseSaintRobertFuel {
 
+		@SuppressWarnings("unchecked")
 		private Amount<VolumetricDensity> idealDensity = (Amount<VolumetricDensity>) Amount
 				.valueOf("1 g/mm^3");
+		
 		private double combustionEfficiency = 1;
 		private double densityRatio = 1;
 		private EditableCombustionProduct cp;
@@ -123,6 +127,7 @@ public class SRFuelEditor extends JSplitPane {
 	final EditablePSRFuel f = new EditablePSRFuel(SaintRobertFuel.Type.SI);
 
 	private class TM extends AbstractTableModel {
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public int getColumnCount() {
@@ -166,6 +171,7 @@ public class SRFuelEditor extends JSplitPane {
 			return true;
 		}
 
+		@SuppressWarnings("unchecked")
 		public void setValueAt(Object value, int row, int col) {
 			Entry e = entries.get(row);
 			try {
@@ -319,10 +325,9 @@ public class SRFuelEditor extends JSplitPane {
 	}
 
 	public static void main(String args[]) {
-		SRFuelEditor ed;
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setContentPane(ed = new SRFuelEditor());
+		f.setContentPane(new SRFuelEditor());
 		f.setSize(800, 600);
 		f.setVisible(true);
 
