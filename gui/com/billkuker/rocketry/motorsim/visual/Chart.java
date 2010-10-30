@@ -141,7 +141,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 			
 			Amount<Y> val = getNear(m);
 			if ( val != null )
-				marker.setLabel(RocketScience.approx(val));
+				marker.setLabel(RocketScience.ammountToRoundedString(val));
 			
 			marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
 			marker.setLabelOffset(new RectangleInsets(0,-5,0,0));

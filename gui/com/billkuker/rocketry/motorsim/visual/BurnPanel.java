@@ -139,11 +139,11 @@ public class BurnPanel extends JPanel {
 			text.add(new JLabel("Max Pressure"));
 			
 			text.add(new JLabel(percent + "% " + new String(new char[]{cl}) + "-" +Math.round(averageThrust.doubleValue(SI.NEWTON))));
-			text.add(new JLabel(RocketScience.approx(ns)));
-			text.add(new JLabel(RocketScience.approx(isp)));			
-			text.add(new JLabel(RocketScience.approx(maxThrust)));
-			text.add(new JLabel(RocketScience.approx(averageThrust)));
-			text.add(new JLabel(RocketScience.approx(maxPressure)));
+			text.add(new JLabel(RocketScience.ammountToRoundedString(ns)));
+			text.add(new JLabel(RocketScience.ammountToRoundedString(isp)));			
+			text.add(new JLabel(RocketScience.ammountToRoundedString(maxThrust)));
+			text.add(new JLabel(RocketScience.ammountToRoundedString(averageThrust)));
+			text.add(new JLabel(RocketScience.ammountToRoundedString(maxPressure)));
 			
 			add(text, BorderLayout.NORTH);
 			

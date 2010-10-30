@@ -152,7 +152,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 										Amount<Length> web = motor.getGrain().webThickness();
 										Amount<Length> remaining = web.times(1.0 - f);
 										
-										progress.setText("Progress: " + pct + "% (" + RocketScience.approx(remaining) + " web thickness remaining)");
+										progress.setText("Progress: " + pct + "% (" + RocketScience.ammountToRoundedString(remaining) + " web thickness remaining)");
 										if ( currentThread != me ){
 											throw new BurnCanceled();
 										}

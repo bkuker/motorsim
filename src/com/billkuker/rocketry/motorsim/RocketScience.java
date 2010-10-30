@@ -1,6 +1,7 @@
 package com.billkuker.rocketry.motorsim;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.prefs.Preferences;
@@ -86,7 +87,12 @@ public class RocketScience {
 		}
 	}
 
-	public static <T extends Quantity> String approx(Amount<T> a) {
+	public static <T extends Quantity> String toString(Amount<T> a) {
+		final NumberFormat nf = new DecimalFormat("##########.###");
+		return nf.format(a.doubleValue(a.getUnit())) + " " + a.getUnit();
+	}
+	
+	public static <T extends Quantity> String ammountToRoundedString(Amount<T> a) {
 		if (a == null)
 			return "NULL";
 		Unit<T> u = RocketScience.UnitPreference.preference.getPreferredUnit(a

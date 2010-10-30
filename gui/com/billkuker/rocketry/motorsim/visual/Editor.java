@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
+import com.billkuker.rocketry.motorsim.RocketScience;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
 
 public class Editor extends PropertySheetPanel {
@@ -114,8 +115,7 @@ public class Editor extends PropertySheetPanel {
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
-			Amount a = (Amount)value;
-			return new JLabel(nf.format(a.doubleValue(a.getUnit())) + " " + a.getUnit() );
+			return new JLabel(RocketScience.ammountToString((Amount<?>)value));
 		}
 		
 	}
