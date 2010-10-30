@@ -7,9 +7,7 @@ import javax.measure.quantity.Duration;
 import javax.measure.quantity.Force;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -17,11 +15,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
-import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
-import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience;
 
 public class MultiBurnChart extends JPanel implements BurnWatcher {
@@ -33,7 +28,6 @@ public class MultiBurnChart extends JPanel implements BurnWatcher {
 	private Unit<Duration> time;
 	private Unit<Force> force;
 
-	@SuppressWarnings("unchecked")
 	public MultiBurnChart() {
 		this.setLayout(new BorderLayout());
 		time = RocketScience.UnitPreference.getUnitPreference()
@@ -71,29 +65,6 @@ public class MultiBurnChart extends JPanel implements BurnWatcher {
 		if (s == null)
 			return;
 		dataset.removeSeries(s);
-	}
-	
-	public static void main(String args[]) throws Exception{
-		MultiBurnChart c = new MultiBurnChart();
-		
-		JFrame f = new JFrame();
-		f.setSize(1024, 768);
-		f.setContentPane(c);
-		f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		f.setVisible(true);
-
-		Motor m = MotorEditor.defaultMotor();
-		Burn b = new Burn(m);
-		c.addBurn(b);
-		
-		m.setName("Motor2");
-		((ConvergentDivergentNozzle)m.getNozzle()).setThroatDiameter(Amount.valueOf(3, SI.MILLIMETER));
-		c.addBurn(new Burn(m));
-		
-		Thread.sleep(5000);
-		
-		c.removeBurn(b);
-		
 	}
 
 	@Override
