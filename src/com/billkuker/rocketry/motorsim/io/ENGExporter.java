@@ -34,7 +34,7 @@ public class ENGExporter {
 
 		CylindricalChamber cha = (CylindricalChamber) b.getMotor().getChamber();
 
-		NumberFormat nf = new DecimalFormat("00.###");
+		NumberFormat nf = new DecimalFormat("00.####");
 
 		StringBuffer out = new StringBuffer();
 
