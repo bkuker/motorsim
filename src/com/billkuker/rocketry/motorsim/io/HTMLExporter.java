@@ -184,7 +184,7 @@ public class HTMLExporter {
 		out.print("</td>");
 		*/
 		out.print("</tr>");
-		
+		/*
 		out.print("<tr>");
 		out.print("<th colspan='3'>.ENG File</th>");
 		out.print("<th colspan='3'>MotorSim File</th>");
@@ -204,7 +204,7 @@ public class HTMLExporter {
 		out.print("</textarea>");
 		out.print("</td>");
 		out.print("</tr>");
-		
+		*/
 		out.print("</table>");
 
 		out.println("\n<!--End motor " + b.getMotor().getName() + "-->");
