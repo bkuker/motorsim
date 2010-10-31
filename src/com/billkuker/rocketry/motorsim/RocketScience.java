@@ -35,6 +35,7 @@ public class RocketScience {
 
 	public static enum UnitPreference{
 		SI(new Unit[]{
+				javax.measure.unit.SI.MILLIMETER.pow(2),
 				javax.measure.unit.SI.MILLIMETER,
 				javax.measure.unit.SI.MILLIMETER.divide(javax.measure.unit.SI.SECOND),
 				javax.measure.unit.SI.NEWTON,
@@ -42,6 +43,7 @@ public class RocketScience {
 				NEWTON_SECOND
 		}),
 		NONSI(new Unit[]{
+				javax.measure.unit.NonSI.INCH.pow(2),
 				javax.measure.unit.NonSI.INCH,
 				javax.measure.unit.NonSI.POUND_FORCE,
 				javax.measure.unit.NonSI.INCH.divide(javax.measure.unit.SI.SECOND),
