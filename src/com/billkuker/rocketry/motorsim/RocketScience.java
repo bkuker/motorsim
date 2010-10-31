@@ -1,5 +1,7 @@
 package com.billkuker.rocketry.motorsim;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashSet;
@@ -86,6 +88,36 @@ public class RocketScience {
 				}
 			}
 			return u;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public <T extends Quantity> Unit<T> getPreferredUnit(Class<T> q){
+			for( Unit<?> u : units ){
+				try {
+					return u.asType(q); 
+				} catch ( ClassCastException e ) {
+					//Not compatible
+				}
+			}
+			try {
+				Field f = q.getDeclaredField("UNIT");
+				if ( Modifier.isStatic(f.getModifiers()) ){
+					if ( Unit.class.isAssignableFrom(f.getType())){
+						return (Unit<T>)f.get(null);
+					}
+				}
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
 		}
 	}
 
