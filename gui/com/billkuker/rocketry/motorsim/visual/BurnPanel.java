@@ -22,7 +22,7 @@ import javax.swing.event.ChangeListener;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
-import com.billkuker.rocketry.motorsim.Burn.Interval;
+import com.billkuker.rocketry.motorsim.BurnSummary;
 import com.billkuker.rocketry.motorsim.RocketScience;
 
 public class BurnPanel extends JPanel {
@@ -95,57 +95,30 @@ public class BurnPanel extends JPanel {
 			add( new SL(), BorderLayout.SOUTH);
 			
 			
-
-				Amount<RocketScience.Impulse> ns = Amount.valueOf(0, RocketScience.NEWTON_SECOND);
-				
-				Amount<Duration> thrustTime = Amount.valueOf(0, SI.SECOND);
-				Amount<Force> maxThrust = Amount.valueOf(0, SI.NEWTON);
-				Amount<Pressure> maxPressure = Amount.valueOf(0, SI.MEGA(SI.PASCAL));
-
-				for( Interval i: burn.getData().values() ){
-					ns = ns.plus(i.dt.times(i.thrust));
-					if ( i.thrust.isGreaterThan(Amount.valueOf(0.01, SI.NEWTON))){
-						thrustTime = thrustTime.plus(i.dt);
-					}
-					if ( i.thrust.isGreaterThan(maxThrust))
-						maxThrust = i.thrust;
-					if ( i.chamberPressure.isGreaterThan(maxPressure))
-						maxPressure = i.chamberPressure;
-				}
-				
-				Amount<Force> averageThrust = Amount.valueOf(0, SI.NEWTON);
-				if ( thrustTime.isGreaterThan(Amount.valueOf(0, SI.SECOND)))
-					averageThrust = ns.divide(thrustTime).to(SI.NEWTON);
-
-				float cnf = (float)(Math.log(ns.doubleValue(RocketScience.NEWTON_SECOND)/1.25) / Math.log(2));
-				int cn = (int)cnf;
-				float fraction = cnf - cn;
-				int percent = (int)(100 * fraction);
-				char cl = (char)((int)'A' + cn);
-
-				
-				Amount<Duration> isp = ns.divide(
-						b.getMotor().getGrain().volume(Amount.valueOf(0, SI.MILLIMETER))
-							.times(b.getMotor().getFuel().getIdealDensity().times(b.getMotor().getFuel().getDensityRatio()))
-						).to(SI.METERS_PER_SECOND).divide(Amount.valueOf(9.81, SI.METERS_PER_SQUARE_SECOND)).to(SI.SECOND);
 			
-			JPanel text = new JPanel(new GridLayout(2,5));
+			{
+				BurnSummary bi = new BurnSummary(burn);
+				JPanel text = new JPanel(new GridLayout(2, 5));
 
-			text.add(new JLabel("Rating"));
-			text.add(new JLabel("Total Impulse"));
-			text.add(new JLabel("ISP"));
-			text.add(new JLabel("Max Thrust"));
-			text.add(new JLabel("Average Thust"));
-			text.add(new JLabel("Max Pressure"));
-			
-			text.add(new JLabel(percent + "% " + new String(new char[]{cl}) + "-" +Math.round(averageThrust.doubleValue(SI.NEWTON))));
-			text.add(new JLabel(RocketScience.ammountToRoundedString(ns)));
-			text.add(new JLabel(RocketScience.ammountToRoundedString(isp)));			
-			text.add(new JLabel(RocketScience.ammountToRoundedString(maxThrust)));
-			text.add(new JLabel(RocketScience.ammountToRoundedString(averageThrust)));
-			text.add(new JLabel(RocketScience.ammountToRoundedString(maxPressure)));
-			
-			add(text, BorderLayout.NORTH);
+				text.add(new JLabel("Rating"));
+				text.add(new JLabel("Total Impulse"));
+				text.add(new JLabel("ISP"));
+				text.add(new JLabel("Max Thrust"));
+				text.add(new JLabel("Average Thust"));
+				text.add(new JLabel("Max Pressure"));
+
+				text.add(new JLabel(bi.getRating()));
+				text.add(new JLabel(RocketScience.ammountToRoundedString(bi.totalImpulse())));
+				text.add(new JLabel(RocketScience.ammountToRoundedString(bi.specificImpulse())));
+				text.add(new JLabel(RocketScience
+						.ammountToRoundedString(bi.maxThrust())));
+				text.add(new JLabel(RocketScience
+						.ammountToRoundedString(bi.averageThrust())));
+				text.add(new JLabel(RocketScience
+						.ammountToRoundedString(bi.maxPressure())));
+
+				add(text, BorderLayout.NORTH);
+			}
 			
 			
 		} catch (NoSuchMethodException e){
