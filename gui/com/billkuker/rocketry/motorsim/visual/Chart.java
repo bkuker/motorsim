@@ -1,8 +1,10 @@
 package com.billkuker.rocketry.motorsim.visual;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Stroke;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -30,17 +32,19 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.TextAnchor;
 import org.jscience.physics.amount.Amount;
 
-import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 
 public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = Logger.getLogger(Burn.class);
+	private static Logger log = Logger.getLogger(Chart.class);
+	
+	private final Stroke dashed =new BasicStroke(1, 1, 1, 1, new float[]{2,4}, 0);
 
 	private static ThreadFactory tf = new ThreadFactory() {
 		public Thread newThread(Runnable r) {
@@ -51,7 +55,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 	};
 	private static ExecutorService fast = Executors.newFixedThreadPool(2, tf);
 	private static ExecutorService slow = Executors.newFixedThreadPool(2, tf);
-	private volatile boolean stop = false;
+
 
 	public class IntervalDomain implements Iterable<Amount<X>> {
 
@@ -129,25 +133,89 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 		add(new ChartPanel(chart));
 	}
 
-	private Marker marker;
+	public void showMax(){
+		markMax = true;
+	}
+	
+	public void showAverage(){
+		markAverage = true;
+	}
+	private boolean markMax = false, markAverage = false;
+	private Marker focusMarkerX, focusMarkerY;
+	private void markMax(){
+		if ( !markMax && !markAverage )
+			return;
+		if ( dataset.getSeriesCount() != 1 ){
+			return;
+		}
+		final XYSeries s = dataset.getSeries(0);
+
+		double max = 0;
+		double accum = 0;
+		for ( int i = 0; i < s.getItemCount(); i++){
+			if ( s.getY(i).doubleValue() > max ){
+				max = s.getY(i).doubleValue();
+			}
+			if ( i > 0 ){
+				double dx = s.getX(i).doubleValue() - s.getX(i-1).doubleValue();
+				accum += s.getY(i).doubleValue() * dx;
+			}
+		}
+		double average = accum / (s.getX(s.getItemCount()-1).doubleValue() - s.getX(0).doubleValue());
+		
+		if (markMax) {
+			Marker marker = new ValueMarker(average);
+			marker.setStroke(dashed);
+			marker.setPaint(Color.BLACK);
+			marker.setLabelFont(new Font(Font.DIALOG, Font.BOLD, 10));
+			marker.setLabel("Average: "
+					+ RocketScience.ammountToRoundedString(Amount.valueOf(
+							average, yUnit)));
+			marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+			marker.setLabelOffset(new RectangleInsets(0, 5, 0, 0));
+			chart.getXYPlot().addRangeMarker(marker);
+		}
+
+		if (markAverage) {
+			Marker marker = new ValueMarker(max);
+			marker.setStroke(dashed);
+			marker.setPaint(Color.BLACK);
+			marker.setLabelFont(new Font(Font.DIALOG, Font.BOLD, 10));
+			marker.setLabel("Max: "
+					+ RocketScience.ammountToRoundedString(Amount.valueOf(max,
+							yUnit)));
+			marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+			marker.setLabelOffset(new RectangleInsets(0, 5, 0, 0));
+			chart.getXYPlot().addRangeMarker(marker);
+		}
+
+	}
 
 	public void mark(Amount<X> m) {
-		if (marker != null)
-			chart.getXYPlot().removeDomainMarker(marker);
+		if (focusMarkerX != null)
+			chart.getXYPlot().removeDomainMarker(focusMarkerX);
+		if (focusMarkerY != null)
+			chart.getXYPlot().removeRangeMarker(focusMarkerY);
+		
 		if (m != null) {
-			marker = new ValueMarker(m.doubleValue(xUnit));
-			marker.setPaint(Color.blue);
-			marker.setAlpha(0.8f);
+			focusMarkerX = new ValueMarker(m.doubleValue(xUnit));
+			focusMarkerX.setPaint(Color.blue);
+			focusMarkerX.setAlpha(0.8f);
+			
+			chart.getXYPlot().addDomainMarker(focusMarkerX);
 			
 			Amount<Y> val = getNear(m);
-			if ( val != null )
-				marker.setLabel(RocketScience.ammountToRoundedString(val));
-			
-			marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
-			marker.setLabelOffset(new RectangleInsets(0,-5,0,0));
-			
-			marker.setLabelFont(new Font(Font.DIALOG, Font.BOLD, 12));
-			chart.getXYPlot().addDomainMarker(marker);
+			if ( val != null ){
+				focusMarkerY = new ValueMarker(val.doubleValue(yUnit));
+				focusMarkerY.setPaint(Color.BLUE);
+				focusMarkerY.setLabelAnchor(RectangleAnchor.TOP_RIGHT);
+				focusMarkerY.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
+				focusMarkerY.setLabelPaint(Color.BLUE);
+				focusMarkerY.setLabelFont(new Font(Font.DIALOG, Font.BOLD, 10));
+				focusMarkerY.setLabelOffset(new RectangleInsets(0,5,0,0));
+				chart.getXYPlot().addRangeMarker(focusMarkerY);
+				focusMarkerY.setLabel(RocketScience.ammountToRoundedString(val));
+			}
 		}
 	}
 	
@@ -188,8 +256,17 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 			}
 		}
 	}
+	
+	private void drawDone(){
+		markMax();
+	}
 
+	private volatile boolean stop = false;
+	private volatile int lastSkipStepShown;
 	public void setDomain(final Iterable<Amount<X>> d) {
+		chart.getXYPlot().clearDomainMarkers();
+		chart.getXYPlot().clearRangeMarkers();
+		lastSkipStepShown = Integer.MAX_VALUE;
 		stop = true;
 		fill(d, 100);
 		fast.submit(new Thread() {
@@ -198,8 +275,9 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 					fill(d, 10);
 				slow.submit(new Thread() {
 					public void run() {
-						if (!stop)
+						if (!stop){
 							fill(d, 1);
+						}
 					}
 				});
 			}
@@ -207,15 +285,16 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 	}
 
 	@SuppressWarnings("unchecked")
-	private synchronized void fill(Iterable<Amount<X>> d, int skip) {
-		log.debug(f.getName() + " " + skip + " Start");
+	private synchronized void fill(Iterable<Amount<X>> d, final int requestedSkip) {
+		log.debug(f.getName() + " " + requestedSkip + " Start");
 		stop = false;
 		int sz = 0;
+		int calculatedSkip = requestedSkip;
 		if (d instanceof Collection) {
 			sz = ((Collection<Amount<X>>) d).size();
 			int sk2 = sz / 200;
-			if (skip < sk2)
-				skip = sk2;
+			if (calculatedSkip < sk2)
+				calculatedSkip = sk2;
 		}
 		// series.clear();
 		int cnt = 0;
@@ -225,11 +304,11 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 			Amount<X> last = null;
 			for (Amount<X> ax : d) {
 				if (stop) {
-					log.debug(f.getName() + " " + skip + " Abort");
+					log.debug(f.getName() + " " + calculatedSkip + " Abort");
 					return;
 				}
 				last = ax;
-				if (cnt % skip == 0) {
+				if (cnt % calculatedSkip == 0) {
 					Amount<Y> y = (Amount<Y>) f.invoke(source, ax);
 					newSeries.add(ax.doubleValue(xUnit), y.doubleValue(yUnit));
 				}
@@ -240,9 +319,15 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 			SwingUtilities.invokeLater(new Thread() {
 				@Override
 				public void run() {
-					dataset.removeAllSeries();
-					dataset.addSeries(newSeries);
-					log.debug(f.getName() + " Replaced");
+					if ( requestedSkip < lastSkipStepShown ){
+						lastSkipStepShown = requestedSkip;
+						dataset.removeAllSeries();
+						dataset.addSeries(newSeries);
+						log.debug(f.getName() + " Replaced with " + requestedSkip);
+					}
+					if ( requestedSkip == 1 ){
+						drawDone();
+					}
 				}
 			});
 		} catch (IllegalArgumentException e) {
@@ -255,7 +340,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		log.debug(f.getName() + " " + skip + " Done");
+		log.debug(f.getName() + " " + calculatedSkip + " Done");
 	}
 
 	public void show() {
