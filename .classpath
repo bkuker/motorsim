@@ -7,13 +7,13 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/gui/jcommon-1.0.15.jar"/>
-	<classpathentry kind="lib" path="lib/gui/jfreechart-1.0.12.jar"/>
 	<classpathentry kind="lib" path="lib/gui/l2fprod-common-sheet.jar"/>
 	<classpathentry kind="lib" path="lib/gui/rsyntaxtextarea.jar"/>
 	<classpathentry kind="lib" path="lib/jscience.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/xpp3_min-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="lib/xstream-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/gui/jcommon-1.0.16.jar"/>
+	<classpathentry kind="lib" path="lib/gui/jfreechart-1.0.13.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
