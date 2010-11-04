@@ -57,6 +57,7 @@ import com.billkuker.rocketry.motorsim.grain.Finocyl;
 import com.billkuker.rocketry.motorsim.grain.Moonburner;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.grain.RodAndTubeGrain;
+import com.billkuker.rocketry.motorsim.grain.Star;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 import com.billkuker.rocketry.motorsim.visual.BurnPanel;
 import com.billkuker.rocketry.motorsim.visual.Editor;
@@ -84,6 +85,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	{
 		grainTypes.add(CoredCylindricalGrain.class);
 		grainTypes.add(Finocyl.class);
+		grainTypes.add(Star.class);
 		grainTypes.add(Moonburner.class);
 		grainTypes.add(RodAndTubeGrain.class);
 		grainTypes.add(CSlot.class);
