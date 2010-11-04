@@ -33,6 +33,8 @@ public class Burn {
 	private static final double regStepDecreaseFactor = .5;
 	private static final Amount<Pressure> chamberPressureMaxDelta = Amount.valueOf(.5, SI.MEGA(SI.PASCAL));
 	
+	private static final Amount<Pressure> endPressure = Amount.valueOf(.1, RocketScience.PSI);
+	
 	private static Logger log = Logger.getLogger(Burn.class);
 	protected final Motor motor;
 	
@@ -94,6 +96,7 @@ public class Burn {
 	
 	private void burn(){
 		log.info("Starting burn...");
+		int endPressureSteps = 0;
 		long start = new Date().getTime();
 		
 		Amount<Length> regStep = Amount.valueOf(0.01, SI.MILLIMETER);
@@ -219,9 +222,11 @@ public class Burn {
 			next.thrust = motor.getNozzle().thrust(next.chamberPressure, atmosphereicPressure, atmosphereicPressure, motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats2Phase());
 			assert(positive(next.thrust));
 			
-			if ( i > 100 && next.chamberPressure.approximates(atmosphereicPressure)){
-				log.info("Pressure at Patm on step " + i);
-				break;
+			if ( i > 100 && next.chamberPressure.minus(atmosphereicPressure).abs().isLessThan(endPressure)){
+				log.info("Pressure at ~Patm on step " + i);
+				endPressureSteps++;
+				if ( endPressureSteps > 5 )
+					break;
 			}
 			
 			data.put(data.lastKey().plus(dt), next);
