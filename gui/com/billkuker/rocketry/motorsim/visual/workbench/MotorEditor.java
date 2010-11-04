@@ -284,6 +284,9 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			});
 			nameAndFuel.add(new JLabel("Fuel:"));
 			nameAndFuel.add( new JComboBox(availableFuels){
+				{
+					this.setSelectedItem(motor.getFuel());
+				}
 				private static final long serialVersionUID = 1L;
 				{
 					setMinimumSize(new Dimension(200, 20));

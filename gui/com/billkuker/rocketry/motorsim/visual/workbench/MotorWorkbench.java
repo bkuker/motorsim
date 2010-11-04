@@ -167,7 +167,9 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 											try {
 												Motor m = MotorIO
 														.readMotor(file);
+												addFuel(m.getFuel());
 												addMotor(m, file);
+												
 											} catch (Exception e) {
 												JOptionPane.showMessageDialog(
 														MotorWorkbench.this, e
@@ -344,6 +346,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	}
 	
 	private void addFuel(Fuel f){
+		
 		fuels.addElement(f);
 		FuelPanel fp = new FuelPanel(f);
 		FuelNode fn = tm.new FuelNode(fp, f);
