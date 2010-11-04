@@ -44,6 +44,8 @@ public class BurnPanel extends JPanel {
 					SI.MEGA(SI.PASCAL),
 					b,
 					"pressure");
+			pressure.showAverage();
+			pressure.showMax();
 			pressure.setDomain(burn.getData().keySet());
 			
 			thrust = new Chart<Duration, Force>(
@@ -51,6 +53,8 @@ public class BurnPanel extends JPanel {
 					SI.NEWTON,
 					b,
 					"thrust");
+			thrust.showAverage();
+			thrust.showMax();
 			thrust.setDomain(burn.getData().keySet());
 			
 			burnRate = new Chart<Pressure, Velocity>(
