@@ -95,7 +95,9 @@ public class Star extends ExtrudedShapeGrain implements Validating {
 		return pointCount;
 	}
 	
-	public void setPointCount(final int points){
+	public void setPointCount(final int points) throws PropertyVetoException{
+		if ( points < 2 || points > 8 )
+			throw new PropertyVetoException("Invalid number of points", null);
 		pointCount = points;
 		generateGeometry();
 	}
@@ -117,5 +119,9 @@ public class Star extends ExtrudedShapeGrain implements Validating {
 			throw new ValidationException(this, "Invalid Length");
 		if ( iD.isGreaterThan(oD) )
 			throw new ValidationException(this, "iD > oD");		
+		if ( iD.isGreaterThan(pD) )
+			throw new ValidationException(this, "iD > pD");		
+		if ( pD.isGreaterThan(oD) )
+			throw new ValidationException(this, "pD > oD");	
 	}
 }
