@@ -141,9 +141,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 
 									@Override
 									public void actionPerformed(ActionEvent arg0) {
-										Motor m = MotorEditor.defaultMotor();
-										addFuel(m.getFuel());
-										addMotor(m, null);
+										addMotor(MotorEditor.defaultMotor(), null);
 									}
 								});
 
@@ -168,7 +166,6 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 											try {
 												Motor m = MotorIO
 														.readMotor(file);
-												addFuel(m.getFuel());
 												addMotor(m, file);
 												
 											} catch (Exception e) {

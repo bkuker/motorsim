@@ -8,10 +8,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.jscience.physics.amount.Amount;
 
+import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Motor;
+import com.billkuker.rocketry.motorsim.fuel.FuelResolver;
+import com.billkuker.rocketry.motorsim.fuel.FuelResolver.FuelNotFound;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -21,6 +26,37 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class MotorIO {
+	
+	static class FuelConverter implements Converter{
+
+		@Override
+		public boolean canConvert(Class c) {
+			return Fuel.class.isAssignableFrom(c);
+		}
+
+		@Override
+		public void marshal(Object o, HierarchicalStreamWriter w,
+				MarshallingContext ctx) {
+			Fuel f = (Fuel)o;
+			w.setValue(f.getURI().toString());
+		}
+
+		@Override
+		public Object unmarshal(HierarchicalStreamReader r,
+				UnmarshallingContext ctx) {
+			String text = r.getValue();
+			try {
+				URI u = new URI(text);
+				return FuelResolver.getFuel(u);
+			} catch (URISyntaxException e) {
+				throw new Error("Bad Fuel URI: " + text, e);
+			} catch (FuelNotFound e) {
+				throw new Error("Can't find fuel: " + text, e);
+			}
+		}
+		
+	}
+	
 	static class AmountConverter implements Converter{
 		
 		@SuppressWarnings("unchecked")
@@ -53,6 +89,7 @@ public class MotorIO {
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 		xstream.registerConverter(new AmountConverter());
+		xstream.registerConverter(new FuelConverter());
 		xstream.registerConverter(new JavaBeanConverter(xstream.getClassMapper(), "class"), -20); 
 		return xstream;
 	}
