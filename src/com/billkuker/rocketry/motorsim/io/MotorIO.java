@@ -18,6 +18,7 @@ import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.fuel.FuelResolver;
 import com.billkuker.rocketry.motorsim.fuel.FuelResolver.FuelNotFound;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -37,22 +38,41 @@ public class MotorIO {
 		@Override
 		public void marshal(Object o, HierarchicalStreamWriter w,
 				MarshallingContext ctx) {
-			Fuel f = (Fuel)o;
-			w.setValue(f.getURI().toString());
+			/*Fuel f = (Fuel)o;
+			w.setValue(f.getURI().toString());*/
+			ctx.convertAnother(((Fuel)o).getURI());
 		}
 
 		@Override
 		public Object unmarshal(HierarchicalStreamReader r,
 				UnmarshallingContext ctx) {
-			String text = r.getValue();
-			try {
-				URI u = new URI(text);
-				return FuelResolver.getFuel(u);
-			} catch (URISyntaxException e) {
-				throw new Error("Bad Fuel URI: " + text, e);
-			} catch (FuelNotFound e) {
-				throw new Error("Can't find fuel: " + text, e);
+			Object o = ctx.currentObject();
+			Object uri = null;
+			Class<?> c = ctx.getRequiredType();
+			try { 
+				uri = ctx.convertAnother(o, URI.class);
+			} catch ( ConversionException e ){
+				e.printStackTrace();
 			}
+			if ( uri != null && uri instanceof URI ){
+				try {
+					return FuelResolver.getFuel((URI)uri);
+				} catch (FuelNotFound e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			try {
+				return FuelResolver.getFuel(new URI("motorsim:" + c.getSimpleName()));
+			} catch (FuelNotFound e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
 		}
 		
 	}
