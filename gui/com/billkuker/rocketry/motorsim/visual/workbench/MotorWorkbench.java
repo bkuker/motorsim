@@ -9,11 +9,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -37,10 +35,7 @@ import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
-import com.billkuker.rocketry.motorsim.fuel.KNDX;
-import com.billkuker.rocketry.motorsim.fuel.KNER;
-import com.billkuker.rocketry.motorsim.fuel.KNSB;
-import com.billkuker.rocketry.motorsim.fuel.KNSU;
+import com.billkuker.rocketry.motorsim.fuel.FuelResolver;
 import com.billkuker.rocketry.motorsim.io.ENGExporter;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 import com.billkuker.rocketry.motorsim.visual.FuelPanel;
@@ -49,14 +44,6 @@ import com.billkuker.rocketry.motorsim.visual.workbench.WorkbenchTreeModel.FuelN
 
 public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private static final long serialVersionUID = 1L;
-	
-	private List<Class<? extends Fuel>> fuelTypes = new Vector<Class<? extends Fuel>>();
-	{
-		fuelTypes.add(KNSB.class);
-		fuelTypes.add(KNSU.class);
-		fuelTypes.add(KNER.class);
-		fuelTypes.add(KNDX.class);
-	}
 	
 	private JPanel top;
 	private JSplitPane split;
@@ -70,8 +57,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private HashMap<File, MotorEditor> f2e = new HashMap<File, MotorEditor>();
 
 	private HashMap<Motor, MotorEditor> m2e = new HashMap<Motor, MotorEditor>();
-	
-	private DefaultComboBoxModel fuels = new DefaultComboBoxModel();
+
 	
 	public MotorWorkbench() {
 		setTitle("MotorSim 1.0 RC1");
@@ -107,16 +93,8 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		
 		top.add(split, BorderLayout.CENTER);
 		
-		for ( Class<? extends Fuel> f : fuelTypes){
-			try {
-				addFuel(f.newInstance());
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		for ( Fuel f : FuelResolver.getFuelMap().values() ){
+			addFuel(f);
 		}
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -344,8 +322,8 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	}
 	
 	private void addFuel(Fuel f){
-		
-		fuels.addElement(f);
+		for ( MotorEditor e : m2e.values() )
+			e.addFuel(f);
 		FuelPanel fp = new FuelPanel(f);
 		FuelNode fn = tm.new FuelNode(fp, f);
 		tm.getFuels().add(fn);
@@ -355,7 +333,8 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	
 	private void newFuel(){
 		final SRFuelEditor ed = new SRFuelEditor();
-		fuels.addElement(ed.getFuel());
+		for ( MotorEditor e : m2e.values() )
+			e.addFuel(ed.getFuel());
 		final FuelEditNode node = tm.new FuelEditNode(ed);
 		tm.getFuels().add(node);
 		tm.nodeStructureChanged(tm.getFuels());
@@ -384,7 +363,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 
 	public void addMotor(Motor m, File f) {
 		tm.addMotor(m);
-		MotorEditor e = new MotorEditor(m, fuels);
+		MotorEditor e = new MotorEditor(m, FuelResolver.getFuelMap().values());
 		e.addBurnWatcher(mb);
 		String title;
 		if (f == null) {

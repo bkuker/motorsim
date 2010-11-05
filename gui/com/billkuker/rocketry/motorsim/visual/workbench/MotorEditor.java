@@ -10,6 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ import javax.measure.quantity.Length;
 import javax.measure.unit.SI;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -74,7 +75,11 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	Burn burn;
 
 	private Vector<BurnWatcher> burnWatchers = new Vector<BurnWatcher>();
-	private ComboBoxModel availableFuels;
+	private DefaultComboBoxModel availableFuels = new DefaultComboBoxModel();
+	
+	public void addFuel(Fuel f){
+		availableFuels.addElement(f);
+	}
 
 	//private static final int XML_TAB = 0;
 	private static final int CASING_TAB = 0;
@@ -332,9 +337,10 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 	}
 
-	public MotorEditor(Motor m, ComboBoxModel fuels) {
+	public MotorEditor(Motor m, Collection<Fuel> fuels) {
 		super(JTabbedPane.BOTTOM);
-		this.availableFuels = fuels;
+		for ( Fuel f : fuels )
+			addFuel(f);
 		text.setName("XML");
 		text.setEditable(false);
 		//add(text, XML_TAB);
