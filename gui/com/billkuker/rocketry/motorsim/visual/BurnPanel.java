@@ -1,6 +1,7 @@
 package com.billkuker.rocketry.motorsim.visual;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.text.NumberFormat;
@@ -44,8 +45,6 @@ public class BurnPanel extends JPanel {
 					SI.MEGA(SI.PASCAL),
 					b,
 					"pressure");
-			pressure.showAverage();
-			pressure.showMax();
 			pressure.setDomain(burn.getData().keySet());
 			
 			thrust = new Chart<Duration, Force>(
@@ -53,8 +52,6 @@ public class BurnPanel extends JPanel {
 					SI.NEWTON,
 					b,
 					"thrust");
-			thrust.showAverage();
-			thrust.showMax();
 			thrust.setDomain(burn.getData().keySet());
 			
 			burnRate = new Chart<Pressure, Velocity>(
@@ -122,6 +119,11 @@ public class BurnPanel extends JPanel {
 						.ammountToRoundedString(bi.maxPressure())));
 
 				add(text, BorderLayout.NORTH);
+				
+				thrust.addRangeMarker(bi.maxThrust(), "Max", Color.BLACK);
+				thrust.addRangeMarker(bi.averageThrust(), "Average", Color.BLACK);
+				pressure.addRangeMarker(bi.maxPressure(), "Max", Color.BLACK);
+				burnRate.addDomainMarker(bi.maxPressure(), "Max", Color.RED);
 			}
 			
 			

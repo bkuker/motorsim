@@ -44,7 +44,8 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(Chart.class);
 	
-	private final Stroke dashed =new BasicStroke(1, 1, 1, 1, new float[]{2,4}, 0);
+	private final Stroke dashed = new BasicStroke(1, 1, 1, 1, new float[]{2,4}, 0);
+	private final Font labelFont = new Font(Font.DIALOG, Font.BOLD, 10);
 
 	private static ThreadFactory tf = new ThreadFactory() {
 		public Thread newThread(Runnable r) {
@@ -132,64 +133,35 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 				);
 		add(new ChartPanel(chart));
 	}
-
-	public void showMax(){
-		markMax = true;
+	
+	public void addDomainMarker(Amount<X> x, String label, Color c){
+		double xVal = x.doubleValue(xUnit);
+		Marker marker = new ValueMarker(xVal);
+		marker.setStroke(dashed);
+		marker.setPaint(c);
+		marker.setLabelPaint(c);
+		marker.setLabelFont(labelFont);
+		marker.setLabel(label + ": " + RocketScience.ammountToRoundedString(x));
+		marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+		marker.setLabelOffset(new RectangleInsets(0, -5, 0, 0));
+		chart.getXYPlot().addDomainMarker(marker);
 	}
 	
-	public void showAverage(){
-		markAverage = true;
+	public void addRangeMarker(Amount<Y> y, String label, Color c){
+		double yVal = y.doubleValue(yUnit);
+		Marker marker = new ValueMarker(yVal);
+		marker.setStroke(dashed);
+		marker.setPaint(Color.BLACK);
+		marker.setLabelFont(labelFont);
+		marker.setLabel("Max: "
+				+ RocketScience.ammountToRoundedString(Amount.valueOf(yVal,
+						yUnit)));
+		marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+		marker.setLabelOffset(new RectangleInsets(0, 5, 0, 0));
+		chart.getXYPlot().addRangeMarker(marker);
 	}
-	private boolean markMax = false, markAverage = false;
+
 	private Marker focusMarkerX, focusMarkerY;
-	private void markMax(){
-		if ( !markMax && !markAverage )
-			return;
-		if ( dataset.getSeriesCount() != 1 ){
-			return;
-		}
-		final XYSeries s = dataset.getSeries(0);
-
-		double max = 0;
-		double accum = 0;
-		for ( int i = 0; i < s.getItemCount(); i++){
-			if ( s.getY(i).doubleValue() > max ){
-				max = s.getY(i).doubleValue();
-			}
-			if ( i > 0 ){
-				double dx = s.getX(i).doubleValue() - s.getX(i-1).doubleValue();
-				accum += s.getY(i).doubleValue() * dx;
-			}
-		}
-		double average = accum / (s.getX(s.getItemCount()-1).doubleValue() - s.getX(0).doubleValue());
-		
-		if (markMax) {
-			Marker marker = new ValueMarker(average);
-			marker.setStroke(dashed);
-			marker.setPaint(Color.BLACK);
-			marker.setLabelFont(new Font(Font.DIALOG, Font.BOLD, 10));
-			marker.setLabel("Average: "
-					+ RocketScience.ammountToRoundedString(Amount.valueOf(
-							average, yUnit)));
-			marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
-			marker.setLabelOffset(new RectangleInsets(0, 5, 0, 0));
-			chart.getXYPlot().addRangeMarker(marker);
-		}
-
-		if (markAverage) {
-			Marker marker = new ValueMarker(max);
-			marker.setStroke(dashed);
-			marker.setPaint(Color.BLACK);
-			marker.setLabelFont(new Font(Font.DIALOG, Font.BOLD, 10));
-			marker.setLabel("Max: "
-					+ RocketScience.ammountToRoundedString(Amount.valueOf(max,
-							yUnit)));
-			marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
-			marker.setLabelOffset(new RectangleInsets(0, 5, 0, 0));
-			chart.getXYPlot().addRangeMarker(marker);
-		}
-
-	}
 
 	public void mark(Amount<X> m) {
 		if (focusMarkerX != null)
@@ -211,7 +183,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 				focusMarkerY.setLabelAnchor(RectangleAnchor.TOP_RIGHT);
 				focusMarkerY.setLabelTextAnchor(TextAnchor.TOP_RIGHT);
 				focusMarkerY.setLabelPaint(Color.BLUE);
-				focusMarkerY.setLabelFont(new Font(Font.DIALOG, Font.BOLD, 10));
+				focusMarkerY.setLabelFont(labelFont);
 				focusMarkerY.setLabelOffset(new RectangleInsets(0,5,0,0));
 				chart.getXYPlot().addRangeMarker(focusMarkerY);
 				focusMarkerY.setLabel(RocketScience.ammountToRoundedString(val));
@@ -258,7 +230,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 	}
 	
 	private void drawDone(){
-		markMax();
+	
 	}
 
 	private volatile boolean stop = false;
