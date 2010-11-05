@@ -21,7 +21,7 @@ public class FuelResolver {
 		add(new KNER());
 	}
 	
-	public Map<URI, Fuel> getFuelMap(){
+	public static Map<URI, Fuel> getFuelMap(){
 		return Collections.unmodifiableMap(fuels);
 	}
 
