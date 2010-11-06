@@ -9,7 +9,6 @@ import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -36,8 +35,6 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import org.apache.log4j.Logger;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
@@ -59,7 +56,6 @@ import com.billkuker.rocketry.motorsim.grain.Moonburner;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.grain.RodAndTubeGrain;
 import com.billkuker.rocketry.motorsim.grain.Star;
-import com.billkuker.rocketry.motorsim.io.MotorIO;
 import com.billkuker.rocketry.motorsim.visual.BurnPanel;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
@@ -68,7 +64,6 @@ import com.billkuker.rocketry.motorsim.visual.HardwarePanel;
 public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(MotorEditor.class);
-	RSyntaxTextArea text = new RSyntaxTextArea();
 	Motor motor;
 	GrainEditor grainEditor;
 	BurnTab bt;
@@ -332,40 +327,24 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		}
 	}
 
-	{
-		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
-
-	}
 
 	public MotorEditor(Motor m, Collection<Fuel> fuels) {
 		super(JTabbedPane.BOTTOM);
 		for ( Fuel f : fuels )
 			addFuel(f);
-		text.setName("XML");
-		text.setEditable(false);
-		//add(text, XML_TAB);
-		setMotor(m, true);
+		setMotor(m);
 	}
 
 	public Motor getMotor() {
 		return motor;
 	}
 
-	private void reText() {
-		try {
-			text.setText(MotorIO.writeMotor(motor));
-		} catch (IOException e) {
-			throw new Error(e);
-		}
-	}
 
-	private void setMotor(Motor m, boolean retext) {
+	private void setMotor(Motor m) {
 		if (motor != null)
 			motor.removePropertyChangeListener(this);
 		motor = m;
 		motor.addPropertyChangeListener(this);
-		if (retext)
-			reText();
 		if (grainEditor != null)
 			remove(grainEditor);
 		while (getTabCount() > 1)
@@ -437,7 +416,6 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
-		reText();
 		// Dont re-burn for a name change!
 		if (!evt.getPropertyName().equals("Name")){
 			bt.reBurn();

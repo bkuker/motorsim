@@ -134,24 +134,4 @@ public class MotorIO {
 		return m;
 	}
 	
-	public static String writeMotor(Motor m) throws IOException{
-		StringWriter sout = new StringWriter();
-		ObjectOutputStream out = getXStream().createObjectOutputStream(sout);
-		out.writeObject(m);
-		out.close();
-		sout.close();
-		return sout.toString();
-	}
-	
-	public static Motor readMotor(String s) throws IOException{
-		StringReader sin = new StringReader(s);
-		ObjectInputStream in = getXStream().createObjectInputStream(sin);
-		Motor m;
-		try {
-			m = (Motor)in.readObject();
-		} catch (ClassNotFoundException e) {
-			throw new IOException("Class not found", e);
-		}
-		return m;
-	}
 }
