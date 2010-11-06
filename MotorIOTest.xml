@@ -5,7 +5,13 @@
       <OD>31 mm</OD>
       <length>200 mm</length>
     </chamber>
-    <fuel class="com.billkuker.rocketry.motorsim.fuel.KNSU"/>
+    <fuel class="com.billkuker.rocketry.motorsim.fuel.KNSU" serialization="custom">
+      <java.net.URI>
+        <default>
+          <string>motorsim:KNSU</string>
+        </default>
+      </java.net.URI>
+    </fuel>
     <grain class="com.billkuker.rocketry.motorsim.grain.MultiGrain">
       <count>2</count>
       <grain class="com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain">

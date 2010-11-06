@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -143,7 +145,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 											}
 											try {
 												Motor m = MotorIO
-														.readMotor(file);
+														.readMotor(new FileInputStream(file));
 												addMotor(m, file);
 												
 											} catch (Exception e) {
@@ -355,7 +357,9 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 
 	private void save(Motor m, File f) {
 		try {
-			MotorIO.writeMotor(m, f);
+			FileOutputStream fo;
+			MotorIO.writeMotor(m, fo = new FileOutputStream(f));
+			fo.close();
 		} catch (Throwable t) {
 			JOptionPane.showMessageDialog(MotorWorkbench.this, t.getMessage());
 		}

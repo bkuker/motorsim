@@ -2,6 +2,8 @@ package com.billkuker.rocketry.motorsim.test;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 import javax.measure.unit.SI;
 
@@ -48,9 +50,9 @@ public class MotorIOTest {
 
 		File f = new File("MotorIOTest.xml");
 
-		MotorIO.writeMotor(m, f);
+		MotorIO.writeMotor(m, new FileOutputStream(f));
 
-		MotorIO.readMotor(f);
+		MotorIO.readMotor(new FileInputStream(f));
 
 	}
 }
