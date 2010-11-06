@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
@@ -242,12 +244,13 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		}
 	}
 
-	private class CaseEditor extends JSplitPane {
+	private class CaseEditor extends JSplitPane implements ComponentListener {
 		private static final long serialVersionUID = 1L;
 
 		public CaseEditor(Nozzle n, Chamber c) {
 			super(JSplitPane.VERTICAL_SPLIT);
 			setName("General Parameters");
+			this.addComponentListener(this);
 			
 			JPanel parts = new JPanel();
 			parts.setLayout(new BoxLayout(parts, BoxLayout.X_AXIS));
@@ -324,6 +327,27 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 				((ChangeListening.Subject) c)
 						.addPropertyChangeListener(MotorEditor.this);
 			}
+		}
+
+		@Override
+		public void componentHidden(ComponentEvent arg0) {
+
+		}
+
+		@Override
+		public void componentMoved(ComponentEvent arg0) {
+
+		}
+
+		@Override
+		public void componentResized(ComponentEvent arg0) {
+			setResizeWeight(.5);
+			setDividerLocation(.5);
+		}
+
+		@Override
+		public void componentShown(ComponentEvent arg0) {
+
 		}
 	}
 

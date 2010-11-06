@@ -51,6 +51,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private JSplitPane split;
 	private JTree tree;
 	private JTabbedPane motors;
+	private JTabbedPane fuels;
 	private WorkbenchTreeModel tm;
 	private MultiBurnChart mb;
 	private JFrame allBurns;
@@ -60,6 +61,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 
 	private HashMap<Motor, MotorEditor> m2e = new HashMap<Motor, MotorEditor>();
 
+	private static final int TREE_WIDTH = 200;
 	
 	public MotorWorkbench() {
 		setTitle("MotorSim 1.0 RC1");
@@ -76,21 +78,20 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		allBurns.add(mb);
 
 		motors = new JTabbedPane();
+		fuels = new JTabbedPane();
 
 		tree = new JTree(tm = new WorkbenchTreeModel());
 		tree.setCellRenderer(new WorkbenchTreeCellRenderer());
 		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.setMinimumSize(new Dimension(200, 100));
+		tree.setMinimumSize(new Dimension(TREE_WIDTH, 100));
 
 		// Listen for when the selection changes.
 		tree.addTreeSelectionListener(this);
 
-		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(
-				tree), motors);
-		split.setDividerLocation(200);
-		split.setResizeWeight(0);
-		split.resetToPreferredSizes();
+		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, 
+				tree, motors);
+		split.setDividerLocation(TREE_WIDTH);
 		split.revalidate();
 		
 		top.add(split, BorderLayout.CENTER);
@@ -330,7 +331,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		FuelNode fn = tm.new FuelNode(fp, f);
 		tm.getFuels().add(fn);
 		tm.nodeStructureChanged(tm.getFuels());
-		motors.addTab(f.getName(), fp);
+		fuels.addTab(f.getName(), fp);
 	}
 	
 	private void newFuel(){
@@ -340,14 +341,14 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		final FuelEditNode node = tm.new FuelEditNode(ed);
 		tm.getFuels().add(node);
 		tm.nodeStructureChanged(tm.getFuels());
-		motors.addTab(ed.getFuel().getName(), ed);
+		fuels.addTab(ed.getFuel().getName(), ed);
 		ed.getFuel().addPropertyChangeListener(new PropertyChangeListener(){
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				if ( evt.getPropertyName().equals("Name")){
-					for ( int i = 0; i < motors.getTabCount(); i++ ){
-						if ( motors.getComponent(i) == ed ){
-							motors.setTitleAt(i, ed.getFuel().getName());
+					for ( int i = 0; i < fuels.getTabCount(); i++ ){
+						if ( fuels.getComponent(i) == ed ){
+							fuels.setTitleAt(i, ed.getFuel().getName());
 							tm.nodeChanged(node);
 						}
 					}
@@ -382,17 +383,23 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	}
 
 	@Override
-	public void valueChanged(TreeSelectionEvent e) {		
-		if ( e.getPath().getLastPathComponent() instanceof FuelNode ){
-			FuelNode fen = ((FuelNode)e.getPath().getLastPathComponent());
-				motors.setSelectedComponent(fen.getUserObject());			
+	public void valueChanged(TreeSelectionEvent e) {
+		if (e.getPath().getLastPathComponent() instanceof FuelNode) {
+			FuelNode fen = ((FuelNode) e.getPath().getLastPathComponent());
+			fuels.setSelectedComponent(fen.getUserObject());
+			split.setRightComponent(fuels);
+			split.setDividerLocation(TREE_WIDTH);
+			split.revalidate();
 		}
-		
+
 		Motor m = getMotor(e.getPath());
-		
-		if ( m == null )
+
+		if (m == null)
 			return;
 
+		split.setRightComponent(motors);
+		split.setDividerLocation(TREE_WIDTH);
+		split.revalidate();
 		motors.setSelectedComponent(m2e.get(m));
 
 		if (e.getPath().getLastPathComponent() instanceof DefaultMutableTreeNode) {
@@ -400,7 +407,6 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 					.getLastPathComponent()).getUserObject();
 			m2e.get(m).focusOnObject(o);
 		}
-		
 
 	}
 
