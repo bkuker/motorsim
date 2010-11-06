@@ -11,10 +11,13 @@ import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.EnumSet;
 import java.util.Vector;
 
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -27,7 +30,9 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.RocketScience;
+import com.billkuker.rocketry.motorsim.cases.PVCCase;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
+import com.sun.org.apache.xml.internal.security.utils.EncryptionElementProxy;
 
 public class Editor extends PropertySheetPanel {
 	private static final long serialVersionUID = 1L;
@@ -62,6 +67,11 @@ public class Editor extends PropertySheetPanel {
 			if (props[i].getName().equals("class"))
 				continue;
 			v.add(props[i]);
+			
+			if ( Enum.class.isAssignableFrom( props[i].getPropertyType() ) ){
+				getEditorRegistry().registerEditor(props[i].getPropertyType(), new EnumPropertyEditor(props[i].getPropertyType()));
+			}
+			
 		}
 		setProperties(v.toArray(new PropertyDescriptor[v.size()]));
 
@@ -103,9 +113,8 @@ public class Editor extends PropertySheetPanel {
 	}
 	
 	public static void main(String args[]){
-		CylindricalChamber o = new CylindricalChamber();
-		o.setLength(Amount.valueOf(100.5, SI.MILLIMETER));
-		o.setID(Amount.valueOf(30, SI.MILLIMETER));
+		PVCCase o = new PVCCase();
+		o.setLength(Amount.valueOf(100, SI.MILLIMETER));
 		Editor e = new Editor(o);
 		e.showAsWindow();
 	}
@@ -118,6 +127,34 @@ public class Editor extends PropertySheetPanel {
 			return new JLabel(RocketScience.ammountToString((Amount<?>)value));
 		}
 		
+	}
+	
+	public static class EnumPropertyEditor<E extends Enum<E>> extends PropertyEditorSupport {
+		JComboBox editor = new JComboBox();
+		DefaultComboBoxModel model = new DefaultComboBoxModel();
+		Class<E> clazz;
+		public EnumPropertyEditor(Class<E> clazz){
+			this.clazz = clazz;
+			for ( E e : EnumSet.allOf(clazz) ){
+				model.addElement(e);
+			}
+			editor.setModel(model);
+		}
+		
+		@Override
+		public Object getValue() {
+			return editor.getSelectedItem();
+		}
+		
+		@Override
+		public boolean supportsCustomEditor() {
+			return true;
+		}
+		
+		@Override
+		public Component getCustomEditor() {
+			return editor;
+		}
 	}
 
 	public static class AmountPropertyEditor extends PropertyEditorSupport {
