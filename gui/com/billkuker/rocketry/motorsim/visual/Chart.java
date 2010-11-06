@@ -151,11 +151,10 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 		double yVal = y.doubleValue(yUnit);
 		Marker marker = new ValueMarker(yVal);
 		marker.setStroke(dashed);
-		marker.setPaint(Color.BLACK);
+		marker.setPaint(c);
+		marker.setLabelPaint(c);
 		marker.setLabelFont(labelFont);
-		marker.setLabel("Max: "
-				+ RocketScience.ammountToRoundedString(Amount.valueOf(yVal,
-						yUnit)));
+		marker.setLabel(label + ": " + RocketScience.ammountToRoundedString(y));
 		marker.setLabelTextAnchor(TextAnchor.TOP_LEFT);
 		marker.setLabelOffset(new RectangleInsets(0, 5, 0, 0));
 		chart.getXYPlot().addRangeMarker(marker);
