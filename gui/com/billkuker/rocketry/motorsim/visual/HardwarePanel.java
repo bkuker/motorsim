@@ -55,7 +55,7 @@ public class HardwarePanel extends JPanel {
 		
 		Shape c = chamber.chamberShape();
 		
-		Shape n = nozzle.nozzleShape(((CylindricalChamber)chamber).getID());
+		Shape n = nozzle.nozzleShape(Amount.valueOf(c.getBounds().getWidth(), SI.MILLIMETER));
 		
 		Rectangle cb = c.getBounds();
 		Rectangle nb = n.getBounds();
