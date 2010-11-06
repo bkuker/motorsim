@@ -14,7 +14,6 @@ import java.text.NumberFormat;
 import java.util.EnumSet;
 import java.util.Vector;
 
-import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -28,11 +27,8 @@ import javax.swing.table.TableCellRenderer;
 import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
-import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.RocketScience;
-import com.billkuker.rocketry.motorsim.cases.PVCCase;
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
-import com.sun.org.apache.xml.internal.security.utils.EncryptionElementProxy;
 
 public class Editor extends PropertySheetPanel {
 	private static final long serialVersionUID = 1L;
@@ -111,14 +107,14 @@ public class Editor extends PropertySheetPanel {
 		f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		f.setVisible(true);
 	}
-	
+/*	
 	public static void main(String args[]){
-		PVCCase o = new PVCCase();
+		Schedule40 o = new Schedule40();
 		o.setLength(Amount.valueOf(100, SI.MILLIMETER));
 		Editor e = new Editor(o);
 		e.showAsWindow();
 	}
-	
+	*/
 	public static class AmountRenderer implements TableCellRenderer {
 		@Override
 		public Component getTableCellRendererComponent(JTable table,
