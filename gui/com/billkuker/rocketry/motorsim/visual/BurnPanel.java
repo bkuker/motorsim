@@ -132,7 +132,7 @@ public class BurnPanel extends JPanel {
 					text.add(new JLabel("NA"));
 				} else {
 					double d = bi.getSaftyFactor();
-					if ( d > 1.5 ){
+					if ( d >= 1.5 ){
 						saftyColor = GREEN;
 					} else if ( d > 1 ){
 						saftyColor = ORANGE;
