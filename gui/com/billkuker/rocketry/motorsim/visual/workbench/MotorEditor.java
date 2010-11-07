@@ -156,7 +156,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 					final JLabel progress = new JLabel();
 					add(progress, BorderLayout.CENTER);
 					try {
-						final Burn b = new Burn(motor,
+						final Burn b = new Burn(motor);
+						b.addBurnProgressListener(
 								new Burn.BurnProgressListener() {
 									@Override
 									public void setProgress(float f) {
@@ -171,6 +172,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 										}
 									}
 								});
+						b.burn();
 
 						final BurnPanel bp = new BurnPanel(b);
 						SwingUtilities.invokeLater(new Thread() {

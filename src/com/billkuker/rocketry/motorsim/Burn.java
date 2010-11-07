@@ -40,6 +40,9 @@ public class Burn {
 	private static Logger log = Logger.getLogger(Burn.class);
 	protected final Motor motor;
 	
+	private boolean burning = false;
+	private boolean done = false;
+	
 	public interface BurnProgressListener{
 		public void setProgress(float p);
 	}
@@ -64,6 +67,8 @@ public class Burn {
 	protected SortedMap<Amount<Duration>,Interval> data = new TreeMap<Amount<Duration>, Interval>();
 	
 	public SortedMap<Amount<Duration>,Interval> getData(){
+		if ( !done )
+			throw new IllegalStateException("Burn not complete!");
 		return data;
 	}
 	
@@ -72,7 +77,7 @@ public class Burn {
 	}
 
 	public Amount<Duration> burnTime(){
-		return data.lastKey();
+		return getData().lastKey();
 	}
 	
 	public Burn(Motor m){
@@ -82,21 +87,18 @@ public class Burn {
 			throw new IllegalArgumentException("Invalid Motor: " + e.getMessage());
 		}
 		motor = m;
-		burn();
 	}
 	
-	public Burn(Motor m, BurnProgressListener bpl){
-		try {
-			m.validate();
-		} catch (ValidationException e) {
-			throw new IllegalArgumentException("Invalid Motor: " + e.getMessage());
-		}
-		motor = m;
+	public void addBurnProgressListener( BurnProgressListener bpl ){
 		bpls.add(bpl);
-		burn();
 	}
 	
-	private void burn(){
+	public void burn(){
+		synchronized(this){
+			if ( burning )
+				throw new IllegalStateException("Already burning!");
+			burning = true;
+		}
 		log.info("Starting burn...");
 		int endPressureSteps = 0;
 		long start = new Date().getTime();
@@ -238,6 +240,7 @@ public class Burn {
 
 		long time = new Date().getTime() - start;
 		log.info("Burn took " + time + " millis.");
+		done = true;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -252,11 +255,11 @@ public class Burn {
 	}
 	
 	public Amount<Pressure> pressure(Amount<Duration> time){
-		return data.get(time).chamberPressure;
+		return getData().get(time).chamberPressure;
 	}
 	
 	public Amount<Force> thrust(Amount<Duration> time){
-		return data.get(time).thrust;
+		return getData().get(time).thrust;
 	}
 	
 	public Amount<Dimensionless> kn(Amount<Length> regression){
