@@ -49,6 +49,7 @@ import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.Nozzle;
 import com.billkuker.rocketry.motorsim.RocketScience;
+import com.billkuker.rocketry.motorsim.cases.Schedule40;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CSlot;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
@@ -175,6 +176,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 						SwingUtilities.invokeLater(new Thread() {
 							public void run() {
 								remove(bar);
+								remove(progress);
 								add(bp, BorderLayout.CENTER);
 
 								for (BurnWatcher bw : burnWatchers)
@@ -388,6 +390,10 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		c.setID(Amount.valueOf(30, SI.MILLIMETER));
 		m.setChamber(c);
 
+		Schedule40 pvc = new Schedule40();
+		pvc.setLength(Amount.valueOf(200, SI.MILLIMETER));
+		m.setChamber(pvc);
+		
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
 		try {
 			g.setLength(Amount.valueOf(70, SI.MILLIMETER));
@@ -396,6 +402,7 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		} catch (PropertyVetoException v) {
 			throw new Error(v);
 		}
+		
 
 		m.setGrain(new MultiGrain(g, 2));
 

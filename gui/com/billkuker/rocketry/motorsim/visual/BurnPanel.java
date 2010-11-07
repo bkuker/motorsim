@@ -3,8 +3,6 @@ package com.billkuker.rocketry.motorsim.visual;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import javax.measure.quantity.Duration;
@@ -13,7 +11,6 @@ import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
 import javax.measure.unit.SI;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
@@ -25,7 +22,6 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.BurnSummary;
-import com.billkuker.rocketry.motorsim.RocketScience;
 
 public class BurnPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -100,36 +96,17 @@ public class BurnPanel extends JPanel {
 			
 			add( new SL(), BorderLayout.SOUTH);
 			
-			
+			BurnSummary bi = new BurnSummary(burn);
+			SummaryPanel text = new SummaryPanel(burn);
+			text.setBurnSummary(bi);
+			add(text, BorderLayout.NORTH);
 			
 			{
-				BurnSummary bi = new BurnSummary(burn);
-				JPanel text = new JPanel(new GridLayout(2, 5));
 
-				text.add(new JLabel("Rating"));
-				text.add(new JLabel("Total Impulse"));
-				text.add(new JLabel("ISP"));
-				text.add(new JLabel("Max Thrust"));
-				text.add(new JLabel("Average Thust"));
-				text.add(new JLabel("Max Pressure"));
-				
-				text.add(new JLabel("Safty Factor"));
-
-				text.add(new JLabel(bi.getRating()));
-				text.add(new JLabel(RocketScience.ammountToRoundedString(bi.totalImpulse())));
-				text.add(new JLabel(RocketScience.ammountToRoundedString(bi.specificImpulse())));
-				text.add(new JLabel(RocketScience
-						.ammountToRoundedString(bi.maxThrust())));
-				text.add(new JLabel(RocketScience
-						.ammountToRoundedString(bi.averageThrust())));
-				text.add(new JLabel(RocketScience
-						.ammountToRoundedString(bi.maxPressure())));
-				
+				//Color in the Burst marker
 				Color saftyColor;
 				if ( bi.getSaftyFactor() == null ){
-
 					saftyColor = Color.BLACK;
-					text.add(new JLabel("NA"));
 				} else {
 					double d = bi.getSaftyFactor();
 					if ( d >= 1.5 ){
@@ -139,25 +116,19 @@ public class BurnPanel extends JPanel {
 					} else {
 						saftyColor = RED;
 					}
-					JLabel l = new JLabel( new DecimalFormat("##########.#").format(bi.getSaftyFactor()));
-					l.setOpaque(true);
-					l.setBackground(saftyColor);
-					l.setForeground(Color.WHITE);
-					text.add(l);
+				}
+				Amount<Pressure> burst = b.getMotor().getChamber().getBurstPressure();
+				if ( burst != null ){
+					pressure.addRangeMarker(burst, "Burst", saftyColor);
 				}
 				
-
-				add(text, BorderLayout.NORTH);
-				
+				//Add some additional Markers
 				thrust.addRangeMarker(bi.maxThrust(), "Max", Color.BLACK);
 				thrust.addRangeMarker(bi.averageThrust(), "Average", Color.BLACK);
 				pressure.addRangeMarker(bi.maxPressure(), "Max", Color.BLACK);
 				burnRate.addDomainMarker(bi.maxPressure(), "Max", RED);
 				
-				Amount<Pressure> burst = b.getMotor().getChamber().getBurstPressure();
-				if ( burst != null ){
-					pressure.addRangeMarker(burst, "Burst", saftyColor);
-				}
+
 			}
 			
 			
