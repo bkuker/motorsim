@@ -3,6 +3,8 @@ package com.billkuker.rocketry.motorsim;
 
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -42,7 +44,7 @@ public class Burn {
 		public void setProgress(float p);
 	}
 	
-	private BurnProgressListener bpl = null;
+	private Set<BurnProgressListener> bpls = new HashSet<Burn.BurnProgressListener>();
 	
 	private static final Amount<Pressure> atmosphereicPressure = Amount.valueOf(101000, SI.PASCAL);
 	
@@ -90,7 +92,7 @@ public class Burn {
 			throw new IllegalArgumentException("Invalid Motor: " + e.getMessage());
 		}
 		motor = m;
-		this.bpl = bpl;
+		bpls.add(bpl);
 		burn();
 	}
 	
@@ -139,10 +141,12 @@ public class Burn {
 			
 			log.debug("Regression: " + next.regression);
 			
-			if ( bpl != null ){
-				Amount<Dimensionless> a = next.regression.divide(motor.getGrain().webThickness()).to(Dimensionless.UNIT);
+			//Update BurnProgressListeners
+			Amount<Dimensionless> a = next.regression.divide(motor.getGrain().webThickness()).to(Dimensionless.UNIT);
+			for (BurnProgressListener bpl : bpls ){
 				bpl.setProgress((float)a.doubleValue(Dimensionless.UNIT));
 			}
+
 			
 			next.time = prev.time.plus(dt);
 			
