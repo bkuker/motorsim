@@ -1,5 +1,6 @@
 package com.billkuker.rocketry.motorsim;
 
+import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Duration;
 import javax.measure.quantity.Force;
 import javax.measure.quantity.Pressure;
@@ -18,6 +19,7 @@ public class BurnSummary {
 	Amount<Force> maxThrust = Amount.valueOf(0, SI.NEWTON);
 	Amount<Pressure> maxPressure = Amount.valueOf(0, SI.MEGA(SI.PASCAL));
 	Amount<Duration> isp;
+	Double saftyFactor;
 	
 	public BurnSummary(Burn b) {
 		for (Interval i : b.getData().values()) {
@@ -45,6 +47,8 @@ public class BurnSummary {
 		.divide(Amount.valueOf(9.81,
 				SI.METERS_PER_SQUARE_SECOND)).to(SI.SECOND);
 
+		if ( b.getMotor().getChamber().burstPressure() != null )
+			saftyFactor = b.getMotor().getChamber().burstPressure().divide(maxPressure).to(Dimensionless.UNIT).doubleValue(Dimensionless.UNIT);
 	}
 
 	public String getRating() {
@@ -61,6 +65,10 @@ public class BurnSummary {
 		+ Math.round(averageThrust().doubleValue(SI.NEWTON));
 	}
 
+	public Double getSaftyFactor(){
+		return saftyFactor;
+	}
+	
 	public Amount<RocketScience.Impulse> totalImpulse() {
 		return ns;
 	}
