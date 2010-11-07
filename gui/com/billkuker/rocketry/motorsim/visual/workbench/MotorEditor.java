@@ -160,6 +160,8 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 						b.addBurnProgressListener(
 								new Burn.BurnProgressListener() {
 									@Override
+									public void burnComplete(){};
+									@Override
 									public void setProgress(float f) {
 										int pct = (int)(f*100);
 										bar.setValue(pct);

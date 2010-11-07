@@ -45,6 +45,7 @@ public class Burn {
 	
 	public interface BurnProgressListener{
 		public void setProgress(float p);
+		public void burnComplete();
 	}
 	
 	private Set<BurnProgressListener> bpls = new HashSet<Burn.BurnProgressListener>();
@@ -241,6 +242,9 @@ public class Burn {
 		long time = new Date().getTime() - start;
 		log.info("Burn took " + time + " millis.");
 		done = true;
+		for (BurnProgressListener bpl : bpls ){
+			bpl.burnComplete();
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
