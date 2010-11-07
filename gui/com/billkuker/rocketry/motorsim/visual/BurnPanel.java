@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import javax.measure.quantity.Duration;
@@ -34,6 +35,10 @@ public class BurnPanel extends JPanel {
 	Chart<Pressure, Velocity> burnRate;
 	GrainPanel grain;
 	Amount<Duration> displayedTime = Amount.valueOf(0, SI.SECOND);
+	
+	private static final Color RED = new Color(196, 0, 0);
+	private static final Color GREEN = new Color(0, 196, 0);
+	private static final Color ORANGE = new Color(160, 96, 0);
 	
 	public BurnPanel(Burn b){
 		super( new BorderLayout() );
@@ -107,6 +112,8 @@ public class BurnPanel extends JPanel {
 				text.add(new JLabel("Max Thrust"));
 				text.add(new JLabel("Average Thust"));
 				text.add(new JLabel("Max Pressure"));
+				
+				text.add(new JLabel("Safty Factor"));
 
 				text.add(new JLabel(bi.getRating()));
 				text.add(new JLabel(RocketScience.ammountToRoundedString(bi.totalImpulse())));
@@ -117,13 +124,40 @@ public class BurnPanel extends JPanel {
 						.ammountToRoundedString(bi.averageThrust())));
 				text.add(new JLabel(RocketScience
 						.ammountToRoundedString(bi.maxPressure())));
+				
+				Color saftyColor;
+				if ( bi.getSaftyFactor() == null ){
+
+					saftyColor = Color.BLACK;
+					text.add(new JLabel("NA"));
+				} else {
+					double d = bi.getSaftyFactor();
+					if ( d > 1.5 ){
+						saftyColor = GREEN;
+					} else if ( d > 1 ){
+						saftyColor = ORANGE;
+					} else {
+						saftyColor = RED;
+					}
+					JLabel l = new JLabel( new DecimalFormat("##########.#").format(bi.getSaftyFactor()));
+					l.setOpaque(true);
+					l.setBackground(saftyColor);
+					l.setForeground(Color.WHITE);
+					text.add(l);
+				}
+				
 
 				add(text, BorderLayout.NORTH);
 				
 				thrust.addRangeMarker(bi.maxThrust(), "Max", Color.BLACK);
 				thrust.addRangeMarker(bi.averageThrust(), "Average", Color.BLACK);
 				pressure.addRangeMarker(bi.maxPressure(), "Max", Color.BLACK);
-				burnRate.addDomainMarker(bi.maxPressure(), "Max", Color.RED);
+				burnRate.addDomainMarker(bi.maxPressure(), "Max", RED);
+				
+				Amount<Pressure> burst = b.getMotor().getChamber().burstPressure();
+				if ( burst != null ){
+					pressure.addRangeMarker(burst, "Burst", saftyColor);
+				}
 			}
 			
 			
