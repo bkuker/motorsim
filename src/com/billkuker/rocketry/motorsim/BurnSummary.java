@@ -47,8 +47,8 @@ public class BurnSummary {
 		.divide(Amount.valueOf(9.81,
 				SI.METERS_PER_SQUARE_SECOND)).to(SI.SECOND);
 
-		if ( b.getMotor().getChamber().burstPressure() != null )
-			saftyFactor = b.getMotor().getChamber().burstPressure().divide(maxPressure).to(Dimensionless.UNIT).doubleValue(Dimensionless.UNIT);
+		if ( b.getMotor().getChamber().getBurstPressure() != null )
+			saftyFactor = b.getMotor().getChamber().getBurstPressure().divide(maxPressure).to(Dimensionless.UNIT).doubleValue(Dimensionless.UNIT);
 	}
 
 	public String getRating() {

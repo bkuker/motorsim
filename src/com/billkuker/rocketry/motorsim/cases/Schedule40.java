@@ -60,7 +60,7 @@ public class Schedule40 implements Chamber {
 	}
 
 	@Override
-	public Amount<Pressure> burstPressure() {
+	public Amount<Pressure> getBurstPressure() {
 		return size.burst;
 	}
 

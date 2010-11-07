@@ -17,7 +17,7 @@ public class CylindricalChamber implements Chamber {
 	private Amount<Length> oD = Amount.valueOf(31, SI.MILLIMETER);
 	private Amount<Length> iD = Amount.valueOf(30, SI.MILLIMETER);
 
-	public Amount<Pressure> burstPressure() {
+	public Amount<Pressure> getBurstPressure() {
 		return null;
 	}
 

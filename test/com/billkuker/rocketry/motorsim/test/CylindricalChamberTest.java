@@ -12,7 +12,7 @@ public class CylindricalChamberTest extends AbstractRocketTest {
 
 	@Test
 	public void testBurstPressure() {
-		Assert.assertNull( new CylindricalChamber().burstPressure() );
+		Assert.assertNull( new CylindricalChamber().getBurstPressure() );
 	}
 
 	@Test

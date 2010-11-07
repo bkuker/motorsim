@@ -154,7 +154,7 @@ public class BurnPanel extends JPanel {
 				pressure.addRangeMarker(bi.maxPressure(), "Max", Color.BLACK);
 				burnRate.addDomainMarker(bi.maxPressure(), "Max", RED);
 				
-				Amount<Pressure> burst = b.getMotor().getChamber().burstPressure();
+				Amount<Pressure> burst = b.getMotor().getChamber().getBurstPressure();
 				if ( burst != null ){
 					pressure.addRangeMarker(burst, "Burst", saftyColor);
 				}

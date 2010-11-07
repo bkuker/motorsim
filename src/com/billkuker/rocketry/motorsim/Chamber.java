@@ -10,7 +10,7 @@ import org.jscience.physics.amount.Amount;
 public interface Chamber {
 	public Amount<Volume> chamberVolume();
 	
-	public Amount<Pressure> burstPressure();
+	public Amount<Pressure> getBurstPressure();
 	
 	public Shape chamberShape();
 }
