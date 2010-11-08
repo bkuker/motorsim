@@ -60,6 +60,7 @@ import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.grain.RodAndTubeGrain;
 import com.billkuker.rocketry.motorsim.grain.Star;
 import com.billkuker.rocketry.motorsim.visual.BurnPanel;
+import com.billkuker.rocketry.motorsim.visual.ClassChooser;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 import com.billkuker.rocketry.motorsim.visual.HardwarePanel;
@@ -97,6 +98,12 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 		grainTypes.add(RodAndTubeGrain.class);
 		grainTypes.add(CSlot.class);
 		grainTypes.add(EndBurner.class);
+	}
+	
+	private List<Class<? extends Chamber>> chamberTypes = new Vector<Class<? extends Chamber>>();
+	{
+		chamberTypes.add(CylindricalChamber.class);
+		chamberTypes.add(Schedule40.class);
 	}
 
 	private abstract class Chooser<T> extends JPanel {
@@ -245,8 +252,35 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 
 	private class CaseEditor extends JSplitPane implements ComponentListener {
 		private static final long serialVersionUID = 1L;
+		
+		private HardwarePanel hp;
+		private JPanel casing;
+		private JPanel nozzle;
+		private Editor casingEditor;
+		private Editor nozzleEditor;
+		
+		private void setup() {
+			if (casingEditor != null)
+				casing.remove(casingEditor);
+			casing.add(casingEditor = new Editor(motor.getChamber()));
+			if (nozzleEditor != null)
+				nozzle.remove(nozzleEditor);
+			nozzle.add(nozzleEditor = new Editor(motor.getNozzle()));
+			if (hp != null)
+				remove(hp);
+			setBottomComponent(hp = new HardwarePanel(motor.getNozzle(),
+					motor.getChamber()));
+			if (motor.getNozzle() instanceof ChangeListening.Subject) {
+				((ChangeListening.Subject) motor.getNozzle())
+						.addPropertyChangeListener(MotorEditor.this);
+			}
+			if (motor.getChamber() instanceof ChangeListening.Subject) {
+				((ChangeListening.Subject) motor.getChamber())
+						.addPropertyChangeListener(MotorEditor.this);
+			}
+		}
 
-		public CaseEditor(Nozzle n, Chamber c) {
+		public CaseEditor() {
 			super(JSplitPane.VERTICAL_SPLIT);
 			setName("General Parameters");
 			this.addComponentListener(this);
@@ -254,7 +288,6 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 			JPanel parts = new JPanel();
 			parts.setLayout(new BoxLayout(parts, BoxLayout.X_AXIS));
 			setTopComponent(parts);
-			setBottomComponent(new HardwarePanel(n, c));
 			
 			JPanel nameAndFuel = new JPanel();
 			nameAndFuel.setLayout(new BoxLayout(nameAndFuel, BoxLayout.Y_AXIS));
@@ -286,13 +319,12 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 
 				}
 			});
+			
 			nameAndFuel.add(new JLabel("Fuel:"));
 			nameAndFuel.add( new JComboBox(availableFuels){
-				{
-					this.setSelectedItem(motor.getFuel());
-				}
 				private static final long serialVersionUID = 1L;
 				{
+					this.setSelectedItem(motor.getFuel());
 					setMinimumSize(new Dimension(200, 20));
 					setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
 					addActionListener(new ActionListener(){
@@ -303,29 +335,58 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 						}});
 				}
 			});
+			
+			nameAndFuel.add(new JLabel("Casing:"));
+			nameAndFuel.add(new ClassChooser<Chamber>(chamberTypes, motor.getChamber()) {
+				private static final long serialVersionUID = 1L;
+				{
+					setMinimumSize(new Dimension(200, 20));
+					setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
+				}
+				@Override
+				protected Chamber classSelected(Class<? extends Chamber> clazz, Chamber c) {
+					try {
+						if ( c != null ){
+							motor.setChamber(c);
+						} else {
+							motor.setChamber(clazz.newInstance());
+						}
+						return motor.getChamber();
+					} catch (InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return null;
+				}
+			});
+			
+			
 			nameAndFuel.add(Box.createVerticalGlue());
 			parts.add(nameAndFuel);
 			
-			JPanel casing = new JPanel();
+			casing = new JPanel();
 			casing.setLayout(new BoxLayout(casing, BoxLayout.Y_AXIS));
 			casing.add(new JLabel("Casing:"));
-			casing.add(new Editor(c));
 			parts.add(casing);
 			
-			JPanel nozzle = new JPanel();
+			nozzle = new JPanel();
 			nozzle.setLayout(new BoxLayout(nozzle, BoxLayout.Y_AXIS));
 			nozzle.add(new JLabel("Nozzle:"));
-			nozzle.add(new Editor(n));
 			parts.add(nozzle);
-
-			if (n instanceof ChangeListening.Subject) {
-				((ChangeListening.Subject) n)
-						.addPropertyChangeListener(MotorEditor.this);
-			}
-			if (c instanceof ChangeListening.Subject) {
-				((ChangeListening.Subject) c)
-						.addPropertyChangeListener(MotorEditor.this);
-			}
+			
+			motor.addPropertyChangeListener(new PropertyChangeListener() {
+				@Override
+				public void propertyChange(PropertyChangeEvent arg0) {
+					setup();
+					setResizeWeight(.5);
+					setDividerLocation(.5);
+				}
+			});
+			
+			setup();
 		}
 
 		@Override
@@ -376,7 +437,7 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 			remove(grainEditor);
 		while (tabs.getTabCount() > 1)
 			tabs.removeTabAt(1);
-		tabs.add(new CaseEditor(motor.getNozzle(), motor.getChamber()), CASING_TAB);
+		tabs.add(new CaseEditor(), CASING_TAB);
 		tabs.add(new GrainEditor(motor.getGrain()), GRAIN_TAB);
 		tabs.add(bt = new BurnTab(), BURN_TAB);
 	}
