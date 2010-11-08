@@ -22,6 +22,7 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.BurnSummary;
+import com.billkuker.rocketry.motorsim.Colors;
 
 public class BurnPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -31,10 +32,6 @@ public class BurnPanel extends JPanel {
 	Chart<Pressure, Velocity> burnRate;
 	GrainPanel grain;
 	Amount<Duration> displayedTime = Amount.valueOf(0, SI.SECOND);
-	
-	private static final Color RED = new Color(196, 0, 0);
-	private static final Color GREEN = new Color(0, 196, 0);
-	private static final Color ORANGE = new Color(160, 96, 0);
 	
 	public BurnPanel(Burn b){
 		super( new BorderLayout() );
@@ -107,11 +104,11 @@ public class BurnPanel extends JPanel {
 				} else {
 					double d = bi.getSaftyFactor();
 					if ( d >= 1.5 ){
-						saftyColor = GREEN;
+						saftyColor = Colors.GREEN;
 					} else if ( d > 1 ){
-						saftyColor = ORANGE;
+						saftyColor =  Colors.ORANGE;
 					} else {
-						saftyColor = RED;
+						saftyColor =  Colors.RED;
 					}
 				}
 				Amount<Pressure> burst = b.getMotor().getChamber().getBurstPressure();
@@ -123,7 +120,7 @@ public class BurnPanel extends JPanel {
 				thrust.addRangeMarker(bi.maxThrust(), "Max", Color.BLACK);
 				thrust.addRangeMarker(bi.averageThrust(), "Average", Color.BLACK);
 				pressure.addRangeMarker(bi.maxPressure(), "Max", Color.BLACK);
-				burnRate.addDomainMarker(bi.maxPressure(), "Max", RED);
+				burnRate.addDomainMarker(bi.maxPressure(), "Max",  Colors.RED);
 				
 
 			}
