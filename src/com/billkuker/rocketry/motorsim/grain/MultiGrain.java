@@ -51,12 +51,22 @@ public class MultiGrain implements Grain, Grain.Composite, PropertyChangeListene
 	private double flush = 1;
 	private Amount<Length> delay = Amount.valueOf(0, SI.MILLIMETER);
 	
+	private Amount<Length> spacing = Amount.valueOf(5, SI.MILLIMETER);
+
 	public MultiGrain(){
 	}
 	
 	public MultiGrain( Grain g, int c ){
 		count = c;
 		setGrain(g);
+	}
+	
+	public Amount<Length> getSpacing() {
+		return spacing;
+	}
+
+	public void setSpacing(Amount<Length> spacing) {
+		this.spacing = spacing;
 	}
 	
 	private Amount<Length> getAdjustedRegression(Amount<Length> regression, int grain){
@@ -95,7 +105,7 @@ public class MultiGrain implements Grain, Grain.Composite, PropertyChangeListene
 		for ( int i = 0 ; i < count ; i++ ){
 			java.awt.geom.Area g = grain.getSideView(getAdjustedRegression(regression, i));
 			ret.add(g);	
-			ret.transform(AffineTransform.getTranslateInstance(0, -(unburntBounds.getHeight() + 10)));
+			ret.transform(AffineTransform.getTranslateInstance(0, -(unburntBounds.getHeight() + spacing.doubleValue(SI.MILLIMETER))));
 		}
 		return ret;
 	}
