@@ -27,6 +27,7 @@ public abstract class ClassChooser<T> extends JComboBox {
 		
 	private DefaultComboBoxModel model ;
 	
+	@SuppressWarnings("unchecked")
 	public ClassChooser(Collection<Class<? extends T>> options, T current){
 		super(new DefaultComboBoxModel());
 		model = (DefaultComboBoxModel)getModel();
@@ -41,7 +42,6 @@ public abstract class ClassChooser<T> extends JComboBox {
 		addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				@SuppressWarnings("unchecked")
 				Class<? extends T> selected = ((Element)getSelectedItem()).clazz;
 				lastVal.put(selected, classSelected(selected, lastVal.get(selected)));
 			}});

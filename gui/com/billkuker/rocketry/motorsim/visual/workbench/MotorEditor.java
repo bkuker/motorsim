@@ -12,22 +12,17 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
-import javax.measure.quantity.Length;
 import javax.measure.unit.SI;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -48,7 +43,6 @@ import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.Nozzle;
-import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.cases.Schedule40;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CSlot;
@@ -104,43 +98,6 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 	{
 		chamberTypes.add(CylindricalChamber.class);
 		chamberTypes.add(Schedule40.class);
-	}
-
-	private abstract class Chooser<T> extends JPanel {
-		private static final long serialVersionUID = 1L;
-		private List<Class<? extends T>> types;
-		private Map<Class<? extends T>, T> old = new HashMap<Class<? extends T>, T>();
-
-		@SuppressWarnings("unchecked")
-		public Chooser(T initial, List<Class<? extends T>> ts) {
-			types = ts;
-			if ( initial != null )
-				old.put((Class<? extends T>)initial.getClass(), initial);
-			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-			for (final Class<? extends T> c : types) {
-				JButton b = new JButton(c.getSimpleName());
-				add(b);
-				b.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						try {
-							T val = old.get(c);
-							if ( val == null ){
-								System.err.println("CREATED NEW =========================");
-								val = c.newInstance();
-								old.put(c, val);
-							}
-							choiceMade(val);
-						} catch (InstantiationException e1) {
-							e1.printStackTrace();
-						} catch (IllegalAccessException e1) {
-							e1.printStackTrace();
-						}
-					}
-				});
-			}
-		}
-
-		protected abstract void choiceMade(T o);
 	}
 
 	private class BurnTab extends JPanel {
@@ -216,12 +173,23 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 				p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 				p.add(new Editor(g));
 				for (Grain gg : ((Grain.Composite) g).getGrains()) {
-					final int grainEditorIndex = p.getComponentCount() + 1;
-					p.add(new Chooser<Grain>(gg, grainTypes) {
+					final int grainEditorIndex = p.getComponentCount() + 2;
+					p.add(new JLabel("Grain Type:"));
+					p.add(new ClassChooser<Grain>(grainTypes, gg) {
 						private static final long serialVersionUID = 1L;
 
 						@Override
-						protected void choiceMade(Grain ng) {
+						protected Grain classSelected(
+								Class<? extends Grain> clazz, Grain ng) {
+							if ( ng == null ){
+								try {
+									ng = clazz.newInstance();
+								} catch (InstantiationException e) {
+									e.printStackTrace();
+								} catch (IllegalAccessException e) {
+									e.printStackTrace();
+								}
+							}
 							if (g instanceof MultiGrain) {
 								((MultiGrain) g).setGrain(ng);
 								p.remove(grainEditorIndex);
@@ -229,6 +197,8 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 								p.remove(0);
 								p.add(new Editor(g), 0);
 							}
+							return ng;
+
 						}
 					});
 					p.add(new Editor(gg));
