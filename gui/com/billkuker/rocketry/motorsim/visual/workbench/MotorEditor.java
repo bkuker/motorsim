@@ -44,6 +44,7 @@ import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.Nozzle;
 import com.billkuker.rocketry.motorsim.cases.Schedule40;
+import com.billkuker.rocketry.motorsim.cases.Schedule80;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CSlot;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
@@ -98,6 +99,7 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 	{
 		chamberTypes.add(CylindricalChamber.class);
 		chamberTypes.add(Schedule40.class);
+		chamberTypes.add(Schedule80.class);
 	}
 
 	private class BurnTab extends JPanel {
