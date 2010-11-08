@@ -122,13 +122,15 @@ public class RocketScience {
 	}
 
 	public static <T extends Quantity> String ammountToString(Amount<T> a) {
+		if ( a == null )
+			return "Null";
 		final NumberFormat nf = new DecimalFormat("##########.###");
 		return nf.format(a.doubleValue(a.getUnit())) + " " + a.getUnit();
 	}
 	
 	public static <T extends Quantity> String ammountToRoundedString(Amount<T> a) {
 		if (a == null)
-			return "NULL";
+			return "Null";
 		Unit<T> u = RocketScience.UnitPreference.preference.getPreferredUnit(a
 				.getUnit());
 		double d = a.doubleValue(u);
