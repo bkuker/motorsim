@@ -2,6 +2,8 @@ package com.billkuker.rocketry.motorsim.visual;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyChangeEvent;
@@ -125,8 +127,17 @@ public class Editor extends PropertySheetPanel {
 		
 	}
 	
-	public static class EnumPropertyEditor<E extends Enum<E>> extends PropertyEditorSupport {
-		JComboBox editor = new JComboBox();
+	public class EnumPropertyEditor<E extends Enum<E>> extends PropertyEditorSupport {
+		JComboBox editor = new JComboBox(){
+			private static final long serialVersionUID = 1L;
+			{
+				addActionListener(new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						getTable().commitEditing();
+					}});
+			}
+		};
 		DefaultComboBoxModel model = new DefaultComboBoxModel();
 		Class<E> clazz;
 		public EnumPropertyEditor(Class<E> clazz){
