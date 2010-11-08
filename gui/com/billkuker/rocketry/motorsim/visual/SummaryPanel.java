@@ -95,7 +95,7 @@ public class SummaryPanel extends JPanel implements Burn.BurnProgressListener {
 					} else {
 						saftyColor = RED;
 					}
-					JLabel l = new JLabel(new DecimalFormat("##########.#")
+					JLabel l = new JLabel(new DecimalFormat("##########.##")
 							.format(bi.getSaftyFactor()));
 					l.setOpaque(true);
 					l.setBackground(saftyColor);
