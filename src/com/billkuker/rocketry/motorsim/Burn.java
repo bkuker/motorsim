@@ -92,6 +92,8 @@ public class Burn {
 	
 	public void addBurnProgressListener( BurnProgressListener bpl ){
 		bpls.add(bpl);
+		if ( done )
+			bpl.burnComplete();
 	}
 	
 	public void burn(){
@@ -101,6 +103,10 @@ public class Burn {
 			burning = true;
 		}
 		log.info("Starting burn...");
+		for (BurnProgressListener bpl : bpls ){
+			bpl.setProgress(0);
+		}
+		
 		int endPressureSteps = 0;
 		long start = new Date().getTime();
 		
