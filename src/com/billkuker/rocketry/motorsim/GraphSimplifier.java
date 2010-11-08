@@ -136,7 +136,7 @@ public class GraphSimplifier<X extends Quantity, Y extends Quantity> {
 		*/
 		EndBurner g = new EndBurner();
 		g.setLength(Amount.valueOf(70, SI.MILLIMETER));
-		g.setoD(Amount.valueOf(30, SI.MILLIMETER));
+		g.setOD(Amount.valueOf(30, SI.MILLIMETER));
 		g.setPuntDepth(Amount.valueOf(10, SI.MILLIMETER));
 		g.setPuntDiameter(Amount.valueOf(10, SI.MILLIMETER));
 		
