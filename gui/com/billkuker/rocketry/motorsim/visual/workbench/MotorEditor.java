@@ -171,13 +171,21 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 			if (g instanceof Grain.Composite) {
 				final JPanel p = new JPanel();
 				p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-				p.add(new Editor(g));
+				
+				Editor grainEditor = new Editor(g);
+				grainEditor.setAlignmentX(LEFT_ALIGNMENT);
+				p.add(grainEditor);
+				
 				for (Grain gg : ((Grain.Composite) g).getGrains()) {
 					final int grainEditorIndex = p.getComponentCount() + 2;
-					p.add(new JLabel("Grain Type:"));
+					
+					JLabel l = new JLabel("Grain Type:");
+					l.setAlignmentX(LEFT_ALIGNMENT);
+					p.add(l);
+					
 					p.add(new ClassChooser<Grain>(grainTypes, gg) {
 						private static final long serialVersionUID = 1L;
-
+						{setAlignmentX(LEFT_ALIGNMENT);}
 						@Override
 						protected Grain classSelected(
 								Class<? extends Grain> clazz, Grain ng) {
@@ -201,7 +209,11 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 
 						}
 					});
-					p.add(new Editor(gg));
+					
+					Editor ggEditor = new Editor(gg);
+					ggEditor.setAlignmentX(LEFT_ALIGNMENT);
+					p.add(ggEditor);
+					
 					if (gg instanceof ChangeListening.Subject) {
 						((ChangeListening.Subject) gg)
 								.addPropertyChangeListener(MotorEditor.this);
@@ -232,10 +244,16 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 		private void setup() {
 			if (casingEditor != null)
 				casing.remove(casingEditor);
-			casing.add(casingEditor = new Editor(motor.getChamber()));
+			casingEditor = new Editor(motor.getChamber());
+			casingEditor.setAlignmentX(LEFT_ALIGNMENT);
+			casing.add(casingEditor);
+			
 			if (nozzleEditor != null)
 				nozzle.remove(nozzleEditor);
-			nozzle.add(nozzleEditor = new Editor(motor.getNozzle()));
+			nozzleEditor = new Editor(motor.getNozzle());
+			nozzleEditor.setAlignmentX(LEFT_ALIGNMENT);
+			nozzle.add(nozzleEditor);
+			
 			if (hp != null)
 				remove(hp);
 			setBottomComponent(hp = new HardwarePanel(motor.getNozzle(),
@@ -262,10 +280,13 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 			JPanel nameAndFuel = new JPanel();
 			nameAndFuel.setLayout(new BoxLayout(nameAndFuel, BoxLayout.Y_AXIS));
 
-			nameAndFuel.add(new JLabel("Name:"));
+			JLabel l = new JLabel("Name:");
+			l.setAlignmentX(LEFT_ALIGNMENT);
+			nameAndFuel.add(l);
 			nameAndFuel.add(new JTextField(motor.getName()) {
 				private static final long serialVersionUID = 1L;
 				{
+					setAlignmentX(LEFT_ALIGNMENT);
 					setMinimumSize(new Dimension(200, 20));
 					setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
 					final JTextField t = this;
@@ -290,10 +311,14 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 				}
 			});
 			
-			nameAndFuel.add(new JLabel("Fuel:"));
+			l = new JLabel("Fuel:");
+			l.setAlignmentX(LEFT_ALIGNMENT);
+			nameAndFuel.add(l);
+			
 			nameAndFuel.add( new JComboBox(availableFuels){
 				private static final long serialVersionUID = 1L;
 				{
+					setAlignmentX(LEFT_ALIGNMENT);
 					this.setSelectedItem(motor.getFuel());
 					setMinimumSize(new Dimension(200, 20));
 					setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
@@ -306,10 +331,14 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 				}
 			});
 			
-			nameAndFuel.add(new JLabel("Casing:"));
+			l = new JLabel("Casing:");
+			l.setAlignmentX(LEFT_ALIGNMENT);
+			nameAndFuel.add(l);
+			
 			nameAndFuel.add(new ClassChooser<Chamber>(chamberTypes, motor.getChamber()) {
 				private static final long serialVersionUID = 1L;
 				{
+					setAlignmentX(LEFT_ALIGNMENT);
 					setMinimumSize(new Dimension(200, 20));
 					setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
 				}
@@ -339,12 +368,16 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 			
 			casing = new JPanel();
 			casing.setLayout(new BoxLayout(casing, BoxLayout.Y_AXIS));
-			casing.add(new JLabel("Casing:"));
+			l = new JLabel("Casing:");
+			l.setAlignmentX(LEFT_ALIGNMENT);
+			casing.add(l);
 			parts.add(casing);
 			
 			nozzle = new JPanel();
 			nozzle.setLayout(new BoxLayout(nozzle, BoxLayout.Y_AXIS));
-			nozzle.add(new JLabel("Nozzle:"));
+			l = new JLabel("Nozzle:");
+			l.setAlignmentX(LEFT_ALIGNMENT);
+			nozzle.add(l);
 			parts.add(nozzle);
 			
 			motor.addPropertyChangeListener(new PropertyChangeListener() {
