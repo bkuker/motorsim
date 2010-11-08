@@ -2,6 +2,7 @@ package com.billkuker.rocketry.motorsim.grain.util;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
@@ -124,11 +125,18 @@ public abstract class ExtrudedShapeGrain extends ExtrudedGrain {
 		
 		double rLenmm = rLen.doubleValue(SI.MILLIMETER);
 		
-		//TODO Shift up or down based on burning ends
 		for( java.awt.geom.Area a : ShapeUtil.separate(getCrossSection(regression))){
 			Rectangle2D bounds = a.getBounds2D();
 			Rectangle2D side = new Rectangle2D.Double(bounds.getMinX(), -rLenmm/2.0, bounds.getWidth(), rLenmm);
 			res.add(new java.awt.geom.Area(side));
+		}
+		
+		//Shift up or down based on burning ends
+		if ( isForeEndInhibited() ){
+			res.transform(AffineTransform.getTranslateInstance(0, +rLenmm/2.0));
+		}
+		if ( isAftEndInhibited() ){
+			res.transform(AffineTransform.getTranslateInstance(0, -rLenmm/2.0));
 		}
 		return res;
 	}
