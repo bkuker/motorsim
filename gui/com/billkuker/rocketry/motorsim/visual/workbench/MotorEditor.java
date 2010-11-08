@@ -1,6 +1,7 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,6 +38,7 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.Chamber;
 import com.billkuker.rocketry.motorsim.ChangeListening;
+import com.billkuker.rocketry.motorsim.Colors;
 import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.Fuel;
@@ -153,9 +155,14 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 					} catch (BurnCanceled c){
 						log.info("Burn Canceled!");
 					} catch (Exception e) {
+						if ( sp != null )
+							MotorEditor.this.remove(sp);
 						JTextArea t = new JTextArea(e.getMessage());
+						t.setBackground(Colors.RED);
+						t.setForeground(Color.WHITE);
 						t.setEditable(false);
-						add(t);
+						MotorEditor.this.add(t, BorderLayout.NORTH);
+						revalidate();
 					}
 				}
 			};
