@@ -63,11 +63,11 @@ public class EndBurner extends RotatedShapeGrain implements Validating {
 		this.length = length;
 	}
 
-	public Amount<Length> getoD() {
+	public Amount<Length> getOD() {
 		return oD;
 	}
 
-	public void setoD(Amount<Length> oD) {
+	public void setOD(Amount<Length> oD) {
 		this.oD = oD;
 	}
 
