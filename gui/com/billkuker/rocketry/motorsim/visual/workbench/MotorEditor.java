@@ -63,14 +63,18 @@ import com.billkuker.rocketry.motorsim.visual.BurnPanel;
 import com.billkuker.rocketry.motorsim.visual.Editor;
 import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 import com.billkuker.rocketry.motorsim.visual.HardwarePanel;
+import com.billkuker.rocketry.motorsim.visual.SummaryPanel;
 
-public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
+public class MotorEditor extends JPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(MotorEditor.class);
 	Motor motor;
 	GrainEditor grainEditor;
 	BurnTab bt;
 	Burn burn;
+	SummaryPanel sp;
+	
+	JTabbedPane tabs;
 
 	private Vector<BurnWatcher> burnWatchers = new Vector<BurnWatcher>();
 	private DefaultComboBoxModel availableFuels = new DefaultComboBoxModel();
@@ -151,10 +155,6 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 			currentThread = new Thread() {
 				public void run() {
 					final Thread me = this;
-					final JProgressBar bar = new JProgressBar(0, 100);
-					add(bar, BorderLayout.NORTH);
-					final JLabel progress = new JLabel();
-					add(progress, BorderLayout.CENTER);
 					try {
 						final Burn b = new Burn(motor);
 						b.addBurnProgressListener(
@@ -163,37 +163,30 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 									public void burnComplete(){};
 									@Override
 									public void setProgress(float f) {
-										int pct = (int)(f*100);
-										bar.setValue(pct);
-										Amount<Length> web = motor.getGrain().webThickness();
-										Amount<Length> remaining = web.times(1.0 - f);
-										
-										progress.setText("Progress: " + pct + "% (" + RocketScience.ammountToRoundedString(remaining) + " web thickness remaining)");
 										if ( currentThread != me ){
 											throw new BurnCanceled();
 										}
 									}
 								});
+						if ( sp != null )
+							MotorEditor.this.remove(sp);
+						MotorEditor.this.add(sp = new SummaryPanel(b), BorderLayout.NORTH);
+						revalidate();
 						b.burn();
 
 						final BurnPanel bp = new BurnPanel(b);
 						SwingUtilities.invokeLater(new Thread() {
 							public void run() {
-								remove(bar);
-								remove(progress);
 								add(bp, BorderLayout.CENTER);
-
 								for (BurnWatcher bw : burnWatchers)
 									bw.replace(burn, b);
 								burn = b;
-
 								revalidate();
 							}
 						});
 					} catch (BurnCanceled c){
 						log.info("Burn Canceled!");
 					} catch (Exception e) {
-						remove(bar);
 						JTextArea t = new JTextArea(e.getMessage());
 						t.setEditable(false);
 						add(t);
@@ -359,7 +352,11 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 
 	public MotorEditor(Motor m, Collection<Fuel> fuels) {
-		super(JTabbedPane.BOTTOM);
+		
+		setLayout( new BorderLayout());
+		tabs = new JTabbedPane(JTabbedPane.BOTTOM);
+		add(tabs, BorderLayout.CENTER);
+
 		for ( Fuel f : fuels )
 			addFuel(f);
 		setMotor(m);
@@ -377,11 +374,11 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 		motor.addPropertyChangeListener(this);
 		if (grainEditor != null)
 			remove(grainEditor);
-		while (getTabCount() > 1)
-			removeTabAt(1);
-		add(new CaseEditor(motor.getNozzle(), motor.getChamber()), CASING_TAB);
-		add(new GrainEditor(motor.getGrain()), GRAIN_TAB);
-		add(bt = new BurnTab(), BURN_TAB);
+		while (tabs.getTabCount() > 1)
+			tabs.removeTabAt(1);
+		tabs.add(new CaseEditor(motor.getNozzle(), motor.getChamber()), CASING_TAB);
+		tabs.add(new GrainEditor(motor.getGrain()), GRAIN_TAB);
+		tabs.add(bt = new BurnTab(), BURN_TAB);
 	}
 
 	public static Motor defaultMotor() {
@@ -421,9 +418,9 @@ public class MotorEditor extends JTabbedPane implements PropertyChangeListener {
 
 	public void focusOnObject(Object o) {
 		if (o instanceof Grain)
-			setSelectedIndex(GRAIN_TAB);
+			tabs.setSelectedIndex(GRAIN_TAB);
 		if (o instanceof Chamber || o instanceof Nozzle)
-			setSelectedIndex(CASING_TAB);
+			tabs.setSelectedIndex(CASING_TAB);
 	}
 
 	public void addBurnWatcher(BurnWatcher bw) {

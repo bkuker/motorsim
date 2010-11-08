@@ -97,9 +97,6 @@ public class BurnPanel extends JPanel {
 			add( new SL(), BorderLayout.SOUTH);
 			
 			BurnSummary bi = new BurnSummary(burn);
-			SummaryPanel text = new SummaryPanel(burn);
-			text.setBurnSummary(bi);
-			add(text, BorderLayout.NORTH);
 			
 			{
 
