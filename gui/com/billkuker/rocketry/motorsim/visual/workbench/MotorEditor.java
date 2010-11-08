@@ -265,8 +265,7 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 			
 			if (hp != null)
 				remove(hp);
-			setBottomComponent(hp = new HardwarePanel(motor.getNozzle(),
-					motor.getChamber()));
+			setBottomComponent(hp = new HardwarePanel(motor));
 			if (motor.getNozzle() instanceof ChangeListening.Subject) {
 				((ChangeListening.Subject) motor.getNozzle())
 						.addPropertyChangeListener(MotorEditor.this);
