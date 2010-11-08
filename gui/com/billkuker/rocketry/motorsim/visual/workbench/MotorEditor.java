@@ -47,6 +47,7 @@ import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.Nozzle;
 import com.billkuker.rocketry.motorsim.cases.Schedule40;
 import com.billkuker.rocketry.motorsim.cases.Schedule80;
+import com.billkuker.rocketry.motorsim.fuel.KNDX;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CSlot;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
@@ -456,32 +457,30 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 	public static Motor defaultMotor() {
 		Motor m = new Motor();
 		m.setName("Example Motor");
-		m.setFuel(new KNSU());
+		m.setFuel(new KNDX());
 
 		CylindricalChamber c = new CylindricalChamber();
-		c.setLength(Amount.valueOf(200, SI.MILLIMETER));
-		c.setID(Amount.valueOf(30, SI.MILLIMETER));
+		c.setLength(Amount.valueOf(420, SI.MILLIMETER));
+		c.setID(Amount.valueOf(70, SI.MILLIMETER));
+		c.setOD(Amount.valueOf(72, SI.MILLIMETER));
 		m.setChamber(c);
 
-		Schedule40 pvc = new Schedule40();
-		pvc.setLength(Amount.valueOf(200, SI.MILLIMETER));
-		m.setChamber(pvc);
-		
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
 		try {
-			g.setLength(Amount.valueOf(70, SI.MILLIMETER));
-			g.setOD(Amount.valueOf(30, SI.MILLIMETER));
-			g.setID(Amount.valueOf(10, SI.MILLIMETER));
+			g.setLength(Amount.valueOf(100, SI.MILLIMETER));
+			g.setOD(Amount.valueOf(62, SI.MILLIMETER));
+			g.setID(Amount.valueOf(20, SI.MILLIMETER));
 		} catch (PropertyVetoException v) {
 			throw new Error(v);
 		}
 		
-
-		m.setGrain(new MultiGrain(g, 2));
+		MultiGrain mg = new MultiGrain(g, 4);
+		mg.setSpacing(Amount.valueOf(6, SI.MILLIMETER));
+		m.setGrain(mg);
 
 		ConvergentDivergentNozzle n = new ConvergentDivergentNozzle();
-		n.setThroatDiameter(Amount.valueOf(7.962, SI.MILLIMETER));
-		n.setExitDiameter(Amount.valueOf(13.79, SI.MILLIMETER));
+		n.setThroatDiameter(Amount.valueOf(14.089, SI.MILLIMETER));
+		n.setExitDiameter(Amount.valueOf(44.55, SI.MILLIMETER));
 		n.setEfficiency(.85);
 		m.setNozzle(n);
 
