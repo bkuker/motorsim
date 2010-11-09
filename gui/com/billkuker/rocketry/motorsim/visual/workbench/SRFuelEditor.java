@@ -31,7 +31,7 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.RocketScience;
-import com.billkuker.rocketry.motorsim.fuel.EditableFuel.EditableCombustionProduct;
+import com.billkuker.rocketry.motorsim.fuel.EditableCombustionProduct;
 import com.billkuker.rocketry.motorsim.fuel.PiecewiseSaintRobertFuel;
 import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel;
 import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel.Type;
