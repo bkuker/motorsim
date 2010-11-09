@@ -19,8 +19,6 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Chamber;
 import com.billkuker.rocketry.motorsim.ChangeListening;
-import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
-import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.Nozzle;
 import com.billkuker.rocketry.motorsim.visual.workbench.MotorEditor;
