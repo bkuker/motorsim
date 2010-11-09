@@ -1,5 +1,6 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -11,9 +12,6 @@ import java.util.Collections;
 import java.util.Vector;
 
 import javax.measure.quantity.Pressure;
-import javax.measure.quantity.Velocity;
-import javax.measure.quantity.VolumetricDensity;
-import javax.measure.unit.SI;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,28 +20,20 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.jscience.physics.amount.Amount;
 
-import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.RocketScience;
-import com.billkuker.rocketry.motorsim.fuel.EditableCombustionProduct;
-import com.billkuker.rocketry.motorsim.fuel.PiecewiseSaintRobertFuel;
 import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel;
 import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel.Type;
-import com.billkuker.rocketry.motorsim.visual.Chart;
-import com.billkuker.rocketry.motorsim.visual.Editor;
 
-public class SRFuelEditor extends JSplitPane {
+public class SRFuelEditor extends AbstractFuelEditor {
 	private static final long serialVersionUID = 1L;
 
 	private static final NumberFormat nf = new DecimalFormat("##########.###");
-
-	Chart<Pressure, Velocity> burnRate;
 
 	private class Entry implements Comparable<Entry> {
 		Amount<Pressure> p = Amount.valueOf(0, RocketScience.UnitPreference.getUnitPreference().getPreferredUnit(RocketScience.PSI));
@@ -55,76 +45,6 @@ public class SRFuelEditor extends JSplitPane {
 			return p.compareTo(o.p);
 		}
 	}
-
-	public static class EditablePSRFuel extends PiecewiseSaintRobertFuel {
-
-		@SuppressWarnings("unchecked")
-		private Amount<VolumetricDensity> idealDensity = (Amount<VolumetricDensity>) Amount
-				.valueOf("1 g/mm^3");
-		
-		private double combustionEfficiency = 1;
-		private double densityRatio = 1;
-		private EditableCombustionProduct cp;
-		private String name = "New Fuel";
-
-		public EditablePSRFuel(Type t) {
-			super(t);
-			cp = new EditableCombustionProduct();
-		}
-		
-		public void clear(){
-			super.clear();
-		}
-		
-		public void setType(Type t){
-			super.setType(t);
-		}
-
-		public void add(Amount<Pressure> p, final double _a, final double _n) {
-			super.add(p, _a, _n);
-
-		}
-
-		public Amount<VolumetricDensity> getIdealDensity() {
-			return idealDensity;
-		}
-
-		public void setIdealDensity(Amount<VolumetricDensity> idealDensity) {
-			this.idealDensity = idealDensity;
-		}
-
-		public double getCombustionEfficiency() {
-			return combustionEfficiency;
-		}
-
-		public void setCombustionEfficiency(double combustionEfficiency) {
-			this.combustionEfficiency = combustionEfficiency;
-		}
-
-		public double getDensityRatio() {
-			return densityRatio;
-		}
-
-		public void setDensityRatio(double densityRatio) {
-			this.densityRatio = densityRatio;
-		}
-
-		@Override
-		public CombustionProduct getCombustionProduct() {
-			return cp;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-	}
-
-	final EditablePSRFuel f = new EditablePSRFuel(SaintRobertFuel.Type.SI);
 
 	private class TM extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
@@ -213,65 +133,30 @@ public class SRFuelEditor extends JSplitPane {
 
 	};
 	
-	public Fuel getFuel(){
-		return f;
-	}
-
-	private void update() {
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				editTop.setTopComponent(new Editor(f));
-				editTop.setBottomComponent(new Editor(f.getCombustionProduct()));
-				if (burnRate != null)
-					SRFuelEditor.this.remove(burnRate);
-				try {
-					burnRate = new Chart<Pressure, Velocity>(
-							SI.MEGA(SI.PASCAL), SI.MILLIMETER.divide(SI.SECOND)
-									.asType(Velocity.class), f, "burnRate");
-				} catch (NoSuchMethodException e) {
-					throw new Error(e);
-				}
-				burnRate.setDomain(burnRate.new IntervalDomain(Amount.valueOf(
-						0, SI.MEGA(SI.PASCAL)), Amount.valueOf(11, SI
-						.MEGA(SI.PASCAL)), 50));
-				SRFuelEditor.this.setRightComponent(burnRate);
-				SRFuelEditor.this.revalidate();
-			}
-		});
-	}
-
 	private Vector<Entry> entries = new Vector<Entry>();
-
-	JSplitPane editParent;
-	JSplitPane editTop;
-	JSplitPane editBottom;
 	JPanel controls;
+	final EditablePSRFuel f;
 
 	public SRFuelEditor() {
-		super(HORIZONTAL_SPLIT);
-		setResizeWeight(0);
-		setDividerLocation(.3);
 		
+		super( new EditablePSRFuel(SaintRobertFuel.Type.SI) );
+		
+		this.f = (EditablePSRFuel)getFuel();
+		
+	}
+	
+	protected  Component getBurnrateEditComponent(){
 		final TM tm = new TM();
 
-		editParent = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		editTop = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		editBottom = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		JSplitPane editBottom = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		
-		editParent.setTopComponent(editTop);
-		editParent.setBottomComponent(editBottom);
-		
-		editTop.setTopComponent(new Editor(f));
 
 		JTable table = new JTable(tm);
 		JScrollPane scrollpane = new JScrollPane(table);
 		scrollpane.setMinimumSize(new Dimension(200, 200));
 		editBottom.setTopComponent(scrollpane);
 
-		setLeftComponent(editParent);
-
+		
 		JButton add = new JButton("Add Data");
 		add.addActionListener(new ActionListener() {
 			@Override
@@ -314,14 +199,10 @@ public class SRFuelEditor extends JSplitPane {
 		editBottom.setBottomComponent(controls);
 		
 		
-		editParent.setDividerLocation(.5);
-		editTop.setDividerLocation(.5);
+
 		editBottom.setDividerLocation(.8);
 		
-		editParent.resetToPreferredSizes();
-		revalidate();
-
-		update();
+		return editBottom;
 	}
 
 	public static void main(String args[]) {
