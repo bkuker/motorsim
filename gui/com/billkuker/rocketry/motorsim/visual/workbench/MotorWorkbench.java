@@ -230,18 +230,25 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 						
 
 						add(new JSeparator());
-						add(new JMenuItem("New Fuel") {
+						add(new JMenu("New Fuel"){
 							private static final long serialVersionUID = 1L;
 							{
-								addActionListener(new ActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent arg0) {
-										newFuel();
+								add(new JMenuItem("Saint-Robert") {
+									private static final long serialVersionUID = 1L;
+									{
+										addActionListener(new ActionListener() {
+											@Override
+											public void actionPerformed(ActionEvent arg0) {
+												newFuel(new SRFuelEditor());
+											}
+										});
+
 									}
 								});
-
+								add(new JMenuItem("Linear"));
 							}
 						});
+
 						add(new JMenuItem("Save Fuel") {
 							private static final long serialVersionUID = 1L;
 						});
@@ -333,8 +340,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		fuels.addTab(f.getName(), fp);
 	}
 	
-	private void newFuel(){
-		final SRFuelEditor ed = new SRFuelEditor();
+	private void newFuel(final AbstractFuelEditor ed){
 		for ( MotorEditor e : m2e.values() )
 			e.addFuel(ed.getFuel());
 		final FuelEditNode node = tm.new FuelEditNode(ed);

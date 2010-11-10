@@ -61,7 +61,7 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 	public class FuelEditNode extends FuelNode {
 		private static final long serialVersionUID = 1L;
 
-		public FuelEditNode(SRFuelEditor sr){
+		public FuelEditNode(AbstractFuelEditor sr){
 			super(sr, sr.getFuel());
 			sr.getFuel().addPropertyChangeListener(new PropertyChangeListener(){
 
@@ -72,8 +72,8 @@ public class WorkbenchTreeModel extends DefaultTreeModel {
 		}
 		
 		@Override
-		public SRFuelEditor getUserObject(){
-			return (SRFuelEditor)super.getUserObject();
+		public AbstractFuelEditor getUserObject(){
+			return (AbstractFuelEditor)super.getUserObject();
 		}
 
 	}
