@@ -99,7 +99,6 @@ public class MotorIO {
 		
 	
 	}
-
 	
 	@SuppressWarnings("deprecation")
 	private static XStream getXStream(){
@@ -109,6 +108,33 @@ public class MotorIO {
 		xstream.registerConverter(new FuelConverter());
 		xstream.registerConverter(new JavaBeanConverter(xstream.getClassMapper(), "class"), -20); 
 		return xstream;
+	}
+	
+	@SuppressWarnings("deprecation")
+	private static XStream getFuelXStream(){
+		XStream xstream = new XStream();
+		xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
+		xstream.registerConverter(new AmountConverter());
+		xstream.registerConverter(new JavaBeanConverter(xstream.getClassMapper(), "class"), -20); 
+		return xstream;
+	}
+	
+	public static void writeFuel(Fuel f, OutputStream os) throws IOException{
+		ObjectOutputStream out = getFuelXStream().createObjectOutputStream(os);
+		out.writeObject(f);
+		out.close();
+		os.flush();
+	}
+	
+	public static Fuel readFuel(InputStream is) throws IOException{
+		ObjectInputStream in = getFuelXStream().createObjectInputStream(is);
+		Fuel f;
+		try {
+			f = (Fuel)in.readObject();
+		} catch (ClassNotFoundException e) {
+			throw new IOException("Class not found", e);
+		}
+		return f;
 	}
 	
 	public static void writeMotor(Motor m, OutputStream os) throws IOException{
