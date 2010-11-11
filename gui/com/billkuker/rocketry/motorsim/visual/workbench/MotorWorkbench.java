@@ -245,7 +245,18 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 
 									}
 								});
-								add(new JMenuItem("Linear"));
+								add(new JMenuItem("Linear"){
+									private static final long serialVersionUID = 1L;
+									{
+										addActionListener(new ActionListener() {
+											@Override
+											public void actionPerformed(ActionEvent arg0) {
+												newFuel(new LinearFuelEditor());
+											}
+										});
+
+									}
+								});
 							}
 						});
 
