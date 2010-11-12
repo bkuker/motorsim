@@ -21,7 +21,7 @@ import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.fuel.EditableCombustionProduct;
 import com.billkuker.rocketry.motorsim.visual.Chart;
 
-public class EditablePiecewiseLinearFuel implements Fuel{
+public class EditablePiecewiseLinearFuel implements EditableFuel{
 	private static final Logger log = Logger
 			.getLogger(EditablePiecewiseLinearFuel.class);
 	private static final Amount<Pressure> ZERO_PRESSURE = Amount.valueOf(0,
@@ -153,6 +153,10 @@ public class EditablePiecewiseLinearFuel implements Fuel{
 		return uri;
 	}
 
+	@Override
+	public void setURI(URI uri) {
+		this.uri = uri;
+	}
 
 	
 	public Map<Amount<Pressure>, Amount<Velocity>> getEntries() {
@@ -192,4 +196,5 @@ public class EditablePiecewiseLinearFuel implements Fuel{
 		
 		burnRate.show();
 	}
+
 }
