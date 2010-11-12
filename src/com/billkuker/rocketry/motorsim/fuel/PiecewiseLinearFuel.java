@@ -1,6 +1,8 @@
 package com.billkuker.rocketry.motorsim.fuel;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -22,7 +24,7 @@ public class PiecewiseLinearFuel implements Fuel{
 	private static final Amount<Pressure> ZERO_PRESSURE =Amount.valueOf(0, SI.PASCAL);
 	private static final Amount<Velocity> ZERO_VELOCITY =Amount.valueOf(0, SI.METERS_PER_SECOND);
 
-	private class Entry implements Comparable<Entry>{
+	private static class Entry implements Comparable<Entry>{
 		Amount<Pressure> pressure;
 		Amount<Velocity> burnRate;
 		@Override
@@ -43,7 +45,7 @@ public class PiecewiseLinearFuel implements Fuel{
 	
 	private EditableCombustionProduct product = new EditableCombustionProduct();
 	private SortedMap<Amount<Pressure>, Entry> entries ;
-	
+
 	public PiecewiseLinearFuel(){
 		clear();
 	}
@@ -105,8 +107,12 @@ public class PiecewiseLinearFuel implements Fuel{
 	}
 	
 	@Override
-	public CombustionProduct getCombustionProduct(){
+	public EditableCombustionProduct getCombustionProduct(){
 		return product;
+	}
+	
+	public void setCombustionProduct(final EditableCombustionProduct product){
+		this.product = product;
 	}
 	
 	@Override
@@ -142,7 +148,20 @@ public class PiecewiseLinearFuel implements Fuel{
 	}
 
 
-
+	
+	public Map<Amount<Pressure>, Amount<Velocity>> getEntries() {
+		HashMap<Amount<Pressure>, Amount<Velocity>> ret = new HashMap<Amount<Pressure>, Amount<Velocity>>();
+		for ( Entry e : entries.values() )
+			ret.put(e.pressure, e.burnRate);
+		return ret;
+	}
+	
+	public void setEntries(Map<Amount<Pressure>, Amount<Velocity>> in) {
+		clear();
+		for ( Map.Entry<Amount<Pressure>, Amount<Velocity>> e : in.entrySet()){
+			add( e.getKey(), e.getValue());
+		}
+	}
 
 
 	

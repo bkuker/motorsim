@@ -85,12 +85,20 @@ public class MotorIO {
 				text = a.getExactValue() + " " + a.getUnit();
 			else
 				text = a.doubleValue(a.getUnit()) + " " + a.getUnit();
-			w.setValue(text);
+			w.setValue(fix(text));
 		}
 
 		public Object unmarshal(HierarchicalStreamReader r, UnmarshallingContext c) {
 			String text = r.getValue();
-			return Amount.valueOf(text);
+			return Amount.valueOf(unfix(text));
+		}
+		
+		private String fix(String s){
+			return s.replace("\u00B3", "^3");
+		}
+		
+		private String unfix(String s){
+			return s.replace("^3", "\u00B3");
 		}
 
 		public boolean canConvert(Class c) {
