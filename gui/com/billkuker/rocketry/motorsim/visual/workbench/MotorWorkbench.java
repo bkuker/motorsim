@@ -37,9 +37,12 @@ import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.fuel.FuelResolver;
+import com.billkuker.rocketry.motorsim.fuel.PiecewiseLinearFuel;
+import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel;
 import com.billkuker.rocketry.motorsim.io.ENGExporter;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 import com.billkuker.rocketry.motorsim.visual.FuelPanel;
+import com.billkuker.rocketry.motorsim.visual.workbench.AbstractFuelEditor.EditablePSRFuel;
 import com.billkuker.rocketry.motorsim.visual.workbench.WorkbenchTreeModel.FuelEditNode;
 import com.billkuker.rocketry.motorsim.visual.workbench.WorkbenchTreeModel.FuelNode;
 
@@ -239,7 +242,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 										addActionListener(new ActionListener() {
 											@Override
 											public void actionPerformed(ActionEvent arg0) {
-												newFuel(new SRFuelEditor());
+												newFuel(new SRFuelEditor(new EditablePSRFuel(SaintRobertFuel.Type.SI)));
 											}
 										});
 
@@ -251,7 +254,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 										addActionListener(new ActionListener() {
 											@Override
 											public void actionPerformed(ActionEvent arg0) {
-												newFuel(new LinearFuelEditor());
+												newFuel(new LinearFuelEditor(new PiecewiseLinearFuel()));
 											}
 										});
 

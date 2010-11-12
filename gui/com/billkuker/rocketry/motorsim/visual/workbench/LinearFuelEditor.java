@@ -137,12 +137,9 @@ public class LinearFuelEditor extends AbstractFuelEditor {
 	JPanel controls;
 	final PiecewiseLinearFuel f;
 
-	public LinearFuelEditor() {
-		
-		super( new PiecewiseLinearFuel() );
-		
-		this.f = (PiecewiseLinearFuel)getFuel();
-		
+	public LinearFuelEditor(PiecewiseLinearFuel f) {
+		super( f );
+		this.f = f;
 	}
 	
 	protected  Component getBurnrateEditComponent(){
@@ -183,7 +180,7 @@ public class LinearFuelEditor extends AbstractFuelEditor {
 	public static void main(String args[]) {
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setContentPane(new LinearFuelEditor());
+		f.setContentPane(new LinearFuelEditor(new PiecewiseLinearFuel()));
 		f.setSize(800, 600);
 		f.setVisible(true);
 

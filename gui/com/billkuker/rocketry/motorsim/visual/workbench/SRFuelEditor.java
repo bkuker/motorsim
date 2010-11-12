@@ -137,11 +137,11 @@ public class SRFuelEditor extends AbstractFuelEditor {
 	JPanel controls;
 	final EditablePSRFuel f;
 
-	public SRFuelEditor() {
+	public SRFuelEditor(EditablePSRFuel f) {
 		
-		super( new EditablePSRFuel(SaintRobertFuel.Type.SI) );
+		super( f);
 		
-		this.f = (EditablePSRFuel)getFuel();
+		this.f = f;
 		
 	}
 	
@@ -208,7 +208,7 @@ public class SRFuelEditor extends AbstractFuelEditor {
 	public static void main(String args[]) {
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setContentPane(new SRFuelEditor());
+		f.setContentPane(new SRFuelEditor(new EditablePSRFuel(SaintRobertFuel.Type.SI)));
 		f.setSize(800, 600);
 		f.setVisible(true);
 
