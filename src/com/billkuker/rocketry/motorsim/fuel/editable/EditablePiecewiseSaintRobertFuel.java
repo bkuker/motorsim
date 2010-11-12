@@ -1,6 +1,5 @@
 package com.billkuker.rocketry.motorsim.fuel.editable;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +21,6 @@ public class EditablePiecewiseSaintRobertFuel extends PiecewiseSaintRobertFuel i
 	private double densityRatio = 1;
 	private EditableCombustionProduct cp;
 	private String name = "New Fuel";
-	private URI uri;
 
 	public EditablePiecewiseSaintRobertFuel() {
 		super(Type.SI);
@@ -47,16 +45,6 @@ public class EditablePiecewiseSaintRobertFuel extends PiecewiseSaintRobertFuel i
 		super.add(p, _a, _n);
 		aMap.put(p, _a);
 		nMap.put(p, _n);
-	}
-
-	@Override
-	public URI getURI() {
-		return uri;
-	}
-
-	@Override
-	public void setURI(URI uri) {
-		this.uri = uri;
 	}
 	
 	public Amount<VolumetricDensity> getIdealDensity() {

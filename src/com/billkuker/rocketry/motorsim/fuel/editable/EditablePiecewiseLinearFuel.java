@@ -1,6 +1,5 @@
 package com.billkuker.rocketry.motorsim.fuel.editable;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -16,7 +15,6 @@ import javax.measure.unit.SI;
 import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
-import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.fuel.EditableCombustionProduct;
 import com.billkuker.rocketry.motorsim.visual.Chart;
@@ -43,7 +41,6 @@ public class EditablePiecewiseLinearFuel implements EditableFuel{
 
 	
 	private String name = "New Linear Fuel";
-	private URI uri;
 	private double combustionEfficiency = .97;
 	private double densityRatio = .96;
 	private Amount<VolumetricDensity> density = Amount.valueOf(1889, 0, SI.KILOGRAM.divide(SI.METER.pow(3))).to(VolumetricDensity.UNIT);
@@ -147,17 +144,6 @@ public class EditablePiecewiseLinearFuel implements EditableFuel{
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	@Override
-	public URI getURI() {
-		return uri;
-	}
-
-	@Override
-	public void setURI(URI uri) {
-		this.uri = uri;
-	}
-
 	
 	public Map<Amount<Pressure>, Amount<Velocity>> getEntries() {
 		HashMap<Amount<Pressure>, Amount<Velocity>> ret = new HashMap<Amount<Pressure>, Amount<Velocity>>();

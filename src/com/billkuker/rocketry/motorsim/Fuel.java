@@ -1,7 +1,5 @@
 package com.billkuker.rocketry.motorsim;
 
-import java.net.URI;
-
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Temperature;
 import javax.measure.quantity.Velocity;
@@ -14,8 +12,6 @@ import com.billkuker.rocketry.motorsim.RocketScience.MolarWeight;
 public interface Fuel {
 	
 	public String getName();
-	
-	public URI getURI();
 
 	public Amount<VolumetricDensity> getIdealDensity();
 

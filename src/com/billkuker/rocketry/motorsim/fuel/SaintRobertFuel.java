@@ -1,8 +1,5 @@
 package com.billkuker.rocketry.motorsim.fuel;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
@@ -69,14 +66,6 @@ public abstract class SaintRobertFuel implements Fuel {
 	}
 
 	public abstract Amount<VolumetricDensity> getIdealDensity();
-
-	public URI getURI(){
-		try {
-			return new URI("motorsim:" + this.getClass().getSimpleName());
-		} catch (URISyntaxException e) {
-			throw new Error("Shouldn't happen", e);
-		}
-	}
 	
 	public String getName(){
 		return this.getClass().getSimpleName();
