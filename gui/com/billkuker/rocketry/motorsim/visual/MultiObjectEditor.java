@@ -27,9 +27,16 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 
 	private static final Logger log = Logger.getLogger(MultiObjectEditor.class);
 	
+	protected abstract class ObjectCreator {
+		public abstract OBJECT newObject();
+		public abstract String getName();
+	}
+	
 	private final Frame frame;
 	
 	private final String noun;
+	
+	private Set<ObjectCreator> creators = new HashSet<ObjectCreator>();
 	
 	private final Map<OBJECT, EDITOR> objectToEditor = new HashMap<OBJECT, EDITOR>();
 	private final Map<EDITOR, OBJECT> editorToObject = new HashMap<EDITOR, OBJECT>();
@@ -41,6 +48,10 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 	public MultiObjectEditor(final Frame frame, final String noun){
 		this.frame = frame;
 		this.noun = " " + noun.trim();
+	}
+	
+	protected final void addCreator(ObjectCreator c){
+		creators.add(c);
 	}
 	
 	public final void dirty(final OBJECT o){
@@ -66,8 +77,8 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		return ret;
 	}
 	
-	private void menuNew(){
-		add(newObject());
+	private void menuNew(ObjectCreator c){
+		add(c.newObject());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -163,16 +174,23 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 	
 	public final List<JMenuItem> getMenuItems(){
 		List<JMenuItem> ret = new Vector<JMenuItem>();
-		ret.add(new JMenuItem("New" + noun){
+		ret.add(new JMenu("New"){
 			private static final long serialVersionUID = 1L;
 			{
-				addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent ae) {
-						log.debug("New");
-						menuNew();
-					}
-				});
+				for (final ObjectCreator c : creators ){
+					add(new JMenuItem("New " + c.getName()){
+						private static final long serialVersionUID = 1L;
+						{
+							addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent ae) {
+									log.debug("New");
+									menuNew(c);
+								}
+							});
+						}
+					});
+				}
 			}
 		});
 		ret.add(new JMenuItem("Open" + noun + "..."){
