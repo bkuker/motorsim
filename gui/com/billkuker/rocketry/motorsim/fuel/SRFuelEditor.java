@@ -1,4 +1,4 @@
-package fuel;
+package com.billkuker.rocketry.motorsim.fuel;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -6,32 +6,39 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Vector;
 
 import javax.measure.quantity.Pressure;
-import javax.measure.quantity.Velocity;
-import javax.measure.unit.SI;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.RocketScience;
-import com.billkuker.rocketry.motorsim.fuel.editable.EditablePiecewiseLinearFuel;
+import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel.Type;
+import com.billkuker.rocketry.motorsim.fuel.editable.EditablePiecewiseSaintRobertFuel;
 
-public class LinearFuelEditor extends AbstractFuelEditor {
+public class SRFuelEditor extends AbstractFuelEditor {
 	private static final long serialVersionUID = 1L;
+
+	private static final NumberFormat nf = new DecimalFormat("##########.###");
 
 	private class Entry implements Comparable<Entry> {
 		Amount<Pressure> p = Amount.valueOf(0, RocketScience.UnitPreference.getUnitPreference().getPreferredUnit(RocketScience.PSI));
-		Amount<Velocity> v = Amount.valueOf(0, RocketScience.UnitPreference.getUnitPreference().getPreferredUnit(SI.METERS_PER_SECOND));
+		double a;
+		double n;
 
 		@Override
 		public int compareTo(Entry o) {
@@ -44,7 +51,7 @@ public class LinearFuelEditor extends AbstractFuelEditor {
 
 		@Override
 		public int getColumnCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
@@ -58,7 +65,9 @@ public class LinearFuelEditor extends AbstractFuelEditor {
 			case 0:
 				return "Pressure";
 			case 1:
-				return "Burn Rate";
+				return "Coefficient (a)";
+			case 2:
+				return "Exponent (n)";
 			}
 			return null;
 		}
@@ -68,9 +77,12 @@ public class LinearFuelEditor extends AbstractFuelEditor {
 			Entry e = entries.get(rowIndex);
 			switch (columnIndex) {
 			case 0:
-				return RocketScience.ammountToString(e.p);
+				//Format like 100 psi or 4.8 Mpa
+				return nf.format(e.p.doubleValue(e.p.getUnit())) + " " + e.p.getUnit();
 			case 1:
-				return RocketScience.ammountToString(e.v);
+				return e.a;
+			case 2:
+				return e.n;
 			}
 			return null;
 		}
@@ -93,13 +105,10 @@ public class LinearFuelEditor extends AbstractFuelEditor {
 					}
 					break;
 				case 1:
-					try {
-						e.v = (Amount<Velocity>) Amount.valueOf((String) value);
-					} catch ( Exception ee ){
-						double d = Double.parseDouble((String)value);
-						e.v = (Amount<Velocity>)Amount.valueOf(d, e.v.getUnit());
-					}
+					e.a = Double.valueOf((String) value);
 					break;
+				case 2:
+					e.n = Double.valueOf((String) value);
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -109,7 +118,7 @@ public class LinearFuelEditor extends AbstractFuelEditor {
 			//f = new EditablePSRFuel(SaintRobertFuel.Type.NONSI);
 			f.clear();
 			for (Entry en : entries) {
-				f.add(en.p, en.v);
+				f.add(en.p, en.a, en.n);
 			}
 			f.firePropertyChange(new PropertyChangeEvent(f,"entries", null, null));
 
@@ -126,18 +135,20 @@ public class LinearFuelEditor extends AbstractFuelEditor {
 	
 	private Vector<Entry> entries = new Vector<Entry>();
 	JPanel controls;
-	final EditablePiecewiseLinearFuel f;
+	final EditablePiecewiseSaintRobertFuel f;
 
-	public LinearFuelEditor(EditablePiecewiseLinearFuel f) {
-		super( f );
+	public SRFuelEditor(EditablePiecewiseSaintRobertFuel f) {
+		super( f);
 		this.f = f;
-		for ( Map.Entry<Amount<Pressure>, Amount<Velocity>> e : f.getEntries().entrySet() ){
-			Entry n = new Entry();
-			n.p = e.getKey();
-			n.v = e.getValue();
-			entries.add(n);
+		
+		for ( Amount<Pressure> p : f.getAMap().keySet() ){
+			Entry e = new Entry();
+			e.a = f.getAMap().get(p);
+			e.n = f.getNMap().get(p);
+			entries.add(e);
 		}
 		Collections.sort(entries);
+		
 	}
 	
 	protected  Component getBurnrateEditComponent(){
@@ -165,6 +176,31 @@ public class LinearFuelEditor extends AbstractFuelEditor {
 		controls.setLayout(new FlowLayout());
 			
 		controls.add(add);
+
+		
+		final JRadioButton si, nonsi;
+		ButtonGroup type = new ButtonGroup();
+		JPanel radio = new JPanel();
+		radio.add(si = new JRadioButton("SI"));
+		radio.add(nonsi = new JRadioButton("NonSI"));
+		controls.add(radio);
+		type.add(si);
+		type.add(nonsi);
+
+		si.setSelected(true);
+		
+		si.addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if ( si.isSelected() ){
+					System.err.println("SI");
+					f.setType(Type.SI);
+				} else {
+					System.err.println("NONSI");
+					f.setType(Type.NONSI);
+				}
+				update();
+			}});
 		
 		editBottom.setBottomComponent(controls);
 		
@@ -178,7 +214,7 @@ public class LinearFuelEditor extends AbstractFuelEditor {
 	public static void main(String args[]) {
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setContentPane(new LinearFuelEditor(new EditablePiecewiseLinearFuel()));
+		f.setContentPane(new SRFuelEditor(new EditablePiecewiseSaintRobertFuel()));
 		f.setSize(800, 600);
 		f.setVisible(true);
 

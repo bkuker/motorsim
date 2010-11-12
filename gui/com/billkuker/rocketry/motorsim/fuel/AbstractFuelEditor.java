@@ -1,4 +1,4 @@
-package fuel;
+package com.billkuker.rocketry.motorsim.fuel;
 
 import java.awt.Component;
 

@@ -27,10 +27,10 @@ import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.fuel.FuelResolver;
+import com.billkuker.rocketry.motorsim.fuel.FuelsEditor;
 import com.billkuker.rocketry.motorsim.io.ENGExporter;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 
-import fuel.FuelsEditor;
 
 public class MotorWorkbench extends JFrame {
 	private static final long serialVersionUID = 1L;
