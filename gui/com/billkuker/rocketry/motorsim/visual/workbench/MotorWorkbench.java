@@ -1,12 +1,9 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,48 +19,44 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTree;
 import javax.swing.WindowConstants;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.fuel.FuelResolver;
-import com.billkuker.rocketry.motorsim.fuel.PiecewiseLinearFuel;
-import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel;
 import com.billkuker.rocketry.motorsim.io.ENGExporter;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
-import com.billkuker.rocketry.motorsim.visual.FuelPanel;
-import com.billkuker.rocketry.motorsim.visual.workbench.AbstractFuelEditor.EditablePSRFuel;
-import com.billkuker.rocketry.motorsim.visual.workbench.WorkbenchTreeModel.FuelEditNode;
-import com.billkuker.rocketry.motorsim.visual.workbench.WorkbenchTreeModel.FuelNode;
 
-public class MotorWorkbench extends JFrame implements TreeSelectionListener {
+import fuel.FuelsEditor;
+
+public class MotorWorkbench extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel top;
-	private JSplitPane split;
-	private JTree tree;
 	private JTabbedPane motors;
-	private JTabbedPane fuels;
-	private WorkbenchTreeModel tm;
 	private MultiBurnChart mb;
 	private JFrame allBurns;
+	
+	private JFrame fuelEditorFrame = new JFrame(){
+		private static final long serialVersionUID = 1L;
+		{
+			setSize(1024, 768);
+			add(fuelEditor = new FuelsEditor(this));
+			JMenuBar b;
+			setJMenuBar(b = new JMenuBar());
+			b.add(fuelEditor.getMenu());
+			setTitle("MotorSim - Fuel Editor");
+		}
+	};
+	private FuelsEditor fuelEditor;
 
 	private HashMap<MotorEditor, File> e2f = new HashMap<MotorEditor, File>();
 	private HashMap<File, MotorEditor> f2e = new HashMap<File, MotorEditor>();
 
 	private HashMap<Motor, MotorEditor> m2e = new HashMap<Motor, MotorEditor>();
-
-	private static final int TREE_WIDTH = 200;
 	
 	public MotorWorkbench() {
 		setTitle("MotorSim 1.0 RC1");
@@ -80,23 +73,8 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		allBurns.add(mb);
 
 		motors = new JTabbedPane();
-		fuels = new JTabbedPane();
-
-		tree = new JTree(tm = new WorkbenchTreeModel());
-		tree.setCellRenderer(new WorkbenchTreeCellRenderer());
-		tree.getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.setMinimumSize(new Dimension(TREE_WIDTH, 100));
-
-		// Listen for when the selection changes.
-		tree.addTreeSelectionListener(this);
-
-		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, 
-				tree, motors);
-		split.setDividerLocation(TREE_WIDTH);
-		split.revalidate();
 		
-		top.add(split, BorderLayout.CENTER);
+		top.add(motors, BorderLayout.CENTER);
 		
 		for ( Fuel f : FuelResolver.getFuelMap().values() ){
 			addFuel(f);
@@ -172,7 +150,6 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 									public void actionPerformed(ActionEvent ev) {
 										MotorEditor e = (MotorEditor) motors
 												.getSelectedComponent();
-										tm.removeMotor(e.getMotor());
 										motors.remove(e);
 										f2e.remove(e2f.get(e));
 										e2f.remove(e);
@@ -233,40 +210,6 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 						
 
 						add(new JSeparator());
-						add(new JMenu("New Fuel"){
-							private static final long serialVersionUID = 1L;
-							{
-								add(new JMenuItem("Saint-Robert") {
-									private static final long serialVersionUID = 1L;
-									{
-										addActionListener(new ActionListener() {
-											@Override
-											public void actionPerformed(ActionEvent arg0) {
-												newFuel(new SRFuelEditor(new EditablePSRFuel(SaintRobertFuel.Type.SI)));
-											}
-										});
-
-									}
-								});
-								add(new JMenuItem("Linear"){
-									private static final long serialVersionUID = 1L;
-									{
-										addActionListener(new ActionListener() {
-											@Override
-											public void actionPerformed(ActionEvent arg0) {
-												newFuel(new LinearFuelEditor(new PiecewiseLinearFuel()));
-											}
-										});
-
-									}
-								});
-							}
-						});
-
-						add(new JMenuItem("Save Fuel") {
-							private static final long serialVersionUID = 1L;
-						});
-						add(new JSeparator());
 						add(new JMenuItem("Export .ENG"){
 							private static final long serialVersionUID = 1L;
 
@@ -326,7 +269,7 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 				add(new JMenu("View") {
 					private static final long serialVersionUID = 1L;
 					{
-						add(new JMenuItem("Show All Motors Graph") {
+						add(new JMenuItem("All Motors Graph") {
 							private static final long serialVersionUID = 1L;
 							{
 								addActionListener(new ActionListener() {
@@ -334,6 +277,18 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 									public void actionPerformed(ActionEvent arg0) {
 										allBurns.setVisible(true);
 										allBurns.toFront();
+									}
+								});
+							}
+						});
+						add(new JMenuItem("Fuel Editor") {
+							private static final long serialVersionUID = 1L;
+							{
+								addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent arg0) {
+										fuelEditorFrame.setVisible(true);
+										fuelEditorFrame.toFront();
 									}
 								});
 							}
@@ -347,33 +302,8 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	private void addFuel(Fuel f){
 		for ( MotorEditor e : m2e.values() )
 			e.addFuel(f);
-		FuelPanel fp = new FuelPanel(f);
-		FuelNode fn = tm.new FuelNode(fp, f);
-		tm.getFuels().add(fn);
-		tm.nodeStructureChanged(tm.getFuels());
-		fuels.addTab(f.getName(), fp);
 	}
 	
-	private void newFuel(final AbstractFuelEditor ed){
-		for ( MotorEditor e : m2e.values() )
-			e.addFuel(ed.getFuel());
-		final FuelEditNode node = tm.new FuelEditNode(ed);
-		tm.getFuels().add(node);
-		tm.nodeStructureChanged(tm.getFuels());
-		fuels.addTab(ed.getFuel().getName(), ed);
-		ed.getFuel().addPropertyChangeListener(new PropertyChangeListener(){
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				if ( evt.getPropertyName().equals("Name")){
-					for ( int i = 0; i < fuels.getTabCount(); i++ ){
-						if ( fuels.getComponent(i) == ed ){
-							fuels.setTitleAt(i, ed.getFuel().getName());
-							tm.nodeChanged(node);
-						}
-					}
-				}
-			}});
-	}
 
 	private void save(Motor m, File f) {
 		try {
@@ -386,7 +316,6 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 	}
 
 	public void addMotor(Motor m, File f) {
-		tm.addMotor(m);
 		MotorEditor e = new MotorEditor(m, FuelResolver.getFuelMap().values());
 		e.addBurnWatcher(mb);
 		String title;
@@ -401,40 +330,5 @@ public class MotorWorkbench extends JFrame implements TreeSelectionListener {
 		motors.addTab(title, e);
 	}
 
-	@Override
-	public void valueChanged(TreeSelectionEvent e) {
-		if (e.getPath().getLastPathComponent() instanceof FuelNode) {
-			FuelNode fen = ((FuelNode) e.getPath().getLastPathComponent());
-			fuels.setSelectedComponent(fen.getUserObject());
-			split.setRightComponent(fuels);
-			split.setDividerLocation(TREE_WIDTH);
-			split.revalidate();
-		}
-
-		Motor m = getMotor(e.getPath());
-
-		if (m == null)
-			return;
-
-		split.setRightComponent(motors);
-		split.setDividerLocation(TREE_WIDTH);
-		split.revalidate();
-		motors.setSelectedComponent(m2e.get(m));
-
-		if (e.getPath().getLastPathComponent() instanceof DefaultMutableTreeNode) {
-			Object o = ((DefaultMutableTreeNode) e.getPath()
-					.getLastPathComponent()).getUserObject();
-			m2e.get(m).focusOnObject(o);
-		}
-
-	}
-
-	private Motor getMotor(TreePath p) {
-		if (p.getLastPathComponent() instanceof WorkbenchTreeModel.MotorNode) {
-			return ((WorkbenchTreeModel.MotorNode) p.getLastPathComponent())
-					.getUserObject();
-		} else if (p.getPath().length > 1)
-			return getMotor(p.getParentPath());
-		return null;
-	}
+	
 }

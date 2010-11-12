@@ -427,7 +427,7 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 	public MotorEditor(Motor m, Collection<Fuel> fuels) {
 		
 		setLayout( new BorderLayout());
-		tabs = new JTabbedPane(JTabbedPane.BOTTOM);
+		tabs = new JTabbedPane(JTabbedPane.TOP);
 		add(tabs, BorderLayout.CENTER);
 
 		for ( Fuel f : fuels )
