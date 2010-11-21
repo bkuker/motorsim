@@ -43,6 +43,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 	private final Map<File, EDITOR> fileToEditor = new HashMap<File, EDITOR>();
 	private final Map<EDITOR, File> editorToFile = new HashMap<EDITOR, File>();
 	
+	
 	private final Set<OBJECT> dirty = new HashSet<OBJECT>();
 	
 	public MultiObjectEditor(final Frame frame, final String noun){
@@ -82,13 +83,16 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Override
-	public EDITOR getSelectedComponent(){
-		return (EDITOR)super.getSelectedComponent();
+	public EDITOR getSelectedEditor(){
+		try {
+			return (EDITOR)super.getSelectedComponent();
+		} catch ( ClassCastException e ){
+			return null;
+		}
 	}
 	
 	private void close(){
-		EDITOR e = getSelectedComponent();
+		EDITOR e = getSelectedEditor();
 		OBJECT o = editorToObject.get(e);
 		File f = editorToFile.get(e);
 		
@@ -109,7 +113,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 	}
 	
 	private void saveDialog(){
-		EDITOR e = getSelectedComponent();
+		EDITOR e = getSelectedEditor();
 		if ( !editorToFile.containsKey(e) ){
 			log.debug("Editor has no file, saving as...");
 			saveAsDialog();
@@ -125,7 +129,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		}
 	}
 	private void saveAsDialog(){
-		EDITOR e = getSelectedComponent();
+		EDITOR e = getSelectedEditor();
 		final FileDialog fd = new FileDialog(frame, "Save" + noun + " As", FileDialog.SAVE);
 		fd.setVisible(true);
 		if (fd.getFile() != null ) {
