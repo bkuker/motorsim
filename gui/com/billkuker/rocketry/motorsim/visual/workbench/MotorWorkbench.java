@@ -23,10 +23,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
 import com.billkuker.rocketry.motorsim.Burn;
-import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
-import com.billkuker.rocketry.motorsim.fuel.FuelResolver;
 import com.billkuker.rocketry.motorsim.fuel.FuelsEditor;
 import com.billkuker.rocketry.motorsim.io.ENGExporter;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
@@ -75,10 +73,6 @@ public class MotorWorkbench extends JFrame {
 		motors = new JTabbedPane();
 		
 		top.add(motors, BorderLayout.CENTER);
-		
-		for ( Fuel f : FuelResolver.getFuelMap().values() ){
-			addFuel(f);
-		}
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setVisible(true);
@@ -298,11 +292,7 @@ public class MotorWorkbench extends JFrame {
 			}
 		});
 	}
-	
-	private void addFuel(Fuel f){
-		for ( MotorEditor e : m2e.values() )
-			e.addFuel(f);
-	}
+
 	
 
 	private void save(Motor m, File f) {
@@ -316,7 +306,7 @@ public class MotorWorkbench extends JFrame {
 	}
 
 	public void addMotor(Motor m, File f) {
-		MotorEditor e = new MotorEditor(m, FuelResolver.getFuelMap().values());
+		MotorEditor e = new MotorEditor(m);
 		e.addBurnWatcher(mb);
 		String title;
 		if (f == null) {

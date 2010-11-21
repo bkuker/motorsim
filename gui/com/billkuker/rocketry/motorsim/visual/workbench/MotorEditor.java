@@ -12,7 +12,6 @@ import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
@@ -47,6 +46,7 @@ import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.Nozzle;
 import com.billkuker.rocketry.motorsim.cases.Schedule40;
 import com.billkuker.rocketry.motorsim.cases.Schedule80;
+import com.billkuker.rocketry.motorsim.fuel.FuelResolver;
 import com.billkuker.rocketry.motorsim.fuel.KNDX;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CSlot;
@@ -64,7 +64,7 @@ import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 import com.billkuker.rocketry.motorsim.visual.HardwarePanel;
 import com.billkuker.rocketry.motorsim.visual.SummaryPanel;
 
-public class MotorEditor extends JPanel implements PropertyChangeListener {
+public class MotorEditor extends JPanel implements PropertyChangeListener, FuelResolver.FuelsChangeListener{
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(MotorEditor.class);
 	Motor motor;
@@ -78,8 +78,21 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 	private Vector<BurnWatcher> burnWatchers = new Vector<BurnWatcher>();
 	private DefaultComboBoxModel availableFuels = new DefaultComboBoxModel();
 	
-	public void addFuel(Fuel f){
-		availableFuels.addElement(f);
+	public MotorEditor(Motor m) {
+		setLayout( new BorderLayout());
+		tabs = new JTabbedPane(JTabbedPane.TOP);
+		add(tabs, BorderLayout.CENTER);
+		setMotor(m);
+		fuelsChanged();
+	}
+
+	@Override
+	public void fuelsChanged() {
+		availableFuels.removeAllElements();
+		availableFuels.addElement(motor.getFuel());
+		for ( Fuel f : FuelResolver.getFuelMap().values() ){
+			availableFuels.addElement(f);
+		}
 	}
 
 	//private static final int XML_TAB = 0;
@@ -424,16 +437,7 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 	}
 
 
-	public MotorEditor(Motor m, Collection<Fuel> fuels) {
-		
-		setLayout( new BorderLayout());
-		tabs = new JTabbedPane(JTabbedPane.TOP);
-		add(tabs, BorderLayout.CENTER);
 
-		for ( Fuel f : fuels )
-			addFuel(f);
-		setMotor(m);
-	}
 
 	public Motor getMotor() {
 		return motor;
@@ -527,5 +531,6 @@ public class MotorEditor extends JPanel implements PropertyChangeListener {
 				bw.replace(burn, burn);
 		}
 	}
+
 
 }
