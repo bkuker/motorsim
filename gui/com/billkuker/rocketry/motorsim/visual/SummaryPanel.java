@@ -54,11 +54,10 @@ public class SummaryPanel extends JPanel implements Burn.BurnProgressListener {
 	}
 
 	private void setBurnSummary(final BurnSummary bi) {
-
-		removeAll();
-		setLayout(new GridLayout(2, 5));
 		SwingUtilities.invokeLater(new Thread() {
 			public void run() {
+				removeAll();
+				setLayout(new GridLayout(2, 5));
 				SummaryPanel.this.add(new JLabel("Rating"));
 				SummaryPanel.this.add(new JLabel("Total Impulse"));
 				SummaryPanel.this.add(new JLabel("ISP"));
