@@ -60,11 +60,6 @@ public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
 	}
 
 	@Override
-	public Fuel newObject() {
-		return new EditablePiecewiseLinearFuel();
-	}
-
-	@Override
 	protected Fuel loadFromFile(File f) throws IOException {
 		Fuel fuel =  MotorIO.readFuel(new FileInputStream(f));
 		return fuel;

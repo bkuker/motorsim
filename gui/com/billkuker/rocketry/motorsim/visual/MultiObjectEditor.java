@@ -268,8 +268,6 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 	
 	public abstract EDITOR createEditor(final OBJECT o);
 	
-	public abstract OBJECT newObject();
-	
 	protected abstract OBJECT loadFromFile(final File f) throws IOException;
 	
 	protected abstract void saveToFile(final OBJECT o, final File f) throws IOException;
