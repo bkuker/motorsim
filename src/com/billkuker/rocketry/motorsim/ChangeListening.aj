@@ -21,7 +21,7 @@ public aspect ChangeListening {
 	}
 	
 	public void Subject.removePropertyChangeListener(PropertyChangeListener l) {
-		pcs.addPropertyChangeListener(l);
+		pcs.removePropertyChangeListener(l);
 	}
 	
 	public void Subject.firePropertyChange(PropertyChangeEvent e) {
