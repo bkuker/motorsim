@@ -18,9 +18,13 @@ import com.billkuker.rocketry.motorsim.visual.MultiObjectEditor;
 public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
 
 	private static final long serialVersionUID = 1L;
+	
+	private MultiFuelChart allFuels = new MultiFuelChart();
 
 	public FuelsEditor(Frame frame) {
 		super(frame, "Fuel");
+		addTab("All Fuels", allFuels);
+		
 		addCreator(new ObjectCreator() {
 			@Override
 			public Fuel newObject() {
