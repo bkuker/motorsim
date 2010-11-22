@@ -36,7 +36,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 	
 	private final String noun;
 	
-	private Set<ObjectCreator> creators = new HashSet<ObjectCreator>();
+	private List<ObjectCreator> creators = new Vector<ObjectCreator>();
 	
 	private final Map<OBJECT, EDITOR> objectToEditor = new HashMap<OBJECT, EDITOR>();
 	private final Map<EDITOR, OBJECT> editorToObject = new HashMap<EDITOR, OBJECT>();
@@ -178,25 +178,41 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 	
 	public final List<JMenuItem> getMenuItems(){
 		List<JMenuItem> ret = new Vector<JMenuItem>();
-		ret.add(new JMenu("New"){
-			private static final long serialVersionUID = 1L;
-			{
-				for (final ObjectCreator c : creators ){
-					add(new JMenuItem("New " + c.getName()){
-						private static final long serialVersionUID = 1L;
-						{
-							addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent ae) {
-									log.debug("New");
-									menuNew(c);
-								}
-							});
+		if ( creators.size() == 1 ){
+			final ObjectCreator c = creators.get(0);
+			ret.add(new JMenuItem("New " + c.getName()){
+				private static final long serialVersionUID = 1L;
+				{
+					addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent ae) {
+							log.debug("New");
+							menuNew(c);
 						}
 					});
 				}
-			}
-		});
+			});
+		} else {
+			ret.add(new JMenu("New"){
+				private static final long serialVersionUID = 1L;
+				{
+					for (final ObjectCreator c : creators ){
+						add(new JMenuItem("New " + c.getName()){
+							private static final long serialVersionUID = 1L;
+							{
+								addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent ae) {
+										log.debug("New");
+										menuNew(c);
+									}
+								});
+							}
+						});
+					}
+				}
+			});
+		}
 		ret.add(new JMenuItem("Open" + noun + "..."){
 				private static final long serialVersionUID = 1L;
 				{
