@@ -1,6 +1,8 @@
 package com.billkuker.rocketry.motorsim.fuel;
 
 import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 
 import javax.measure.quantity.Pressure;
@@ -49,10 +51,18 @@ public class MultiFuelChart extends JPanel implements FuelResolver.FuelsChangeLi
 		fuelsChanged();
 	}
 
-	public void addFuel(Fuel f) {
+	public void addFuel(final Fuel f) {
 		XYSeries s = createSeries(f);
 		fuelToSeries.put(f, s);
 		dataset.addSeries(s);
+		f.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				System.err.println("PropertyChanged :" + evt.getPropertyName());
+				removeFuel(f);
+				addFuel(f);
+			}
+		});
 	}
 
 	private XYSeries createSeries(Fuel f) {
