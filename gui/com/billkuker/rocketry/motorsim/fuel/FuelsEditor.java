@@ -21,6 +21,8 @@ public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
 	
 	private MultiFuelChart allFuels = new MultiFuelChart();
 
+	private static int lIdx = 0;
+	private static int sIdx = 0;
 	public FuelsEditor(Frame frame) {
 		super(frame, "Fuel");
 		addTab("All Fuels", allFuels);
@@ -28,7 +30,9 @@ public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
 		addCreator(new ObjectCreator() {
 			@Override
 			public Fuel newObject() {
-				return new EditablePiecewiseLinearFuel();
+				EditablePiecewiseLinearFuel ret = new EditablePiecewiseLinearFuel();
+				ret.setName("New Linear Fuel " + ++lIdx);
+				return ret;
 			}
 
 			@Override
@@ -39,7 +43,9 @@ public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
 		addCreator(new ObjectCreator() {
 			@Override
 			public Fuel newObject() {
-				return new EditablePiecewiseSaintRobertFuel();
+				EditablePiecewiseSaintRobertFuel ret = new EditablePiecewiseSaintRobertFuel();
+				ret.setName("New StRobert Fuel " + ++sIdx);
+				return ret;
 			}
 
 			@Override
@@ -48,6 +54,17 @@ public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
 			}
 		});
 	}
+	
+	/*
+	@Override
+	protected void objectAdded(Fuel f, AbstractFuelEditor e){
+		allFuels.addFuel(f);
+	}
+	
+	@Override
+	protected void objectRemoved(Fuel f, AbstractFuelEditor e){
+		allFuels.removeFuel(f);
+	}*/
 
 	@Override
 	public AbstractFuelEditor createEditor(Fuel o) {
