@@ -12,6 +12,7 @@ import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
+import java.net.URI;
 import java.util.List;
 import java.util.Vector;
 
@@ -47,7 +48,6 @@ import com.billkuker.rocketry.motorsim.Nozzle;
 import com.billkuker.rocketry.motorsim.cases.Schedule40;
 import com.billkuker.rocketry.motorsim.cases.Schedule80;
 import com.billkuker.rocketry.motorsim.fuel.FuelResolver;
-import com.billkuker.rocketry.motorsim.fuel.KNDX;
 import com.billkuker.rocketry.motorsim.fuel.KNSU;
 import com.billkuker.rocketry.motorsim.grain.CSlot;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
@@ -461,7 +461,11 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 	public static Motor defaultMotor() {
 		Motor m = new Motor();
 		m.setName("Example Motor");
-		m.setFuel(new KNDX());
+		try {
+			m.setFuel(FuelResolver.getFuel(new URI("motorsim:KNDX")));
+		} catch (Exception e) {
+			throw new Error(e);
+		}
 
 		CylindricalChamber c = new CylindricalChamber();
 		c.setLength(Amount.valueOf(420, SI.MILLIMETER));
