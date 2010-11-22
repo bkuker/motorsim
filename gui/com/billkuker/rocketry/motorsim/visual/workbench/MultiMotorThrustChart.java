@@ -19,7 +19,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.RocketScience;
 
-public class MultiBurnChart extends JPanel implements BurnWatcher {
+public class MultiMotorThrustChart extends JPanel implements BurnWatcher {
 	private static final long serialVersionUID = 1L;
 
 	private XYSeriesCollection dataset = new XYSeriesCollection();
@@ -28,7 +28,7 @@ public class MultiBurnChart extends JPanel implements BurnWatcher {
 	private Unit<Duration> time;
 	private Unit<Force> force;
 
-	public MultiBurnChart() {
+	public MultiMotorThrustChart() {
 		this.setLayout(new BorderLayout());
 		time = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(SI.SECOND);

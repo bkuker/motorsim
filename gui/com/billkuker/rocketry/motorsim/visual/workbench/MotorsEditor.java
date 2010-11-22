@@ -23,7 +23,7 @@ import com.billkuker.rocketry.motorsim.visual.MultiObjectEditor;
 public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	private static final long serialVersionUID = 1L;
 	
-	MultiBurnChart mbc = new MultiBurnChart();
+	MultiMotorThrustChart mbc = new MultiMotorThrustChart();
 
 	public MotorsEditor(JFrame f) {
 		super(f, "Motor");

@@ -18,7 +18,7 @@ import com.billkuker.rocketry.motorsim.fuel.FuelsEditor;
 public class MotorWorkbench extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
-	private MultiBurnChart mb;
+	private MultiMotorThrustChart mb;
 	private JFrame allBurns;
 	
 	private JFrame fuelEditorFrame = new JFrame(){
@@ -46,7 +46,7 @@ public class MotorWorkbench extends JFrame {
 		
 		addMenu();
 		
-		mb = new MultiBurnChart();
+		mb = new MultiMotorThrustChart();
 		allBurns = new JFrame();
 		allBurns.setTitle("All Burns");
 		allBurns.setSize(800, 600);
