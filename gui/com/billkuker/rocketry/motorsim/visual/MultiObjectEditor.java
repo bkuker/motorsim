@@ -53,9 +53,9 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		this.noun = " " + noun.trim();
 	}
 	
-	protected void objectAdded(OBJECT o){}
+	protected void objectAdded(OBJECT o, EDITOR e){}
 	
-	protected void objectRemoved(OBJECT o){}
+	protected void objectRemoved(OBJECT o, EDITOR e){}
 	
 	protected final void addCreator(ObjectCreator c){
 		creators.add(c);
@@ -115,7 +115,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		editorToObject.remove(e);
 		fileToEditor.remove(f);
 		editorToFile.remove(e);
-		objectRemoved(o);
+		objectRemoved(o, e);
 		remove(e);
 	}
 	
@@ -177,7 +177,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 				fileToEditor.put(file, e);
 				editorToFile.put(e, file);
 				addTab(file.getName(), e);	
-				objectAdded(o);
+				objectAdded(o, e);
 			} catch (Exception e) {
 				errorDialog(e);
 			}
@@ -279,7 +279,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		editorToObject.put(e, o);
 		addTab("new", e);
 		dirty(o);
-		objectAdded(o);
+		objectAdded(o, e);
 	}
 	
 	public final void load(final File f) throws IOException{
@@ -290,7 +290,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		fileToEditor.put(f, e);
 		editorToFile.put(e, f);
 		addTab(f.getName(), e);
-		objectAdded(o);
+		objectAdded(o, e);
 	}
 	
 	public abstract EDITOR createEditor(final OBJECT o);

@@ -98,18 +98,6 @@ public class MotorWorkbench extends JFrame {
 				add(new JMenu("View") {
 					private static final long serialVersionUID = 1L;
 					{
-						add(new JMenuItem("All Motors Graph") {
-							private static final long serialVersionUID = 1L;
-							{
-								addActionListener(new ActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent arg0) {
-										allBurns.setVisible(true);
-										allBurns.toFront();
-									}
-								});
-							}
-						});
 						add(new JMenuItem("Fuel Editor") {
 							private static final long serialVersionUID = 1L;
 							{

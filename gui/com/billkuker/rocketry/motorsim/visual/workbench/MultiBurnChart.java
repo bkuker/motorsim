@@ -36,8 +36,8 @@ public class MultiBurnChart extends JPanel implements BurnWatcher {
 				.getPreferredUnit(SI.NEWTON);
 		JFreeChart chart = ChartFactory.createXYLineChart(
 				"", // Title
-				time.toString(), // x-axis Label
-				force.toString(), // y-axis Label
+				"Time (" + time.toString() + ")", // x-axis Label
+				"Thrust (" + force.toString() + ")", // y-axis Label
 				dataset, PlotOrientation.VERTICAL, // Plot Orientation
 				true, // Show Legend
 				true, // Use tool tips

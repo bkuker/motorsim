@@ -22,9 +22,14 @@ import com.billkuker.rocketry.motorsim.visual.MultiObjectEditor;
 
 public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	private static final long serialVersionUID = 1L;
+	
+	MultiBurnChart mbc = new MultiBurnChart();
 
 	public MotorsEditor(JFrame f) {
 		super(f, "Motor");
+		
+		addTab("Thrust Graphs", mbc);
+		
 		addCreator(new ObjectCreator() {
 			@Override
 			public Motor newObject() {
@@ -36,6 +41,16 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 				return "Motor";
 			}
 		});
+	}
+	
+	@Override
+	protected void objectAdded(Motor m, MotorEditor e){
+		e.addBurnWatcher(mbc);
+	}
+	
+	@Override
+	protected void objectRemoved(Motor m, MotorEditor e){
+		mbc.removeBurn(e.burn);
 	}
 
 	@Override
