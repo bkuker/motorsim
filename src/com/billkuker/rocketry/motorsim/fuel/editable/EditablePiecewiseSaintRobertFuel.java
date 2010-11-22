@@ -80,6 +80,12 @@ public class EditablePiecewiseSaintRobertFuel extends PiecewiseSaintRobertFuel i
 		this.cp = (EditableCombustionProduct)product;
 	}
 
+	@Override
+	public String toString(){
+		return getName();
+	}
+	
+	@Override
 	public String getName() {
 		return name;
 	}

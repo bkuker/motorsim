@@ -137,6 +137,11 @@ public class EditablePiecewiseLinearFuel implements EditableFuel{
 	}
 
 	@Override
+	public String toString(){
+		return getName();
+	}
+	
+	@Override
 	public String getName() {
 		return name;
 	}
