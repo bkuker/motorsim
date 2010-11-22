@@ -24,11 +24,13 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	private static final long serialVersionUID = 1L;
 	
 	MultiMotorThrustChart mbc = new MultiMotorThrustChart();
+	MultiMotorPressureChart mpc = new MultiMotorPressureChart();
 
 	public MotorsEditor(JFrame f) {
 		super(f, "Motor");
 		
-		addTab("Thrust Graphs", mbc);
+		addTab("All Thrust", mbc);
+		addTab("All Pressure", mpc);
 		
 		addCreator(new ObjectCreator() {
 			@Override
@@ -46,11 +48,13 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	@Override
 	protected void objectAdded(Motor m, MotorEditor e){
 		e.addBurnWatcher(mbc);
+		e.addBurnWatcher(mpc);
 	}
 	
 	@Override
 	protected void objectRemoved(Motor m, MotorEditor e){
 		mbc.removeBurn(e.burn);
+		mpc.removeBurn(e.burn);
 	}
 
 	@Override

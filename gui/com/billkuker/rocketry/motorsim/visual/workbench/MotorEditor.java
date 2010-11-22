@@ -469,9 +469,10 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 		tabs.add(bt = new BurnTab(), BURN_TAB);
 	}
 
+	private static int idx;
 	public static Motor defaultMotor() {
 		Motor m = new Motor();
-		m.setName("Example Motor");
+		m.setName("New Motor " + ++idx);
 		try {
 			m.setFuel(FuelResolver.getFuel(new URI("motorsim:KNDX")));
 		} catch (Exception e) {
