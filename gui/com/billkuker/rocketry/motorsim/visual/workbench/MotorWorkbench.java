@@ -16,6 +16,7 @@ import com.billkuker.rocketry.motorsim.fuel.FuelsEditor;
 
 
 public class MotorWorkbench extends JFrame {
+	public static final String name = "MotorSim 2.0 BETA";
 	private static final long serialVersionUID = 1L;
 	
 	private MultiMotorThrustChart mb;
@@ -29,7 +30,7 @@ public class MotorWorkbench extends JFrame {
 			JMenuBar b;
 			setJMenuBar(b = new JMenuBar());
 			b.add(fuelEditor.getMenu());
-			setTitle("MotorSim - Fuel Editor");
+			setTitle(name + " - Fuel Editor");
 		}
 	};
 	private FuelsEditor fuelEditor;
@@ -38,7 +39,7 @@ public class MotorWorkbench extends JFrame {
 
 	
 	public MotorWorkbench() {
-		setTitle("MotorSim 1.0 RC1");
+		setTitle(name);
 		setSize(1024, 768);
 
 		motorsEditor = new MotorsEditor(this);
