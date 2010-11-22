@@ -10,6 +10,7 @@ import javax.measure.quantity.Velocity;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -21,6 +22,7 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.RocketScience;
+import com.billkuker.rocketry.motorsim.RocketScience.UnitPreferenceListener;
 
 public class MultiFuelChart extends JPanel implements FuelResolver.FuelsChangeListener {
 	private static final long serialVersionUID = 1L;
@@ -33,10 +35,29 @@ public class MultiFuelChart extends JPanel implements FuelResolver.FuelsChangeLi
 	
 	public MultiFuelChart() {
 		this.setLayout(new BorderLayout());
+		RocketScience.addUnitPreferenceListener(new UnitPreferenceListener() {
+			@Override
+			public void preferredUnitsChanged() {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						setup();	
+						revalidate();
+					}
+				});
+			}
+		});
+		setup();
+		FuelResolver.addFuelsChangeListener(this);
+	}
+	
+	private void setup(){
 		pressureUnit = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(SI.PASCAL);
 		rateUnit = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(SI.METERS_PER_SECOND);
+		System.err.println(pressureUnit);
+		removeAll();
 		JFreeChart chart = ChartFactory.createXYLineChart(
 				"", // Title
 				pressureUnit.toString(), // x-axis Label
@@ -47,7 +68,8 @@ public class MultiFuelChart extends JPanel implements FuelResolver.FuelsChangeLi
 				false // Configure chart to generate URLs?
 				);
 		add(new ChartPanel(chart));
-		FuelResolver.addFuelsChangeListener(this);
+		dataset.removeAllSeries();
+		fuelToSeries.clear();
 		fuelsChanged();
 	}
 

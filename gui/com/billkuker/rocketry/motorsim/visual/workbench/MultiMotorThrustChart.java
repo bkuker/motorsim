@@ -2,12 +2,15 @@ package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.BorderLayout;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.measure.quantity.Duration;
 import javax.measure.quantity.Force;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -18,6 +21,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.RocketScience;
+import com.billkuker.rocketry.motorsim.RocketScience.UnitPreferenceListener;
 
 public class MultiMotorThrustChart extends JPanel implements BurnWatcher {
 	private static final long serialVersionUID = 1L;
@@ -30,6 +34,31 @@ public class MultiMotorThrustChart extends JPanel implements BurnWatcher {
 
 	public MultiMotorThrustChart() {
 		this.setLayout(new BorderLayout());
+		RocketScience.addUnitPreferenceListener(new UnitPreferenceListener() {
+			@Override
+			public void preferredUnitsChanged() {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						removeAll();
+						dataset.removeAllSeries();
+						Set<Burn> burns = new HashSet<Burn>();
+						burns.addAll(burnToSeries.keySet());
+						burnToSeries.clear();
+						setup();	
+						for ( Burn b : burns ){
+							addBurn(b);
+						}
+						revalidate();
+					}
+				});
+			}
+		});
+		setup();
+		
+	}
+	
+	private void setup(){
 		time = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(SI.SECOND);
 		force = RocketScience.UnitPreference.getUnitPreference()
