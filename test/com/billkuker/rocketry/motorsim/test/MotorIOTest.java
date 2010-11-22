@@ -4,6 +4,7 @@ import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.URI;
 
 import javax.measure.unit.SI;
 
@@ -13,7 +14,7 @@ import org.junit.Test;
 import com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle;
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.Motor;
-import com.billkuker.rocketry.motorsim.fuel.KNSU;
+import com.billkuker.rocketry.motorsim.fuel.FuelResolver;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
@@ -24,7 +25,7 @@ public class MotorIOTest {
 	public void testReadWrite() throws Exception {
 		Motor m = new Motor();
 		m.setName("IOTestMotor");
-		m.setFuel(new KNSU());
+		m.setFuel(FuelResolver.getFuel(new URI("motorsim:KNSB")));
 
 		CylindricalChamber c = new CylindricalChamber();
 		c.setLength(Amount.valueOf(200, SI.MILLIMETER));

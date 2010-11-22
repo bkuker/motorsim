@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import com.billkuker.rocketry.motorsim.Fuel;
 import com.billkuker.rocketry.motorsim.RocketScience;
-import com.billkuker.rocketry.motorsim.fuel.SaintRobertFuel;
 import com.billkuker.rocketry.motorsim.fuel.editable.EditablePiecewiseLinearFuel;
 import com.billkuker.rocketry.motorsim.fuel.editable.EditablePiecewiseSaintRobertFuel;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
