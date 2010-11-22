@@ -72,7 +72,7 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 	BurnTab bt;
 	Burn burn;
 	SummaryPanel sp;
-	
+	JTextArea error;
 	JTabbedPane tabs;
 
 	private Vector<BurnWatcher> burnWatchers = new Vector<BurnWatcher>();
@@ -134,10 +134,18 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 
 		public void reBurn() {
 			removeAll();
+			if ( error != null ){
+				MotorEditor.this.remove(error);
+				error = null;
+			}
+			if ( sp != null ){
+				MotorEditor.this.remove(sp);
+				sp = null;
+			}
 			currentThread = new Thread() {
 				public void run() {
 					final Thread me = this;
-					try {
+					try {						
 						final Burn b = new Burn(motor);
 						b.addBurnProgressListener(
 								new Burn.BurnProgressListener() {
@@ -150,8 +158,7 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 										}
 									}
 								});
-						if ( sp != null )
-							MotorEditor.this.remove(sp);
+
 						MotorEditor.this.add(sp = new SummaryPanel(b), BorderLayout.NORTH);
 						revalidate();
 						b.burn();
@@ -168,15 +175,19 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 						});
 					} catch (BurnCanceled c){
 						log.info("Burn Canceled!");
-					} catch (Exception e) {
-						if ( sp != null )
-							MotorEditor.this.remove(sp);
-						JTextArea t = new JTextArea(e.getMessage());
-						t.setBackground(Colors.RED);
-						t.setForeground(Color.WHITE);
-						t.setEditable(false);
-						MotorEditor.this.add(t, BorderLayout.NORTH);
-						revalidate();
+					} catch (final Exception e) {
+						SwingUtilities.invokeLater(new Thread() {
+							public void run() {
+								if ( sp != null )
+									MotorEditor.this.remove(sp);
+								error = new JTextArea(e.getMessage());
+								error.setBackground(Colors.RED);
+								error.setForeground(Color.WHITE);
+								error.setEditable(false);
+								MotorEditor.this.add(error, BorderLayout.NORTH);
+								revalidate();
+							}
+						});
 					}
 				}
 			};
