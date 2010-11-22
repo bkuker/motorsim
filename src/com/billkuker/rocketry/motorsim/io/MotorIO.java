@@ -37,7 +37,9 @@ public class MotorIO {
 				MarshallingContext ctx) {
 			/*Fuel f = (Fuel)o;
 			w.setValue(f.getURI().toString());*/
-			ctx.convertAnother(FuelResolver.getURI((Fuel)o));
+			Fuel f = (Fuel)o;
+			URI uri = FuelResolver.getURI(f);
+			ctx.convertAnother(uri);
 		}
 
 		@Override
