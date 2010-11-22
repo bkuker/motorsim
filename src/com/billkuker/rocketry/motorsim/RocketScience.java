@@ -21,6 +21,7 @@ import org.jscience.physics.amount.Amount;
 public class RocketScience {
 	public static Unit<Pressure> PSI = new ProductUnit<Pressure>(NonSI.POUND_FORCE.divide(NonSI.INCH.pow(2)));
 	public static Unit<Impulse> NEWTON_SECOND = new ProductUnit<Impulse>(SI.NEWTON.times(SI.SECOND));
+	public static Unit<Impulse> POUND_SECOND = new ProductUnit<Impulse>(NonSI.POUND_FORCE.times(SI.SECOND));
 	static{
 		UnitFormat.getInstance().label(PSI, "psi");
 		UnitFormat.getInstance().label(NEWTON_SECOND, "Ns");
@@ -41,6 +42,7 @@ public class RocketScience {
 				javax.measure.unit.SI.MILLIMETER,
 				javax.measure.unit.SI.MILLIMETER.divide(javax.measure.unit.SI.SECOND),
 				javax.measure.unit.SI.NEWTON,
+				javax.measure.unit.SI.GRAM,
 				javax.measure.unit.SI.MEGA(javax.measure.unit.SI.PASCAL),
 				NEWTON_SECOND
 		}),
@@ -48,9 +50,10 @@ public class RocketScience {
 				javax.measure.unit.NonSI.INCH.pow(2),
 				javax.measure.unit.NonSI.INCH,
 				javax.measure.unit.NonSI.POUND_FORCE,
+				javax.measure.unit.NonSI.OUNCE,
 				javax.measure.unit.NonSI.INCH.divide(javax.measure.unit.SI.SECOND),
 				PSI,
-				NEWTON_SECOND
+				POUND_SECOND
 		});
 		
 		private static UnitPreference preference = SI;
