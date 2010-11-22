@@ -13,9 +13,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Logger;
@@ -32,7 +34,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		public abstract String getName();
 	}
 	
-	private final Frame frame;
+	protected final Frame frame;
 	
 	private final String noun;
 	
@@ -73,7 +75,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 	
 	public JMenu getMenu(){
 		JMenu ret = new JMenu("File");
-		for ( JMenuItem i : getMenuItems() )
+		for ( JComponent i : getMenuItems() )
 			ret.add(i);
 		return ret;
 	}
@@ -176,8 +178,8 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		}
 	}
 	
-	public final List<JMenuItem> getMenuItems(){
-		List<JMenuItem> ret = new Vector<JMenuItem>();
+	public final List<JComponent> getMenuItems(){
+		List<JComponent> ret = new Vector<JComponent>();
 		if ( creators.size() == 1 ){
 			final ObjectCreator c = creators.get(0);
 			ret.add(new JMenuItem("New " + c.getName()){
@@ -237,6 +239,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 				});
 			}
 		});
+		ret.add(new JSeparator());
 		ret.add(new JMenuItem("Save" + noun){
 			private static final long serialVersionUID = 1L;
 			{
