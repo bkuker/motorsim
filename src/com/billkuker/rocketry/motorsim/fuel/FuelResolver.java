@@ -60,7 +60,7 @@ public class FuelResolver {
 		throw new FuelNotFound();
 	}
 
-	private static void add(Fuel f, URI uri) {
+	public static void add(Fuel f, URI uri) {
 		fuels.put(uri, f);
 		uris.put(f, uri);
 		for ( FuelsChangeListener l : listeners )
