@@ -35,6 +35,14 @@ public class RocketScience {
 	public interface Impulse extends Quantity {
 		public static Unit<Impulse> UNIT = NEWTON_SECOND;
 	}
+	
+	private static HashSet<UnitPreferenceListener> prefListeners = new HashSet<RocketScience.UnitPreferenceListener>();
+	public static interface UnitPreferenceListener{
+		public void preferredUnitsChanged();
+	}
+	public static void addUnitPreferenceListener(UnitPreferenceListener l){
+		prefListeners.add(l);
+	}
 
 	public static enum UnitPreference{
 		SI(new Unit[]{
@@ -69,9 +77,14 @@ public class RocketScience {
 		}
 		
 		public static void setUnitPreference( final UnitPreference up ){
+			if ( preference == up )
+				return;
 			preference = up;
 			Preferences prefs = Preferences.userNodeForPackage(RocketScience.class);
 			prefs.put("PreferedUnits", up.toString());
+			for ( UnitPreferenceListener l : prefListeners ){
+				l.preferredUnitsChanged();
+			}
 		}
 		
 		protected Set<Unit<?>> units = new HashSet<Unit<?>>();
