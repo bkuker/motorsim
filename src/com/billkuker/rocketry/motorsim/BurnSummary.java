@@ -3,7 +3,10 @@ package com.billkuker.rocketry.motorsim;
 import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Duration;
 import javax.measure.quantity.Force;
+import javax.measure.quantity.Mass;
 import javax.measure.quantity.Pressure;
+import javax.measure.quantity.Volume;
+import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
@@ -19,6 +22,7 @@ public class BurnSummary {
 	Amount<Force> maxThrust = Amount.valueOf(0, SI.NEWTON);
 	Amount<Pressure> maxPressure = Amount.valueOf(0, SI.MEGA(SI.PASCAL));
 	Amount<Duration> isp;
+	Amount<Mass> propellantMass;
 	Double saftyFactor;
 	
 	public BurnSummary(Burn b) {
@@ -49,6 +53,11 @@ public class BurnSummary {
 
 		if ( b.getMotor().getChamber().getBurstPressure() != null )
 			saftyFactor = b.getMotor().getChamber().getBurstPressure().divide(maxPressure).to(Dimensionless.UNIT).doubleValue(Dimensionless.UNIT);
+
+		Amount<Volume> vol = b.getMotor().getGrain().volume(Amount.valueOf(0, SI.MILLIMETER));
+		Amount<VolumetricDensity> ideal = b.getMotor().getFuel().getIdealDensity();
+		Amount<VolumetricDensity> actual = ideal.times(b.getMotor().getFuel().getDensityRatio());
+		propellantMass = vol.times(actual).to(SI.GRAM);
 	}
 
 	public String getRating() {
@@ -94,6 +103,10 @@ public class BurnSummary {
 
 	public Amount<Pressure> maxPressure(){
 		return maxPressure;
+	}
+	
+	public Amount<Mass> getPropellantMass() {
+		return propellantMass;
 	}
 
 }

@@ -64,7 +64,7 @@ public class SummaryPanel extends JPanel implements Burn.BurnProgressListener {
 				SummaryPanel.this.add(new JLabel("Max Thrust"));
 				SummaryPanel.this.add(new JLabel("Average Thust"));
 				SummaryPanel.this.add(new JLabel("Max Pressure"));
-
+				SummaryPanel.this.add(new JLabel("Fuel Mass"));
 				SummaryPanel.this.add(new JLabel("Safty Factor"));
 
 				SummaryPanel.this.add(new JLabel(bi.getRating()));
@@ -78,7 +78,9 @@ public class SummaryPanel extends JPanel implements Burn.BurnProgressListener {
 						.ammountToRoundedString(bi.averageThrust())));
 				SummaryPanel.this.add(new JLabel(RocketScience
 						.ammountToRoundedString(bi.maxPressure())));
-
+				SummaryPanel.this.add(new JLabel(RocketScience
+						.ammountToRoundedString(bi.getPropellantMass())));
+				
 				Color saftyColor;
 				if (bi.getSaftyFactor() == null) {
 
