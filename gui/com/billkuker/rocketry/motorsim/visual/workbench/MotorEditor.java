@@ -299,6 +299,10 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 				((ChangeListening.Subject) motor.getChamber())
 						.addPropertyChangeListener(MotorEditor.this);
 			}
+			if (motor.getFuel() instanceof ChangeListening.Subject ){
+				((ChangeListening.Subject) motor.getFuel())
+						.addPropertyChangeListener(MotorEditor.this);
+			}
 		}
 
 		public CaseEditor() {
