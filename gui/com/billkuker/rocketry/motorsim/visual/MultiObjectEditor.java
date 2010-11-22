@@ -71,7 +71,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		dirty.remove(o);
 	}
 	
-	public final JMenu getMenu(){
+	public JMenu getMenu(){
 		JMenu ret = new JMenu("File");
 		for ( JMenuItem i : getMenuItems() )
 			ret.add(i);
