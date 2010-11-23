@@ -82,16 +82,22 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 		setLayout( new BorderLayout());
 		tabs = new JTabbedPane(JTabbedPane.TOP);
 		add(tabs, BorderLayout.CENTER);
-		setMotor(m);
+		availableFuels.addElement(m.getFuel());
+		availableFuels.setSelectedItem(m.getFuel());
+		FuelResolver.addFuelsChangeListener(this);
 		fuelsChanged();
+		setMotor(m);
 	}
 
 	@Override
 	public void fuelsChanged() {
-		availableFuels.removeAllElements();
-		availableFuels.addElement(motor.getFuel());
+		while ( availableFuels.getSize() > 0 && availableFuels.getIndexOf(availableFuels.getSelectedItem()) != 0 )
+			availableFuels.removeElementAt(0);
+		while ( availableFuels.getSize() > 1 )
+			availableFuels.removeElementAt(1);
 		for ( Fuel f : FuelResolver.getFuelMap().values() ){
-			availableFuels.addElement(f);
+			if ( f != availableFuels.getSelectedItem() )
+				availableFuels.addElement(f);
 		}
 	}
 
