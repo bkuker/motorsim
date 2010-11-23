@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
@@ -17,9 +18,12 @@ import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import javax.measure.unit.UnitFormat;
 
+import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
 public class RocketScience {
+	private static final Logger log = Logger.getLogger(RocketScience.class);
+	
 	public static Unit<Pressure> PSI = new ProductUnit<Pressure>(NonSI.POUND_FORCE.divide(NonSI.INCH.pow(2)));
 	public static Unit<Impulse> NEWTON_SECOND = new ProductUnit<Impulse>(SI.NEWTON.times(SI.SECOND));
 	public static Unit<Impulse> POUND_SECOND = new ProductUnit<Impulse>(NonSI.POUND_FORCE.times(SI.SECOND));
@@ -83,10 +87,16 @@ public class RocketScience {
 			preference = up;
 			Preferences prefs = Preferences.userNodeForPackage(RocketScience.class);
 			prefs.put("PreferedUnits", up.toString());
-			for ( WeakReference<UnitPreferenceListener> weak : prefListeners ){
+			Iterator<WeakReference<UnitPreferenceListener>> weakIter = prefListeners.iterator();
+			while (weakIter.hasNext()) {
+				WeakReference<UnitPreferenceListener> weak = weakIter.next();
 				UnitPreferenceListener l = weak.get();
-				if ( l != null )
+				if (l != null) {
 					l.preferredUnitsChanged();
+				} else {
+					log.debug("Weak reference to UPE is null");
+					weakIter.remove();
+				}
 			}
 		}
 		
