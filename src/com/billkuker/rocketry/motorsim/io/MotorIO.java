@@ -57,7 +57,7 @@ public class MotorIO {
 				try {
 					return FuelResolver.getFuel((URI)uri);
 				} catch (FuelNotFound e) {
-					throw new ConversionException(e);
+					throw new ConversionException("Unable to load fuel " + uri, e);
 				}
 			}
 
