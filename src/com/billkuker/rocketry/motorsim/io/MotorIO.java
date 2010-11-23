@@ -57,8 +57,7 @@ public class MotorIO {
 				try {
 					return FuelResolver.getFuel((URI)uri);
 				} catch (FuelNotFound e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new ConversionException(e);
 				}
 			}
 
