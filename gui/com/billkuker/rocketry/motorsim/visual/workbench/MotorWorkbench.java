@@ -25,7 +25,7 @@ public class MotorWorkbench extends JFrame {
 	private JFrame fuelEditorFrame = new JFrame(){
 		private static final long serialVersionUID = 1L;
 		{
-			setSize(1024, 768);
+			setSize(800, 600);
 			add(fuelEditor = new FuelsEditor(this));
 			JMenuBar b;
 			setJMenuBar(b = new JMenuBar());
@@ -99,7 +99,18 @@ public class MotorWorkbench extends JFrame {
 				add(new JMenu("View") {
 					private static final long serialVersionUID = 1L;
 					{
-						add(new JMenuItem("Fuel Editor") {
+						add(new JMenuItem("Detach \"All Motors\" tabs") {
+							private static final long serialVersionUID = 1L;
+							{
+								addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent arg0) {
+										motorsEditor.detach();
+									}
+								});
+							}
+						});
+						add(new JMenuItem("Show Fuel Editor") {
 							private static final long serialVersionUID = 1L;
 							{
 								addActionListener(new ActionListener() {
