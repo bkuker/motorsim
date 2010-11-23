@@ -1,5 +1,6 @@
 package com.billkuker.rocketry.motorsim;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.DecimalFormat;
@@ -36,12 +37,12 @@ public class RocketScience {
 		public static Unit<Impulse> UNIT = NEWTON_SECOND;
 	}
 	
-	private static HashSet<UnitPreferenceListener> prefListeners = new HashSet<RocketScience.UnitPreferenceListener>();
+	private static HashSet<WeakReference<UnitPreferenceListener>> prefListeners = new HashSet<WeakReference<UnitPreferenceListener>>();
 	public static interface UnitPreferenceListener{
 		public void preferredUnitsChanged();
 	}
 	public static void addUnitPreferenceListener(UnitPreferenceListener l){
-		prefListeners.add(l);
+		prefListeners.add(new WeakReference<RocketScience.UnitPreferenceListener>(l));
 	}
 
 	public static enum UnitPreference{
@@ -82,8 +83,10 @@ public class RocketScience {
 			preference = up;
 			Preferences prefs = Preferences.userNodeForPackage(RocketScience.class);
 			prefs.put("PreferedUnits", up.toString());
-			for ( UnitPreferenceListener l : prefListeners ){
-				l.preferredUnitsChanged();
+			for ( WeakReference<UnitPreferenceListener> weak : prefListeners ){
+				UnitPreferenceListener l = weak.get();
+				if ( l != null )
+					l.preferredUnitsChanged();
 			}
 		}
 		
