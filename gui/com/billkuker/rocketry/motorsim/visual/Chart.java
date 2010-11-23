@@ -40,7 +40,7 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.grain.CoredCylindricalGrain;
 
-public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
+public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implements RocketScience.UnitPreferenceListener {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(Chart.class);
 	
@@ -107,6 +107,8 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 
 	Object source;
 	Method f;
+	
+	Iterable<Amount<X>> domain;
 
 	public Chart(Unit<X> xUnit, Unit<Y> yUnit, Object source, String method)
 			throws NoSuchMethodException {
@@ -114,16 +116,25 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 		f = source.getClass().getMethod(method, Amount.class);
 
 		this.source = source;
+		
+		this.xUnit = xUnit;
+		this.yUnit = yUnit;
 
-
+		RocketScience.addUnitPreferenceListener(this);
+		
+		setup();
+	}
+	
+	private void setup(){
+		removeAll();
 		this.xUnit = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(xUnit);
 		this.yUnit = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(yUnit);
 
-		chart = ChartFactory.createXYLineChart(method.substring(0, 1)
+		chart = ChartFactory.createXYLineChart(f.getName().substring(0, 1)
 				.toUpperCase()
-				+ method.substring(1), // Title
+				+ f.getName().substring(1), // Title
 				this.xUnit.toString(), // x-axis Label
 				this.yUnit.toString(), // y-axis Label
 				dataset, PlotOrientation.VERTICAL, // Plot Orientation
@@ -133,6 +144,15 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 				);
 		add(new ChartPanel(chart));
 	}
+	
+
+	@Override
+	public void preferredUnitsChanged() {
+		setup();
+		setDomain(domain);
+	}
+	
+	
 	
 	public void addDomainMarker(Amount<X> x, String label, Color c){
 		double xVal = x.doubleValue(xUnit);
@@ -257,6 +277,8 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 
 	@SuppressWarnings("unchecked")
 	private synchronized void fill(Iterable<Amount<X>> d, final int requestedSkip) {
+		this.domain = d;
+		
 		log.debug(f.getName() + " " + requestedSkip + " Start");
 		stop = false;
 		int sz = 0;
@@ -347,5 +369,6 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel {
 
 		v.show();
 	}
+
 
 }

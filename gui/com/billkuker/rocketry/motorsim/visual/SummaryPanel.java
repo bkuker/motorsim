@@ -18,13 +18,14 @@ import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.BurnSummary;
 import com.billkuker.rocketry.motorsim.RocketScience;
 
-public class SummaryPanel extends JPanel implements Burn.BurnProgressListener {
+public class SummaryPanel extends JPanel implements Burn.BurnProgressListener, RocketScience.UnitPreferenceListener {
 	private static final long serialVersionUID = 1L;
 	private static final Color RED = new Color(196, 0, 0);
 	private static final Color GREEN = new Color(0, 196, 0);
 	private static final Color ORANGE = new Color(160, 96, 0);
 	private final Burn burn;
 	private final JProgressBar bar = new JProgressBar();
+	private BurnSummary bs;
 
 	
 	public SummaryPanel(Burn b) {
@@ -50,7 +51,15 @@ public class SummaryPanel extends JPanel implements Burn.BurnProgressListener {
 
 	@Override
 	public void burnComplete() {
-		setBurnSummary(new BurnSummary(burn));
+		setBurnSummary(bs = new BurnSummary(burn));
+		RocketScience.addUnitPreferenceListener(this);
+	}
+	
+
+	@Override
+	public void preferredUnitsChanged() {
+		if ( bs != null )
+			setBurnSummary(bs);
 	}
 
 	private void setBurnSummary(final BurnSummary bi) {
@@ -106,5 +115,6 @@ public class SummaryPanel extends JPanel implements Burn.BurnProgressListener {
 			}
 		});
 	}
+
 
 }
