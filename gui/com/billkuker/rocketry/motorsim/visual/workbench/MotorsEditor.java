@@ -11,6 +11,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import java.awt.event.ActionListener;
 
@@ -25,10 +26,12 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	
 	MultiMotorThrustChart mbc = new MultiMotorThrustChart();
 	MultiMotorPressureChart mpc = new MultiMotorPressureChart();
+	MultiMotorTable mmt = new MultiMotorTable();
 
 	public MotorsEditor(JFrame f) {
 		super(f, "Motor");
 		
+		addTab("All Motors", new JScrollPane(mmt));
 		addTab("All Thrust", mbc);
 		addTab("All Pressure", mpc);
 		
@@ -49,12 +52,14 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	protected void objectAdded(Motor m, MotorEditor e){
 		e.addBurnWatcher(mbc);
 		e.addBurnWatcher(mpc);
+		e.addBurnWatcher(mmt);
 	}
 	
 	@Override
 	protected void objectRemoved(Motor m, MotorEditor e){
 		mbc.removeBurn(e.burn);
 		mpc.removeBurn(e.burn);
+		mmt.removeBurn(e.burn);
 	}
 
 	@Override
