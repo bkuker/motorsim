@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Velocity;
@@ -32,6 +33,7 @@ public class MultiFuelChart extends JPanel implements FuelResolver.FuelsChangeLi
 	private HashMap<Fuel, XYSeries> fuelToSeries = new HashMap<Fuel, XYSeries>();
 	private Unit<Pressure> pressureUnit;
 	private Unit<Velocity> rateUnit;
+	private HashSet<Fuel> editFuels = new HashSet<Fuel>();
 	
 	public MultiFuelChart() {
 		this.setLayout(new BorderLayout());
@@ -73,7 +75,9 @@ public class MultiFuelChart extends JPanel implements FuelResolver.FuelsChangeLi
 		fuelsChanged();
 	}
 
-	public void addFuel(final Fuel f) {
+	void addFuel(final Fuel f, final boolean keep) {
+		if ( keep )
+			editFuels.add(f);
 		XYSeries s = createSeries(f);
 		fuelToSeries.put(f, s);
 		dataset.addSeries(s);
@@ -82,7 +86,7 @@ public class MultiFuelChart extends JPanel implements FuelResolver.FuelsChangeLi
 			public void propertyChange(PropertyChangeEvent evt) {
 				System.err.println("PropertyChanged :" + evt.getPropertyName());
 				removeFuel(f);
-				addFuel(f);
+				addFuel(f, keep);
 			}
 		});
 	}
@@ -110,11 +114,11 @@ public class MultiFuelChart extends JPanel implements FuelResolver.FuelsChangeLi
 	public void fuelsChanged() {
 		for ( Fuel f : FuelResolver.getFuelMap().values() ){
 			if ( !fuelToSeries.containsKey(f) ){
-				addFuel(f);
+				addFuel(f, false);
 			}
 		}
 		for ( Fuel f : fuelToSeries.keySet() ){
-			if ( !FuelResolver.getFuelMap().values().contains(f) ){
+			if ( !FuelResolver.getFuelMap().values().contains(f) && !editFuels.contains(f) ){
 				removeFuel(f);
 			}
 		}

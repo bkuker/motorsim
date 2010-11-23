@@ -5,17 +5,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
 import com.billkuker.rocketry.motorsim.Fuel;
+import com.billkuker.rocketry.motorsim.fuel.FuelResolver.FuelsChangeListener;
+import com.billkuker.rocketry.motorsim.fuel.editable.EditableFuel;
 import com.billkuker.rocketry.motorsim.fuel.editable.EditablePiecewiseLinearFuel;
 import com.billkuker.rocketry.motorsim.fuel.editable.EditablePiecewiseSaintRobertFuel;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 import com.billkuker.rocketry.motorsim.visual.MultiObjectEditor;
 
-public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
+public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> implements FuelsChangeListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -26,7 +30,7 @@ public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
 	public FuelsEditor(Frame frame) {
 		super(frame, "Fuel");
 		addTab("All Fuels", allFuels);
-		
+		FuelResolver.addFuelsChangeListener(this);
 		addCreator(new ObjectCreator() {
 			@Override
 			public Fuel newObject() {
@@ -55,16 +59,16 @@ public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
 		});
 	}
 	
-	/*
+	
 	@Override
 	protected void objectAdded(Fuel f, AbstractFuelEditor e){
-		allFuels.addFuel(f);
+		allFuels.addFuel(f, true);
 	}
 	
 	@Override
 	protected void objectRemoved(Fuel f, AbstractFuelEditor e){
 		allFuels.removeFuel(f);
-	}*/
+	}
 
 	@Override
 	public AbstractFuelEditor createEditor(Fuel o) {
@@ -79,12 +83,14 @@ public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
 	@Override
 	protected Fuel loadFromFile(File f) throws IOException {
 		Fuel fuel =  MotorIO.readFuel(new FileInputStream(f));
+		FuelResolver.add(fuel, f.toURI());
 		return fuel;
 	}
 
 	@Override
 	protected void saveToFile(Fuel o, File f) throws IOException {
 		MotorIO.writeFuel(o, new FileOutputStream(f));
+		FuelResolver.add(o, f.toURI());
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -98,6 +104,18 @@ public class FuelsEditor extends MultiObjectEditor<Fuel, AbstractFuelEditor> {
 		b.add(fe.getMenu());
 		f.setSize(1024, 768);
 		f.show();
+	}
+
+
+	@Override
+	public void fuelsChanged() {
+		for ( Map.Entry<URI, Fuel> e : FuelResolver.getFuelMap().entrySet() ){
+			if ( !has(e.getValue()) ){
+				if ( e.getValue() instanceof EditableFuel ){
+					add(e.getValue(), new File(e.getKey()));
+				}
+			}
+		}
 	}
 
 }
