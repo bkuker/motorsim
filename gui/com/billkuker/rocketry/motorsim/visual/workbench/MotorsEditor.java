@@ -2,6 +2,7 @@ package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,7 +14,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import java.awt.event.ActionListener;
 
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.Motor;

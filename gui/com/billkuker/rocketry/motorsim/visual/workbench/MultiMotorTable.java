@@ -42,6 +42,8 @@ public class MultiMotorTable extends JTable implements BurnWatcher, RocketScienc
 			case 7:
 				return "Max Pressure";
 			case 8:
+				return "Volume Loading";
+			case 9:
 				return "Fuel Mass";
 			}
 			return null;
@@ -49,7 +51,7 @@ public class MultiMotorTable extends JTable implements BurnWatcher, RocketScienc
 		
 		@Override
 		public int getColumnCount() {
-			return 9;
+			return 10;
 		}
 
 		@Override
@@ -81,6 +83,8 @@ public class MultiMotorTable extends JTable implements BurnWatcher, RocketScienc
 			case 7:
 				return RocketScience.ammountToRoundedString(bs.maxPressure());
 			case 8:
+				return Integer.toString((int)(bs.getVolumeLoading()*100.0)) + "%";
+			case 9:
 				return RocketScience.ammountToRoundedString(bs.getPropellantMass());
 			}
 			throw new IndexOutOfBoundsException("Col out of bounds");

@@ -24,6 +24,7 @@ public class BurnSummary {
 	Amount<Duration> isp;
 	Amount<Mass> propellantMass;
 	Double saftyFactor;
+	Double volumeLoading;
 	
 	public BurnSummary(Burn b) {
 		for (Interval i : b.getData().values()) {
@@ -58,6 +59,9 @@ public class BurnSummary {
 		Amount<VolumetricDensity> ideal = b.getMotor().getFuel().getIdealDensity();
 		Amount<VolumetricDensity> actual = ideal.times(b.getMotor().getFuel().getDensityRatio());
 		propellantMass = vol.times(actual).to(SI.GRAM);
+		
+		Amount<Volume> chamber = b.getMotor().getChamber().chamberVolume();
+		volumeLoading = vol.divide(chamber).to(Dimensionless.UNIT).doubleValue(Dimensionless.UNIT);
 	}
 
 	public String getRating() {
@@ -107,6 +111,10 @@ public class BurnSummary {
 	
 	public Amount<Mass> getPropellantMass() {
 		return propellantMass;
+	}
+	
+	public double getVolumeLoading() {
+		return volumeLoading;
 	}
 
 }
