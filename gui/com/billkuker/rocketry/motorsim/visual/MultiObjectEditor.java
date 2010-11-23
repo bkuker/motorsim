@@ -53,6 +53,10 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		this.noun = " " + noun.trim();
 	}
 	
+	protected boolean has(OBJECT o){
+		return objectToEditor.containsKey(o);
+	}
+	
 	protected void objectAdded(OBJECT o, EDITOR e){}
 	
 	protected void objectRemoved(OBJECT o, EDITOR e){}
@@ -279,6 +283,16 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		editorToObject.put(e, o);
 		addTab("new", e);
 		dirty(o);
+		objectAdded(o, e);
+	}
+	
+	protected final void add(final OBJECT o, final File f){
+		EDITOR e = createEditor(o);
+		objectToEditor.put(o, e);
+		editorToObject.put(e, o);
+		fileToEditor.put(f, e);
+		editorToFile.put(e, f);
+		addTab(f.getName(), e);
 		objectAdded(o, e);
 	}
 	
