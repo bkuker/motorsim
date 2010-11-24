@@ -13,16 +13,17 @@ import javax.swing.WindowConstants;
 
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.fuel.FuelsEditor;
+import com.billkuker.rocketry.motorsim.visual.RememberJFrame;
 
 
-public class MotorWorkbench extends JFrame {
+public class MotorWorkbench extends RememberJFrame {
 	public static final String name = "MotorSim 2.0 BETA";
 	private static final long serialVersionUID = 1L;
 	
 	private MultiMotorThrustChart mb;
 	private JFrame allBurns;
 	
-	private JFrame fuelEditorFrame = new JFrame(){
+	private JFrame fuelEditorFrame = new RememberJFrame(800,600){
 		private static final long serialVersionUID = 1L;
 		{
 			setSize(800, 600);
@@ -39,8 +40,8 @@ public class MotorWorkbench extends JFrame {
 
 	
 	public MotorWorkbench() {
+		super(1024, 768);
 		setTitle(name);
-		setSize(1024, 768);
 
 		motorsEditor = new MotorsEditor(this);
 		setContentPane(motorsEditor);

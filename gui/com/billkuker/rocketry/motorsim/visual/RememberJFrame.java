@@ -7,11 +7,11 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFrame;
 
-public class RemeberJFrame extends JFrame {
+public class RememberJFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 
-	public RemeberJFrame(int width, int height){
+	public RememberJFrame(int width, int height){
 		setSize(width, height);
 		restore();
 		addComponentListener(new ComponentListener() {
@@ -30,15 +30,19 @@ public class RemeberJFrame extends JFrame {
 		});
 	}
 	
+	protected String getPositionKey(){
+		return this.getClass().getName();
+	}
+	
 	private void positionChanged(){
 		Rectangle r = getBounds();
 		Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 		boolean max = (getExtendedState() & JFrame.MAXIMIZED_BOTH)!=0;
 		if ( !max ){
-			prefs.putInt("w", r.width);
-			prefs.putInt("h", r.height);
-			prefs.putInt("x", r.x);
-			prefs.putInt("y", r.y);
+			prefs.putInt(getPositionKey() + ".w", r.width);
+			prefs.putInt(getPositionKey() + ".h", r.height);
+			prefs.putInt(getPositionKey() + ".x", r.x);
+			prefs.putInt(getPositionKey() + ".y", r.y);
 		}
 		prefs.putInt("m", max?1:0);
 	}
@@ -46,10 +50,10 @@ public class RemeberJFrame extends JFrame {
 	private void restore(){
 		Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 		Rectangle r = new Rectangle(
-					prefs.getInt("x", 0),
-					prefs.getInt("y", 0),
-					prefs.getInt("w", getSize().width),
-					prefs.getInt("h", getSize().height)
+					prefs.getInt(getPositionKey() + ".x", 0),
+					prefs.getInt(getPositionKey() + ".y", 0),
+					prefs.getInt(getPositionKey() + ".w", getSize().width),
+					prefs.getInt(getPositionKey() + ".h", getSize().height)
 					);
 		this.setSize(r.width, r.height);
 		setLocation(r.x, r.y);
@@ -59,8 +63,9 @@ public class RemeberJFrame extends JFrame {
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args){
-		RemeberJFrame f = new RemeberJFrame(300, 300);
+		RememberJFrame f = new RememberJFrame(300, 300);
 		f.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		f.show();
 	}

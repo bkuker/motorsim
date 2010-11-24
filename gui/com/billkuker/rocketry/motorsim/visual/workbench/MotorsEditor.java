@@ -23,6 +23,7 @@ import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.io.ENGExporter;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 import com.billkuker.rocketry.motorsim.visual.MultiObjectEditor;
+import com.billkuker.rocketry.motorsim.visual.RememberJFrame;
 
 public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	private static final long serialVersionUID = 1L;
@@ -54,8 +55,9 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 			}
 		});
 
-		detached = new JFrame();
-		detached.setSize(800, 600);
+		detached = new RememberJFrame(800,600){
+			private static final long serialVersionUID = 1L;
+		};
 		detached.setTitle(MotorWorkbench.name + " - All Motors");
 		detached.setContentPane(detachedTabs = new JTabbedPane());
 
