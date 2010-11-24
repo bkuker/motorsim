@@ -14,8 +14,6 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.Validating;
 import com.billkuker.rocketry.motorsim.grain.util.BurningShape;
 import com.billkuker.rocketry.motorsim.grain.util.ExtrudedShapeGrain;
-import com.billkuker.rocketry.motorsim.visual.Editor;
-import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class Star extends ExtrudedShapeGrain implements Validating {
 	private Amount<Length> oD = Amount.valueOf(30, SI.MILLIMETER);
@@ -100,13 +98,6 @@ public class Star extends ExtrudedShapeGrain implements Validating {
 			throw new PropertyVetoException("Invalid number of points", null);
 		pointCount = points;
 		generateGeometry();
-	}
-	
-	
-	public static void main(String args[]) throws Exception {
-		Star e = new Star();
-		new Editor(e).showAsWindow();
-		new GrainPanel(e).showAsWindow();
 	}
 	
 	@Override

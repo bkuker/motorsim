@@ -11,17 +11,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import javax.measure.quantity.Area;
-import javax.measure.quantity.Length;
 import javax.measure.quantity.Quantity;
-import javax.measure.unit.SI;
-import javax.swing.JFrame;
-import javax.swing.JSplitPane;
 
 import org.jscience.physics.amount.Amount;
-
-import com.billkuker.rocketry.motorsim.grain.EndBurner;
-import com.billkuker.rocketry.motorsim.visual.Chart;
 
 public class GraphSimplifier<X extends Quantity, Y extends Quantity> {
 	Method f;
@@ -123,48 +115,6 @@ public class GraphSimplifier<X extends Quantity, Y extends Quantity> {
 				break;
 		}
 		
-		
-
 	}
-
-	public static void main(String args[]) throws Exception {
-		/*
-		CoredCylindricalGrain g = new CoredCylindricalGrain();
-		g.setLength(Amount.valueOf(70, SI.MILLIMETER));
-		g.setOD(Amount.valueOf(30, SI.MILLIMETER));
-		g.setID(Amount.valueOf(10, SI.MILLIMETER));
-		*/
-		EndBurner g = new EndBurner();
-		g.setLength(Amount.valueOf(70, SI.MILLIMETER));
-		g.setOD(Amount.valueOf(30, SI.MILLIMETER));
-		g.setPuntDepth(Amount.valueOf(10, SI.MILLIMETER));
-		g.setPuntDiameter(Amount.valueOf(10, SI.MILLIMETER));
-		
-		JFrame f = new JFrame();
-		f.setSize(1024, 768);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JSplitPane jsp = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		f.add(jsp);
-
-		Chart<Length, Area> c = new Chart<Length, Area>(SI.MILLIMETER,
-				SI.MILLIMETER.pow(2).asType(Area.class), g, "surfaceArea");
-		c.setDomain(c.new IntervalDomain(Amount.valueOf(0, SI.CENTIMETER), g
-				.webThickness()));
-		jsp.setTopComponent(c);
-
-		GraphSimplifier<Length, Area> gs = new GraphSimplifier(g,
-				"surfaceArea", c.new IntervalDomain(Amount.valueOf(0,
-						SI.CENTIMETER), g.webThickness()).iterator());
-
-		Chart<Length, Area> d = new Chart<Length, Area>(SI.MILLIMETER,
-				SI.MILLIMETER.pow(2).asType(Area.class), gs, "value");
-		d.setDomain(gs.getDomain());
-		jsp.setBottomComponent(d);
-		
-
-		
-		f.setVisible(true);
-		jsp.setDividerLocation(.5);
-		jsp.revalidate();
-	}
+	
 }

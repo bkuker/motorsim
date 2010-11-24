@@ -1,15 +1,12 @@
 package com.billkuker.rocketry.motorsim.fuel;
 
-import javax.measure.quantity.Pressure;
 import javax.measure.quantity.Temperature;
-import javax.measure.quantity.Velocity;
 import javax.measure.quantity.VolumetricDensity;
 import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.RocketScience.MolarWeight;
-import com.billkuker.rocketry.motorsim.visual.Chart;
 
 public class KNDX extends PiecewiseSaintRobertFuel {
 
@@ -46,24 +43,6 @@ public class KNDX extends PiecewiseSaintRobertFuel {
 				return 1.043;
 			}
 		};
-	}
-	
-	public static void main( String args[]) throws Exception{
-		KNDX f = new KNDX();
-		
-		Chart<Pressure, Velocity> burnRate = new Chart<Pressure, Velocity>(
-				SI.MEGA(SI.PASCAL),
-				SI.METERS_PER_SECOND,
-				f,
-				"burnRate");
-		burnRate.setDomain(
-				burnRate.new IntervalDomain(
-						Amount.valueOf(0, SI.MEGA(SI.PASCAL)),
-						Amount.valueOf(11, SI.MEGA(SI.PASCAL)),
-						20
-						));
-		
-		burnRate.show();
 	}
 
 	public double getCombustionEfficiency() {

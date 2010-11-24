@@ -12,8 +12,6 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.Validating;
 import com.billkuker.rocketry.motorsim.grain.util.BurningShape;
 import com.billkuker.rocketry.motorsim.grain.util.ExtrudedShapeGrain;
-import com.billkuker.rocketry.motorsim.visual.Editor;
-import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class Moonburner extends ExtrudedShapeGrain implements Validating {
 
@@ -76,13 +74,7 @@ public class Moonburner extends ExtrudedShapeGrain implements Validating {
 		xsection.subtract(new Ellipse2D.Double(odmm/2 - idmm/2 + offmm, odmm/2 - idmm/2, idmm, idmm));
 		webThickness = null;
 	}
-	
-	public static void main(String args[]) throws Exception {
-		Moonburner e = new Moonburner();
-		new Editor(e).showAsWindow();
-		new GrainPanel(e).showAsWindow();
-	}
-	
+
 	public void validate() throws ValidationException{
 		if ( iD.equals(Amount.ZERO) )
 			throw new ValidationException(this, "Invalid iD");

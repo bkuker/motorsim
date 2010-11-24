@@ -14,8 +14,6 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.Validating;
 import com.billkuker.rocketry.motorsim.grain.util.BurningShape;
 import com.billkuker.rocketry.motorsim.grain.util.ExtrudedShapeGrain;
-import com.billkuker.rocketry.motorsim.visual.Editor;
-import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class Finocyl extends ExtrudedShapeGrain implements Validating {
 	private Amount<Length> oD = Amount.valueOf(30, SI.MILLIMETER);
@@ -107,12 +105,6 @@ public class Finocyl extends ExtrudedShapeGrain implements Validating {
 			return;
 		this.finCount = finCount;
 		generateGeometry();
-	}
-	
-	public static void main(String args[]) throws Exception {
-		Finocyl e = new Finocyl();
-		new Editor(e).showAsWindow();
-		new GrainPanel(e).showAsWindow();
 	}
 	
 	@Override

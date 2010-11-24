@@ -13,8 +13,6 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Validating;
-import com.billkuker.rocketry.motorsim.visual.Editor;
-import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 
 public class CoredCylindricalGrain extends ExtrudedGrain implements Validating {
@@ -246,12 +244,6 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements Validating {
 
 	public void setInnerSurfaceInhibited(boolean innerSurfaceInhibited)  throws PropertyVetoException {
 		this.innerSurfaceInhibited = innerSurfaceInhibited;
-	}
-
-	public static void main(String args[]) throws Exception {
-		CoredCylindricalGrain e = DEFAULT_GRAIN;
-		new Editor(e).showAsWindow();
-		new GrainPanel(e).showAsWindow();
 	}
 
 }

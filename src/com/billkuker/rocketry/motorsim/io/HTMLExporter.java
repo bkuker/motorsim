@@ -1,7 +1,5 @@
 package com.billkuker.rocketry.motorsim.io;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -22,9 +20,7 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.BurnSummary;
 import com.billkuker.rocketry.motorsim.GraphSimplifier;
-import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience;
-import com.billkuker.rocketry.motorsim.motors.kuker.PVC9;
 
 public class HTMLExporter {
 
@@ -210,37 +206,6 @@ public class HTMLExporter {
 		out.println("\n<!--End motor " + b.getMotor().getName() + "-->");
 		out.flush();
 		out.close();
-	}
-
-	public static void main(String args[]) throws Exception {
-
-		Motor m = new PVC9();
-		Burn b = new Burn(m);
-
-		File f = new File("test.html");
-		export(b, System.out);
-		export(b, new FileOutputStream(f));
-
-		/*
-		 * 
-		 * EndBurner g = new EndBurner(); g.setLength(Amount.valueOf(70,
-		 * SI.MILLIMETER)); g.setoD(Amount.valueOf(30, SI.MILLIMETER));
-		 * g.setPuntDepth(Amount.valueOf(10, SI.MILLIMETER));
-		 * g.setPuntDiameter(Amount.valueOf(10, SI.MILLIMETER));
-		 * 
-		 * Chart<Length, Area> c = new Chart<Length, Area>(SI.MILLIMETER,
-		 * SI.MILLIMETER.pow(2).asType(Area.class), g, "surfaceArea");
-		 * c.setDomain(c.new IntervalDomain(Amount.valueOf(0, SI.CENTIMETER), g
-		 * .webThickness()));
-		 * 
-		 * GraphSimplifier<Length, Area> gs = new GraphSimplifier<Length,
-		 * Area>(g, "surfaceArea", c.new IntervalDomain(Amount.valueOf(0,
-		 * SI.CENTIMETER), g.webThickness()).iterator());
-		 * 
-		 * System.out.print(toChart(SI.MILLIMETER,
-		 * SI.MILLIMETER.pow(2).asType(Area.class), gs, "value", gs
-		 * .getDomain().iterator(), "Area"));
-		 */
 	}
 
 }

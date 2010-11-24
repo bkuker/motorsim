@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+
+<project name="MotorSim" basedir=".">
+	<property name="name" value="MotorSim" />
+
+	<property name="findbugs.root" value="C:\src\Libs\findbugs-1.3.9" />
+
+	<property name="core.src.dir" value="src" />
+	<property name="test.src.dir" value="test" />
+	<property name="gui.src.dir" value="test" />
+	
+	<property name="core.build.dir" value=".classes" />
+	<property name="test.build.dir" value=".tests" />
+	<property name="gui.build.dir" value=".tests" />
+	
+	<property name="dist.dir" value="dist" />
+	<property name="temp.dir" value=".temp" />
+
+	<path id="findbugs.classpath">
+		<fileset dir="${findbugs.root}/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="core.classpath">
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	
+	<path id="gui.classpath">
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="dist">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="test.classpath">
+		<path refid="core.classpath" />
+		<path refid="gui.classpath" />
+		<fileset dir="${dist.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="clean" description="Clean output dirs (build, docs, dist)">
+		<delete dir="${core.build.dir}" />
+		<delete dir="${gui.build.dir}" />
+		<delete dir="${test.build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${temp.dir}" />
+		<delete file="${name}-findbugs.xml" />
+		<delete file="TEST-UnitTests.xml" />
+	</target>
+
+	<target name="core.build" description="Compile main source tree java files into class files.">
+		<mkdir dir="${core.build.dir}" />
+		<javac destdir="${core.build.dir}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${core.src.dir}" />
+			<classpath refid="core.classpath" />
+		</javac>
+	</target>
+	
+	<target name="gui.build" depends='core.jarfile' description="Compile main source tree java files into class files.">
+		<mkdir dir="${gui.build.dir}" />
+		<javac destdir="${gui.build.dir}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${gui.src.dir}" />
+			<classpath refid="gui.classpath" />
+		</javac>
+	</target>
+		
+	
+	<target name="core.jarfile" depends="core.build" description="Build the jar file">
+		<mkdir dir="${dist.dir}" />
+		<jar jarfile="${dist.dir}/${name}-API.jar" compress="true" basedir="${cure.build.dir}" />
+	</target>
+	
+	<target name="gui.jarfile" depends="gui.build" description="Build the jar file">
+		<mkdir dir="${dist.dir}" />
+		<jar jarfile="${dist.dir}/${name}-API.jar" compress="true" basedir="${cure.build.dir}" />
+	</target>
+
+<!--
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<fileset dir="ant/">
+				<include name="*.jar" />
+			</fileset>
+		</classpath>
+	</taskdef>
+
+	<target name="dist" depends="Fat-Jar">
+		<delete quiet='true'>
+			<fileset dir="${dist.dir}/installers" includes="*"/>
+		</delete>
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/installers" />
+
+
+		<ant dir="RPM" target="dist" inheritAll='false' />
+		<ant target="One-Jar"/>
+		<trycatch>
+			<try>
+				<ant dir="MSI" target="dist" inheritAll='false' />
+			</try>
+			<catch><echo>Skipping MSI</echo></catch>
+		</trycatch>
+	</target>
+
+
+
+
+	<taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask">
+		<classpath>
+			<fileset dir="ant">
+				<include name="*.jar" />
+			</fileset>
+		</classpath>
+	</taskdef>
+	<target name='One-Jar' depends='jarfile-main, jarfile-api'>
+		<property file=".classes/MarProbe.version.properties" />
+		<property name="destfilename" value="${name}-${version}.jar"/>
+		<one-jar destfile="${dist.dir}/installers/${destfilename}" manifest="manifest.mf">
+			<main>
+				<fileset dir="${src.dir}">
+					<include name="log4j.properties" />
+					<include name="martello.pem" />
+					<include name="MartelloKey.der" />
+				</fileset>
+			</main>
+			<lib>
+				<fileset dir="${dist.dir}">
+					<include name="${name}.jar" />
+					<include name="${name}-API.jar" />
+				</fileset>
+				<fileset dir="lib/build">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="lib/runtime">
+					<include name="*.jar" />
+				</fileset>
+			</lib>
+			<fileset dir="${build.dir}">
+				<include name="com/martellotech/Diagnostic*.class" />
+			</fileset>
+		</one-jar>
+	</target>
+
+
+	<target name="Fat-Jar" depends="jarfile-main, jarfile-api">
+		<delete dir="${temp.dir}" quiet="true" />
+		<unjar dest="${temp.dir}">
+			<fileset dir="lib/build">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="lib/runtime">
+				<include name="**/*.jar" />
+			</fileset>
+		</unjar>
+		<unjar dest="${temp.dir}">
+			<fileset dir="lib/build">
+				<include name="**/Martello-*.jar" />
+			</fileset>
+			<fileset dir="lib/runtime">
+				<include name="**/Martello-*.jar" />
+			</fileset>
+		</unjar>
+		<unjar dest="${temp.dir}">
+			<fileset dir="${dist.dir}">
+					<include name="${name}.jar" />
+					<include name="${name}-API.jar" />
+			</fileset>
+		</unjar>
+		<delete dir='${temp.dir}/META-INF'/>
+		<jar jarfile="${dist.dir}/${name}-Fat.jar" basedir="${temp.dir}" includes="**/*.*" update="false" compress="true">
+			<fileset dir="${src.dir}">
+				<include name="log4j.properties" />
+				<include name="martello.pem" />
+				<include name="MartelloKey.der" />
+			</fileset>
+		</jar>
+	</target>
+	
+	
+
+	<target name="findbugs" depends="jarfile-main, jarfile-api">
+
+		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="findbugs.classpath" />
+
+		<findbugs home="${findbugs.root}" output="xml" outputFile="${name}-findbugs.xml">
+			<auxClasspath refid="test-classpath" />
+			<sourcePath path="${src.dir}" />
+			<class location="${dist.dir}/${name}.jar" />
+		</findbugs>
+	</target>
+
+
+	<target name="test" depends="dist">
+		<mkdir dir="${test.build.dir}" />
+		<javac destdir="${test.build.dir}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${test.src.dir}" />
+			<classpath refid="test-classpath" />
+		</javac>
+		<copy todir="${test.build.dir}">
+			<fileset dir="${test.src.dir}">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+		<mkdir dir="${dist.dir}" />
+		<jar jarfile="${dist.dir}/${name}-tests.jar" compress="true" basedir="${test.build.dir}" />
+		<junit printsummary="yes" fork="yes" haltonfailure="no" haltonerror="false" showoutput="yes">
+
+
+			<classpath refid="test-classpath" />
+
+
+			<formatter type="xml" />
+
+
+			<test name="UnitTests" />
+		</junit>
+
+	</target>	-->
+
+</project>

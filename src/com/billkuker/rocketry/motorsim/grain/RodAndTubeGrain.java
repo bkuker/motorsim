@@ -7,10 +7,7 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
-import com.billkuker.rocketry.motorsim.Grain;
 import com.billkuker.rocketry.motorsim.Validating;
-import com.billkuker.rocketry.motorsim.visual.Editor;
-import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class RodAndTubeGrain extends CompoundGrain implements Validating {
 	CoredCylindricalGrain rod, tube;
@@ -102,13 +99,6 @@ public class RodAndTubeGrain extends CompoundGrain implements Validating {
 			throws PropertyVetoException {
 		rod.setForeEndInhibited(foreEndInhibited);
 		tube.setForeEndInhibited(foreEndInhibited);
-	}
-
-
-	public static void main(String args[]) throws Exception {
-		Grain g = DEFAULT_GRAIN;
-		new Editor(g).showAsWindow();
-		new GrainPanel(g).showAsWindow();
 	}
 
 	@Override

@@ -17,7 +17,6 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.fuel.EditableCombustionProduct;
-import com.billkuker.rocketry.motorsim.visual.Chart;
 
 public class EditablePiecewiseLinearFuel implements EditableFuel{
 	private static final Logger log = Logger
@@ -162,30 +161,6 @@ public class EditablePiecewiseLinearFuel implements EditableFuel{
 		for ( Map.Entry<Amount<Pressure>, Amount<Velocity>> e : in.entrySet()){
 			add( e.getKey(), e.getValue());
 		}
-	}
-
-
-	
-	public static void main( String args[]) throws Exception{
-		EditablePiecewiseLinearFuel f = new EditablePiecewiseLinearFuel();
-		f.add(Amount.valueOf(0,SI.MEGA(SI.PASCAL)), Amount.valueOf(2, SI.METERS_PER_SECOND));
-		//f.add(Amount.valueOf(2,SI.MEGA(SI.PASCAL)), Amount.valueOf(2, SI.METERS_PER_SECOND));
-		//f.add(Amount.valueOf(4,SI.MEGA(SI.PASCAL)), Amount.valueOf(1, SI.METERS_PER_SECOND));
-		//f.add(Amount.valueOf(10,SI.MEGA(SI.PASCAL)), Amount.valueOf(3, SI.METERS_PER_SECOND));
-		//f.add(Amount.valueOf(20,SI.MEGA(SI.PASCAL)), Amount.valueOf(4, SI.METERS_PER_SECOND));
-		Chart<Pressure, Velocity> burnRate = new Chart<Pressure, Velocity>(
-				SI.MEGA(SI.PASCAL),
-				SI.METERS_PER_SECOND,
-				f,
-				"burnRate");
-		burnRate.setDomain(
-				burnRate.new IntervalDomain(
-						Amount.valueOf(0, SI.MEGA(SI.PASCAL)),
-						Amount.valueOf(11, SI.MEGA(SI.PASCAL)),
-						200
-						));
-		
-		burnRate.show();
 	}
 
 }

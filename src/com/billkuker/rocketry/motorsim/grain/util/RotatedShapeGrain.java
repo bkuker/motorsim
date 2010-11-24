@@ -17,8 +17,6 @@ import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Grain;
-import com.billkuker.rocketry.motorsim.visual.Editor;
-import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public abstract class RotatedShapeGrain implements Grain {
 	
@@ -245,14 +243,6 @@ public abstract class RotatedShapeGrain implements Grain {
 			i.next();
 		}
 		return len;
-	}
-
-	
-
-	public static void main(String args[]) throws Exception {
-		RotatedShapeGrain e = DEFAULT_GRAIN;
-		new Editor(e).showAsWindow();
-		new GrainPanel(e).showAsWindow();
 	}
 	
 }

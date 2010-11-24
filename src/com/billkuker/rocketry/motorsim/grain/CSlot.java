@@ -13,8 +13,6 @@ import org.jscience.physics.amount.Amount;
 import com.billkuker.rocketry.motorsim.Validating;
 import com.billkuker.rocketry.motorsim.grain.util.BurningShape;
 import com.billkuker.rocketry.motorsim.grain.util.ExtrudedShapeGrain;
-import com.billkuker.rocketry.motorsim.visual.Editor;
-import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class CSlot extends ExtrudedShapeGrain implements Validating {
 
@@ -104,12 +102,6 @@ public class CSlot extends ExtrudedShapeGrain implements Validating {
 		generateGeometry();
 	}
 
-	public static void main(String args[]) throws Exception {
-		CSlot e = new CSlot();
-		new Editor(e).showAsWindow();
-		new GrainPanel(e).showAsWindow();
-	}
-	
 	public void validate() throws ValidationException{
 		if ( oD.equals(Amount.ZERO) )
 			throw new ValidationException(this, "Invalid oD");

@@ -14,8 +14,6 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.grain.ExtrudedGrain;
-import com.billkuker.rocketry.motorsim.visual.Editor;
-import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public abstract class ExtrudedShapeGrain extends ExtrudedGrain {
 	
@@ -139,12 +137,6 @@ public abstract class ExtrudedShapeGrain extends ExtrudedGrain {
 			res.transform(AffineTransform.getTranslateInstance(0, -rLenmm/2.0));
 		}
 		return res;
-	}
-	
-	public static void main(String args[]) throws Exception {
-		ExtrudedShapeGrain e = DEFAULT_GRAIN;
-		new Editor(e).showAsWindow();
-		new GrainPanel(e).showAsWindow();
 	}
 
 }
