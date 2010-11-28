@@ -65,6 +65,10 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		creators.add(c);
 	}
 	
+	public boolean hasDirty(){
+		return dirty.size() > 0;
+	}
+	
 	public final void dirty(final OBJECT o){
 		if ( !dirty.contains(o) )
 			setTitleAt(indexOfComponent(objectToEditor.get(o)), "*" + getTitleAt(indexOfComponent(objectToEditor.get(o))));
@@ -116,6 +120,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 			 }
 		}
 		
+		undirty(o);
 		objectToEditor.remove(o);
 		editorToObject.remove(e);
 		fileToEditor.remove(f);
