@@ -187,6 +187,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 				editorToFile.put(e, file);
 				addTab(file.getName(), e);	
 				objectAdded(o, e);
+				setSelectedComponent(e);
 			} catch (Exception e) {
 				errorDialog(e);
 			}
@@ -289,6 +290,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		addTab("new", e);
 		dirty(o);
 		objectAdded(o, e);
+		setSelectedComponent(e);
 	}
 	
 	protected final void add(final OBJECT o, final File f){
@@ -299,6 +301,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		editorToFile.put(e, f);
 		addTab(f.getName(), e);
 		objectAdded(o, e);
+		setSelectedComponent(e);
 	}
 	
 	public final void load(final File f) throws IOException{
@@ -310,6 +313,7 @@ public abstract class MultiObjectEditor<OBJECT, EDITOR extends Component> extend
 		editorToFile.put(e, f);
 		addTab(f.getName(), e);
 		objectAdded(o, e);
+		setSelectedComponent(e);
 	}
 	
 	public abstract EDITOR createEditor(final OBJECT o);
