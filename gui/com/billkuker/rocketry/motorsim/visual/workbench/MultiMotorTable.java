@@ -13,6 +13,7 @@ import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience;
 
 public class MultiMotorTable extends JTable implements BurnWatcher, RocketScience.UnitPreferenceListener {
+	private static final long serialVersionUID = 1L;
 
 	private class Entry {
 		Motor m;
@@ -22,6 +23,8 @@ public class MultiMotorTable extends JTable implements BurnWatcher, RocketScienc
 	private List<Entry> entries = new Vector<Entry>();
 
 	private class TM extends AbstractTableModel {
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public String getColumnName(int col) {
 			switch (col) {
