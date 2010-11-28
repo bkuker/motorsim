@@ -2,14 +2,17 @@ package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.WindowConstants;
+import javax.swing.JSeparator;
 
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.fuel.FuelsEditor;
@@ -53,13 +56,62 @@ public class MotorWorkbench extends RememberJFrame {
 		allBurns = new JFrame();
 		allBurns.setTitle("All Burns");
 		allBurns.setSize(800, 600);
-		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		allBurns.add(mb);
 
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		//setVisible(true);
+		addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				maybeQuit();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {}
+		});
 
+	}
+	
+	private void maybeQuit(){
+		if (motorsEditor.hasDirty()) {
+			int response = JOptionPane
+					.showConfirmDialog(
+							MotorWorkbench.this,
+							"There are unsaved Motors.\nExit Anyway?",
+							"Confirm",
+							JOptionPane.YES_NO_OPTION);
+			if (response == JOptionPane.NO_OPTION) {
+				return;
+			}
+		}
+		if (fuelEditor.hasDirty()) {
+			int response = JOptionPane
+					.showConfirmDialog(
+							MotorWorkbench.this,
+							"There are unsaved Fuels.\nExit Anyway?",
+							"Confirm",
+							JOptionPane.YES_NO_OPTION);
+			if (response == JOptionPane.NO_OPTION) {
+				return;
+			}
+		}
+		MotorWorkbench.this.dispose();
 	}
 
 	private void addMenu() {
@@ -68,7 +120,20 @@ public class MotorWorkbench extends RememberJFrame {
 			private static final long serialVersionUID = 1L;
 
 			{
-				add(motorsEditor.getMenu());
+				JMenu file = motorsEditor.getMenu();
+				file.add(new JSeparator());
+				file.add(new JMenuItem("Quit") {
+					private static final long serialVersionUID = 1L;
+					{
+						addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								maybeQuit();
+							}
+						});
+					}
+				});
+				add(file);
 				
 				add(new JMenu("Settings") {
 					private static final long serialVersionUID = 1L;
