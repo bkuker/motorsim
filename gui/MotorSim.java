@@ -16,9 +16,9 @@ public class MotorSim {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		SplashWindow3 sw = new SplashWindow3("splash.png",null, 4000);
+		new Splash("splash.png",null, 2000);
 		final MotorWorkbench mw = new com.billkuker.rocketry.motorsim.visual.workbench.MotorWorkbench();
-		Thread.sleep(4000);
+		Thread.sleep(2000);
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run() {
