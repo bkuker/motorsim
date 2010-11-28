@@ -20,7 +20,7 @@ import com.billkuker.rocketry.motorsim.visual.RememberJFrame;
 
 
 public class MotorWorkbench extends RememberJFrame {
-	public static final String version = "2.0 BETA";
+	public static final String version = "2.0 BETA1";
 	public static final String name = "MotorSim " + version;
 	private static final long serialVersionUID = 1L;
 	
