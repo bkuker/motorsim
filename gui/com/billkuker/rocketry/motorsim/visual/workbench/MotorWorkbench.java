@@ -57,7 +57,7 @@ public class MotorWorkbench extends RememberJFrame {
 
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setVisible(true);
+		//setVisible(true);
 
 	}
 

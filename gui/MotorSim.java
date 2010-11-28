@@ -1,6 +1,8 @@
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import com.billkuker.rocketry.motorsim.visual.workbench.MotorWorkbench;
+
 public class MotorSim {
 
 	public static void main(String args[]) throws Exception {
@@ -14,12 +16,16 @@ public class MotorSim {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+		SplashWindow3 sw = new SplashWindow3("splash.png",null, 4000);
+		final MotorWorkbench mw = new com.billkuker.rocketry.motorsim.visual.workbench.MotorWorkbench();
+		Thread.sleep(4000);
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run() {
-				new com.billkuker.rocketry.motorsim.visual.workbench.MotorWorkbench().setVisible(true);
+				mw.setVisible(true);
 			}
 		});
+		
 		
 	}
 
