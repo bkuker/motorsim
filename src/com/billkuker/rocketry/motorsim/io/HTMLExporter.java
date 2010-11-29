@@ -23,6 +23,8 @@ import com.billkuker.rocketry.motorsim.GraphSimplifier;
 import com.billkuker.rocketry.motorsim.RocketScience;
 
 public class HTMLExporter {
+	static final int WIDTH=400;
+	static final int HEIGHT=200;
 
 	@SuppressWarnings("deprecation")
 	private static String encode(String s) {
@@ -87,7 +89,7 @@ public class HTMLExporter {
 		sb.append("<img src='");
 		sb.append("http://chart.apis.google.com/chart?chxt=x,x,y,y"
 				+ (y2 ? ",r,r" : "") + (x2 ? ",t,t" : "")
-				+ "&chs=640x240&cht=lxy&chco=3072F3");
+				+ "&chs="+WIDTH+"x"+HEIGHT+"&cht=lxy&chco=3072F3");
 		sb.append("&chds=" + nf.format(xMin) + "," + nf.format(xMax) + ","
 				+ nf.format(yMin) + "," + nf.format(yMax));
 		sb.append("&chxr=" + "0," + nf.format(xMin) + "," + nf.format(xMax)
@@ -108,8 +110,9 @@ public class HTMLExporter {
 			sb.append("|5,50");
 		if (x2)
 			sb.append("|7,50");
-		sb.append("&chtt=" + title);
-		sb.append("' width='640' height='240' alt='" + title + "' />");
+		if ( title != null )
+			sb.append("&chtt=" + title);
+		sb.append("' width='"+WIDTH+"' height='"+HEIGHT+"' alt='" + title + "' />");
 
 		return sb.toString();
 	}
@@ -120,53 +123,74 @@ public class HTMLExporter {
 		BurnSummary bs = new BurnSummary(b);
 		
 		out.println("<!--Begin motor " + b.getMotor().getName() + " HTML export from MotorSim-->");
-		out.print("<table class='motor'>");
+		out.print("<table class='motor' style='text-align: left; border: 1px solid black'>");
 
 		out.print("<tr>");
 		out.print("<th colspan='6' class='title'>" + b.getMotor().getName() + "</th>");
 		out.print("</tr>");
 
 		out.print("<tr class='summary'>");
+
 		out.print("<th>Rating:</th>");
-		
 		out.print("<td>" + bs.getRating() + "</td>");
+		
+		
+		out.print("<th>Max Pressure:</th>");
+		out.print("<td>"
+				+ RocketScience.ammountToRoundedString(bs.maxPressure())
+				+ "</td>");
+
+		out.print("</tr>");
+		
+		
+		out.print("<tr class='summary'>");
+		
 		out.print("<th>Total Impulse:</th>");
-	
 		out.print("<td>"
 				+ RocketScience.ammountToRoundedString(bs.totalImpulse())
 				+ "</td>");
+		
+		
 		out.print("<th>Specific Impulse:</th>");
 		out.print("<td>"
 				+ RocketScience.ammountToRoundedString(bs.specificImpulse())
 				+ "</td>");
 		out.print("</tr>");
 		
-		
 		out.print("<tr class='summary'>");
+		
 		out.print("<th>Max Thrust:</th>");
-		
-		
 		out.print("<td>"
 				+ RocketScience.ammountToRoundedString(bs.maxThrust())
 				+ "</td>");
+		
+		out.print("<th>Volume Loading:</th>");
+		out.print("<td>"
+				+ (int)(bs.getVolumeLoading()*100)
+				+ "%</td>");
+		out.print("</tr>");
+		
+		out.print("<tr class='summary'>");
+		
 		out.print("<th>Average Thrust:</th>");
-	
 		out.print("<td>"
 				+ RocketScience.ammountToRoundedString(bs.averageThrust())
 				+ "</td>");
-		out.print("<th>Max Pressure:</th>");
+		out.print("<th>Fuel Mass:</th>");
 		out.print("<td>"
-				+ RocketScience.ammountToRoundedString(bs.maxPressure())
+				+ RocketScience.ammountToRoundedString(bs.getPropellantMass())
 				+ "</td>");
+
 		out.print("</tr>");
+		
 
 		out.print("<tr>");
-		out.print("<td colspan='6' class='thrust'>");
+		out.print("<td colspan='4' class='thrust'>");
 		GraphSimplifier<Duration, Force> thrust = new GraphSimplifier<Duration, Force>(
 				b, "thrust", b.getData().keySet().iterator());
 
 		out.print(toChart(SI.SECOND, SI.NEWTON, thrust, "value", thrust
-				.getDomain().iterator(), "Thrust"));
+				.getDomain().iterator(), null));
 		out.print("</td>");
 		/*
 		out.print("<td colspan='3' class='pressure'>");
