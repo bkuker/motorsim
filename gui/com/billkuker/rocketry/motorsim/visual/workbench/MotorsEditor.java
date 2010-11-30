@@ -174,7 +174,7 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 						});
 					}
 				});	
-				add(new JMenuItem("Export HTML") {
+				add(new JMenuItem("Export HTML to Clipboard") {
 					private static final long serialVersionUID = 1L;
 					{
 						addActionListener(new ActionListener() {
