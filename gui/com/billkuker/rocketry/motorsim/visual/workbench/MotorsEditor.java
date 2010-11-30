@@ -1,10 +1,14 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
 import java.awt.FileDialog;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,6 +18,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
@@ -21,6 +26,7 @@ import javax.swing.JTabbedPane;
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.io.ENGExporter;
+import com.billkuker.rocketry.motorsim.io.HTMLExporter;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 import com.billkuker.rocketry.motorsim.visual.MultiObjectEditor;
 import com.billkuker.rocketry.motorsim.visual.RememberJFrame;
@@ -137,32 +143,59 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	public JMenu getMenu() {
 		JMenu ret = super.getMenu();
 		ret.add(new JSeparator());
-		ret.add(new JMenuItem("Export .ENG") {
+		ret.add(new JMenu("Export"){
 			private static final long serialVersionUID = 1L;
 			{
-				addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
+				add(new JMenuItem("Export .ENG") {
+					private static final long serialVersionUID = 1L;
+					{
+						addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
 
-						final FileDialog fd = new FileDialog(frame,
-								"Export .ENG File", FileDialog.SAVE);
-						fd.setFile("motorsim.eng");
-						fd.setVisible(true);
-						if (fd.getFile() != null) {
-							File file = new File(fd.getDirectory()
-									+ fd.getFile());
-							MotorEditor me = getSelectedEditor();
-							Vector<Burn> bb = new Vector<Burn>();
-							bb.add(me.burn);
-							try {
-								ENGExporter.export(bb, file);
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								final FileDialog fd = new FileDialog(frame,
+										"Export .ENG File", FileDialog.SAVE);
+								fd.setFile("motorsim.eng");
+								fd.setVisible(true);
+								if (fd.getFile() != null) {
+									File file = new File(fd.getDirectory()
+											+ fd.getFile());
+									MotorEditor me = getSelectedEditor();
+									Vector<Burn> bb = new Vector<Burn>();
+									bb.add(me.burn);
+									try {
+										ENGExporter.export(bb, file);
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
 							}
-						}
+						});
 					}
-				});
+				});	
+				add(new JMenuItem("Export HTML") {
+					private static final long serialVersionUID = 1L;
+					{
+						addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								ByteArrayOutputStream out = new ByteArrayOutputStream();
+								MotorEditor me = getSelectedEditor();
+								try {
+									HTMLExporter.export(me.burn, out);
+									String html = new String(out.toByteArray());
+									Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+									clipboard.setContents( new StringSelection(html), null );
+									JOptionPane.showMessageDialog(MotorsEditor.this, "HTML Copied to Clipboard");
+								} catch (Exception e) {
+									
+								}
+								
+							}
+						});
+					}
+				});	
 			}
 		});
 		return ret;
