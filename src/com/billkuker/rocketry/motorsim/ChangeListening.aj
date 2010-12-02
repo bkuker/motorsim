@@ -28,7 +28,7 @@ public aspect ChangeListening {
 		pcs.firePropertyChange(e);
 	}
 
-	declare parents: Motor || Grain || Chamber || Nozzle || Fuel implements Subject;
+	declare parents: Motor || Grain || Chamber || Nozzle || Fuel || Burn.BurnSettings implements Subject;
 
 	void around(Subject s, Object newVal):
 	        execution(void Subject+.set*(..)) && target(s) && args(newVal) {

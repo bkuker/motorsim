@@ -32,6 +32,11 @@ import com.billkuker.rocketry.motorsim.Validating.ValidationException;
 public class Burn {
 	private static Logger log = Logger.getLogger(Burn.class);
 	
+	private static final BurnSettings settings = new BurnSettings();
+	public static final BurnSettings getBurnSettings(){
+		return settings;
+	}
+	
 	/**
 	 * A class representing all the settigns one can change on a burn
 	 * @author bkuker
@@ -93,8 +98,7 @@ public class Burn {
 	}
 	
 
-	
-	public static final BurnSettings settings = new BurnSettings();
+
 	
 	private Set<BurnProgressListener> bpls = new HashSet<Burn.BurnProgressListener>();
 	
