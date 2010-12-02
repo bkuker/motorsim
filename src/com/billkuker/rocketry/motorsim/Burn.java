@@ -30,14 +30,58 @@ import org.jscience.physics.amount.Constants;
 import com.billkuker.rocketry.motorsim.Validating.ValidationException;
 
 public class Burn {
-	//Some constants to tune adaptive regression step
-	private static final double regStepIncreaseFactor = 1.01;
-	private static final double regStepDecreaseFactor = .5;
-	private static final Amount<Pressure> chamberPressureMaxDelta = Amount.valueOf(.5, SI.MEGA(SI.PASCAL));
-	
-	private static final Amount<Pressure> endPressure = Amount.valueOf(.1, RocketScience.PSI);
-	
 	private static Logger log = Logger.getLogger(Burn.class);
+	
+	/**
+	 * A class representing all the settigns one can change on a burn
+	 * @author bkuker
+	 */
+	public static class BurnSettings {
+		private BurnSettings(){};
+
+		public enum BurnVolumeMethod {
+			DeltaVolume,
+			SurfaceTimesRegression;
+		}
+		
+		private BurnVolumeMethod volumeMethod = BurnVolumeMethod.SurfaceTimesRegression;
+		private double regStepIncreaseFactor = 1.01;
+		private double regStepDecreaseFactor = .5;
+		private Amount<Pressure> chamberPressureMaxDelta = Amount.valueOf(.5, SI.MEGA(SI.PASCAL));
+		private Amount<Pressure> endPressure = Amount.valueOf(.1, RocketScience.PSI);
+		
+		public void setVolumeMethod(BurnVolumeMethod volumeMethod) {
+			this.volumeMethod = volumeMethod;
+		}
+		public BurnVolumeMethod getVolumeMethod() {
+			return volumeMethod;
+		}
+		public double getRegStepIncreaseFactor() {
+			return regStepIncreaseFactor;
+		}
+		public void setRegStepIncreaseFactor(double regStepIncreaseFactor) {
+			this.regStepIncreaseFactor = regStepIncreaseFactor;
+		}
+		public double getRegStepDecreaseFactor() {
+			return regStepDecreaseFactor;
+		}
+		public void setRegStepDecreaseFactor(double regStepDecreaseFactor) {
+			this.regStepDecreaseFactor = regStepDecreaseFactor;
+		}
+		public Amount<Pressure> getChamberPressureMaxDelta() {
+			return chamberPressureMaxDelta;
+		}
+		public void setChamberPressureMaxDelta(Amount<Pressure> chamberPressureMaxDelta) {
+			this.chamberPressureMaxDelta = chamberPressureMaxDelta;
+		}
+		public Amount<Pressure> getEndPressure() {
+			return endPressure;
+		}
+		public void setEndPressure(Amount<Pressure> endPressure) {
+			this.endPressure = endPressure;
+		}
+	}
+	
 	protected final Motor motor;
 	
 	private boolean burning = false;
@@ -47,6 +91,10 @@ public class Burn {
 		public void setProgress(float p);
 		public void burnComplete();
 	}
+	
+
+	
+	public static final BurnSettings settings = new BurnSettings();
 	
 	private Set<BurnProgressListener> bpls = new HashSet<Burn.BurnProgressListener>();
 	
@@ -125,7 +173,7 @@ public class Burn {
 		step:
 		for ( int i = 0; i < 5000; i++ ) {
 			assert(positive(regStep));
-			regStep = regStep.times(regStepIncreaseFactor);
+			regStep = regStep.times(settings.getRegStepIncreaseFactor());
 			
 			Interval prev = data.get(data.lastKey());
 			log.debug(prev);
@@ -163,8 +211,12 @@ public class Burn {
 			
 			//log.debug("Vnew: " + motor.getGrain().volume(next.regression).to(SI.MILLIMETER.pow(3)));
 			
-			//TODO Amount<Volume> volumeBurnt = motor.getGrain().volume(prev.regression).minus(motor.getGrain().volume(next.regression));
-			Amount<Volume> volumeBurnt = motor.getGrain().surfaceArea(prev.regression).times(regStep).to(Volume.UNIT);
+			Amount<Volume> volumeBurnt;
+			if ( settings.getVolumeMethod() == BurnSettings.BurnVolumeMethod.DeltaVolume ){
+				volumeBurnt = motor.getGrain().volume(prev.regression).minus(motor.getGrain().volume(next.regression));
+			} else {
+				volumeBurnt = motor.getGrain().surfaceArea(prev.regression).times(regStep).to(Volume.UNIT);
+			}
 			assert(positive(volumeBurnt));
 			//log.info("Volume Burnt: " + volumeBurnt.to(SI.MILLIMETER.pow(3)));
 			
@@ -205,7 +257,7 @@ public class Burn {
 			//Product can not go negative!
 			if ( !positive(next.chamberProduct) ){
 				log.warn("ChamberProduct Negative on step " + i + "!, Adjusting regstep down and repeating step!");
-				regStep = regStep.times(regStepDecreaseFactor);
+				regStep = regStep.times(settings.getRegStepDecreaseFactor());
 				continue step;
 			}
 			assert(positive(next.chamberProduct));
@@ -226,16 +278,16 @@ public class Burn {
 					SI.PASCAL);
 			
 			Amount<Pressure> dp = next.chamberPressure.minus(prev.chamberPressure);
-			if ( dp.abs().isGreaterThan(chamberPressureMaxDelta)){
+			if ( dp.abs().isGreaterThan(settings.getChamberPressureMaxDelta())){
 				log.warn("DP " + dp + " too big!, Adjusting regstep down and repeating step!");
-				regStep = regStep.times(regStepDecreaseFactor);
+				regStep = regStep.times(settings.getRegStepDecreaseFactor());
 				continue step;
 			}
 			
 			next.thrust = motor.getNozzle().thrust(next.chamberPressure, atmosphereicPressure, atmosphereicPressure, motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats2Phase());
 			assert(positive(next.thrust));
 			
-			if ( i > 100 && next.chamberPressure.minus(atmosphereicPressure).abs().isLessThan(endPressure)){
+			if ( i > 100 && next.chamberPressure.minus(atmosphereicPressure).abs().isLessThan(settings.getEndPressure())){
 				log.info("Pressure at ~Patm on step " + i);
 				endPressureSteps++;
 				if ( endPressureSteps > 5 )
