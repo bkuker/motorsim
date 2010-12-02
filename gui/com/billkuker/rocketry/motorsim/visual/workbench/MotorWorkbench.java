@@ -27,6 +27,8 @@ public class MotorWorkbench extends RememberJFrame {
 	private MultiMotorThrustChart mb;
 	private JFrame allBurns;
 	
+	private SettingsEditor settings = new SettingsEditor(this);
+	
 	private JFrame fuelEditorFrame = new RememberJFrame(800,600){
 		private static final long serialVersionUID = 1L;
 		{
@@ -161,6 +163,19 @@ public class MotorWorkbench extends RememberJFrame {
 						});
 						add(sci);
 						add(nonsci);
+						
+						add(new JSeparator());
+						add(new JMenuItem("Simulation Settings"){
+							private static final long serialVersionUID = 1L;
+							{
+								addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										settings.setVisible(true);
+									}
+								});
+							}
+						});
 					}
 				});
 				add(new JMenu("View") {

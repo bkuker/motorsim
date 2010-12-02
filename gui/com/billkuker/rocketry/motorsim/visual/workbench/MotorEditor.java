@@ -87,6 +87,8 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 		FuelResolver.addFuelsChangeListener(this);
 		fuelsChanged();
 		setMotor(m);
+		
+		Burn.getBurnSettings().addPropertyChangeListener(this);
 	}
 
 	@Override
