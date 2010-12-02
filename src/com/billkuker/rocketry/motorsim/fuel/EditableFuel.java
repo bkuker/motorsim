@@ -6,8 +6,6 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
-
-//TODO Implement MotorPart
 public class EditableFuel extends SaintRobertFuel {
 	private String name;
 	private double a = 0.0665;

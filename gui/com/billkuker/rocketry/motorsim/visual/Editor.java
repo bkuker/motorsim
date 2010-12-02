@@ -90,8 +90,7 @@ public class Editor extends PropertySheetPanel {
 					log.debug("Writing properties to object.");
 					writeToObject(obj);
 				} catch (Exception v) {
-					// TODO
-					v.printStackTrace();
+					log.error(v);
 					java.awt.Toolkit.getDefaultToolkit().beep();
 				} finally {
 					readFromObject(obj);

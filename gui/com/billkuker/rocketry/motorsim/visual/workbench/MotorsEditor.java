@@ -23,6 +23,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 
+import org.apache.log4j.Logger;
+
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.io.ENGExporter;
@@ -32,6 +34,8 @@ import com.billkuker.rocketry.motorsim.visual.MultiObjectEditor;
 import com.billkuker.rocketry.motorsim.visual.RememberJFrame;
 
 public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
+	private static Logger log = Logger.getLogger(MotorsEditor.class);
+			
 	private static final long serialVersionUID = 1L;
 
 	MultiMotorThrustChart mbc = new MultiMotorThrustChart();
@@ -166,8 +170,7 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 									try {
 										ENGExporter.export(bb, file);
 									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
+										log.error(e);
 									}
 								}
 							}

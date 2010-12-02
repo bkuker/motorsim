@@ -395,11 +395,9 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 						}
 						return motor.getChamber();
 					} catch (InstantiationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						log.error(e);
 					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						log.error(e);
 					}
 					return null;
 				}

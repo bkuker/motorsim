@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.jfree.util.Log;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Fuel;
@@ -64,11 +65,9 @@ public class MotorIO {
 			try {
 				return FuelResolver.getFuel(new URI("motorsim:" + c.getSimpleName()));
 			} catch (FuelNotFound e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.error(e);
 			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.error(e);
 			}
 			return null;
 		}

@@ -26,12 +26,15 @@ import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.ChangeListening;
 import com.billkuker.rocketry.motorsim.Grain;
 
 public class GrainPanel extends JPanel {
+	private static Logger log = Logger.getLogger(GrainPanel.class);
+			
 	private static final long serialVersionUID = 1L;
 	private Amount<Length> displayedRegression = Amount.valueOf(0, SI.MILLIMETER);
 	private JLabel l = new JLabel();
@@ -77,11 +80,9 @@ public class GrainPanel extends JPanel {
 			
 
 		} catch (ClassCastException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 		addComponents(

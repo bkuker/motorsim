@@ -140,11 +140,9 @@ public class RocketScience {
 			} catch (NoSuchFieldException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e);
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error(e);
 			}
 			return null;
 		}

@@ -324,14 +324,11 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implem
 				}
 			});
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		log.debug(f.getName() + " " + calculatedSkip + " Done");
 	}

@@ -5,10 +5,10 @@
       <OD>31 mm</OD>
       <length>200 mm</length>
     </chamber>
-    <fuel class="com.billkuker.rocketry.motorsim.fuel.KNSU" serialization="custom">
+    <fuel class="com.billkuker.rocketry.motorsim.fuel.KNSB" serialization="custom">
       <java.net.URI>
         <default>
-          <string>motorsim:KNSU</string>
+          <string>motorsim:KNSB</string>
         </default>
       </java.net.URI>
     </fuel>
@@ -23,6 +23,7 @@
         <length>70 mm</length>
         <outerSurfaceInhibited>true</outerSurfaceInhibited>
       </grain>
+      <spacing>5 mm</spacing>
     </grain>
     <name>IOTestMotor</name>
     <nozzle class="com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle">
