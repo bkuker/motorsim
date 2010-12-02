@@ -54,6 +54,7 @@ public class Burn {
 		private double regStepDecreaseFactor = .5;
 		private Amount<Pressure> chamberPressureMaxDelta = Amount.valueOf(.5, SI.MEGA(SI.PASCAL));
 		private Amount<Pressure> endPressure = Amount.valueOf(.1, RocketScience.PSI);
+		private Amount<Pressure> atmosphereicPressure = Amount.valueOf(101000, SI.PASCAL);
 		
 		public void setVolumeMethod(BurnVolumeMethod volumeMethod) {
 			this.volumeMethod = volumeMethod;
@@ -85,6 +86,12 @@ public class Burn {
 		public void setEndPressure(Amount<Pressure> endPressure) {
 			this.endPressure = endPressure;
 		}
+		public Amount<Pressure> getAtmosphereicPressure() {
+			return atmosphereicPressure;
+		}
+		public void setAtmosphereicPressure(Amount<Pressure> atmosphereicPressure) {
+			this.atmosphereicPressure = atmosphereicPressure;
+		}
 	}
 	
 	protected final Motor motor;
@@ -96,14 +103,9 @@ public class Burn {
 		public void setProgress(float p);
 		public void burnComplete();
 	}
-	
-
-
-	
+		
 	private Set<BurnProgressListener> bpls = new HashSet<Burn.BurnProgressListener>();
-	
-	private static final Amount<Pressure> atmosphereicPressure = Amount.valueOf(101000, SI.PASCAL);
-	
+
 	public class Interval{
 		public Amount<Duration> time;
 		public Amount<Duration> dt;
@@ -168,7 +170,7 @@ public class Burn {
 		initial.time = Amount.valueOf(0, SI.SECOND);
 		initial.dt = Amount.valueOf(0, SI.SECOND);
 		initial.regression = Amount.valueOf(0, SI.MILLIMETER);
-		initial.chamberPressure = atmosphereicPressure;
+		initial.chamberPressure = settings.getAtmosphereicPressure();
 		initial.chamberProduct = Amount.valueOf(0, SI.KILOGRAM);
 		initial.thrust = Amount.valueOf(0, SI.NEWTON);
 		
@@ -241,7 +243,7 @@ public class Burn {
 			
 			Amount<MassFlowRate> mNozzle;
 			{
-				Amount<Pressure> pDiff = prev.chamberPressure.minus(atmosphereicPressure);
+				Amount<Pressure> pDiff = prev.chamberPressure.minus(settings.getAtmosphereicPressure());
 				//log.debug("Pdiff: " + pDiff);
 				Amount<Area> aStar = motor.getNozzle().throatArea();
 				double k = motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats();
@@ -274,7 +276,7 @@ public class Burn {
 			
 			log.debug("Product Density: " + combustionProductDensity);
 			
-			next.chamberPressure = combustionProductDensity.times(specificGasConstant).times(chamberTemp).plus(atmosphereicPressure).to(Pressure.UNIT);
+			next.chamberPressure = combustionProductDensity.times(specificGasConstant).times(chamberTemp).plus(settings.getAtmosphereicPressure()).to(Pressure.UNIT);
 			assert(positive(next.chamberPressure));
 			
 			next.chamberPressure = Amount.valueOf(
@@ -288,10 +290,10 @@ public class Burn {
 				continue step;
 			}
 			
-			next.thrust = motor.getNozzle().thrust(next.chamberPressure, atmosphereicPressure, atmosphereicPressure, motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats2Phase());
+			next.thrust = motor.getNozzle().thrust(next.chamberPressure, settings.getAtmosphereicPressure(), settings.getAtmosphereicPressure(), motor.getFuel().getCombustionProduct().getRatioOfSpecificHeats2Phase());
 			assert(positive(next.thrust));
 			
-			if ( i > 100 && next.chamberPressure.minus(atmosphereicPressure).abs().isLessThan(settings.getEndPressure())){
+			if ( i > 100 && next.chamberPressure.minus(settings.getAtmosphereicPressure()).abs().isLessThan(settings.getEndPressure())){
 				log.info("Pressure at ~Patm on step " + i);
 				endPressureSteps++;
 				if ( endPressureSteps > 5 )
