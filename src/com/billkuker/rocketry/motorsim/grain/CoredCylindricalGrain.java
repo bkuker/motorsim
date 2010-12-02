@@ -144,20 +144,20 @@ public class CoredCylindricalGrain extends ExtrudedGrain implements Validating {
 	}
 
 	public Amount<Length> webThickness() {
-		if ( innerSurfaceInhibited && outerSurfaceInhibited ){
-			return oD; //TODO gotta move this to the end
-		}
-		
-		Amount<Length> radial = null;
-		if ( !innerSurfaceInhibited && !outerSurfaceInhibited )
-			radial = oD.minus(iD).divide(4); //Outer and inner exposed
-		else if ( !innerSurfaceInhibited || !outerSurfaceInhibited )
-			radial = oD.minus(iD).divide(2); //Outer or inner exposed
 		
 		Amount<Length> axial = null;
-		
 		if ( numberOfBurningEnds(Amount.valueOf(0, SI.MILLIMETER)) != 0 )
 			axial = getLength().divide(numberOfBurningEnds(Amount.valueOf(0, SI.MILLIMETER)));
+		
+		Amount<Length> radial = null;
+		if ( !innerSurfaceInhibited && !outerSurfaceInhibited ){
+			radial = oD.minus(iD).divide(4); //Outer and inner exposed
+		} else if ( !innerSurfaceInhibited || !outerSurfaceInhibited ){
+			radial = oD.minus(iD).divide(2); //Outer or inner exposed
+		} else if ( innerSurfaceInhibited && outerSurfaceInhibited ){
+			return axial;
+		} 
+		
 		
 		if ( axial == null )
 			return radial;

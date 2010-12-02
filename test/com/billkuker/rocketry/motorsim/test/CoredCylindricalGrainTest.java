@@ -50,7 +50,67 @@ public class CoredCylindricalGrainTest extends AbstractRocketTest {
 		
 		assertApproximate(g.webThickness(), Amount.valueOf("50mm"));
 	}
+	
+	@Test
+	public void testWebThicknessSkinny2Ends() throws PropertyVetoException {
+		CoredCylindricalGrain g = new CoredCylindricalGrain();
+		
+		//thin and long
+		g.setLength(Amount.valueOf(100, SI.MILLIMETER));
+		g.setOD(Amount.valueOf(30, SI.MILLIMETER));
+		g.setID(Amount.valueOf(10, SI.MILLIMETER));
+		g.setInnerSurfaceInhibited(true);
+		g.setOuterSurfaceInhibited(true);
+		
+		assertApproximate(g.webThickness(), Amount.valueOf("50mm"));
 
+	}
+	
+	@Test
+	public void testWebThicknessSkinny1End() throws PropertyVetoException {
+		CoredCylindricalGrain g = new CoredCylindricalGrain();
+		
+		//thin and long
+		g.setLength(Amount.valueOf(100, SI.MILLIMETER));
+		g.setOD(Amount.valueOf(30, SI.MILLIMETER));
+		g.setID(Amount.valueOf(10, SI.MILLIMETER));
+		g.setInnerSurfaceInhibited(true);
+		g.setOuterSurfaceInhibited(true);
+		g.setForeEndInhibited(true);
+		
+		assertApproximate(g.webThickness(), Amount.valueOf("100mm"));
+
+	}
+
+	@Test
+	public void testWebThicknessFat2Ends() throws PropertyVetoException {
+		CoredCylindricalGrain g = new CoredCylindricalGrain();
+		
+		g.setLength(Amount.valueOf(100, SI.MILLIMETER));
+		g.setOD(Amount.valueOf(60, SI.MILLIMETER));
+		g.setID(Amount.valueOf(20, SI.MILLIMETER));
+		g.setInnerSurfaceInhibited(true);
+		g.setOuterSurfaceInhibited(true);
+		
+		assertApproximate(g.webThickness(), Amount.valueOf("50mm"));
+
+	}
+	
+	@Test
+	public void testWebThicknessFat1End() throws PropertyVetoException {
+		CoredCylindricalGrain g = new CoredCylindricalGrain();
+		
+		g.setLength(Amount.valueOf(20, SI.MILLIMETER));
+		g.setOD(Amount.valueOf(60, SI.MILLIMETER));
+		g.setID(Amount.valueOf(20, SI.MILLIMETER));
+		g.setInnerSurfaceInhibited(true);
+		g.setOuterSurfaceInhibited(true);
+		g.setForeEndInhibited(true);
+		
+		assertApproximate(g.webThickness(), Amount.valueOf("20mm"));
+
+	}
+	
 	@Test
 	public void testVolume() throws PropertyVetoException {
 		CoredCylindricalGrain g = new CoredCylindricalGrain();
