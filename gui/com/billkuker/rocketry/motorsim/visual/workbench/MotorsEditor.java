@@ -68,6 +68,7 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 		detached = new RememberJFrame(800,600){
 			private static final long serialVersionUID = 1L;
 		};
+		detached.setIconImage(MotorWorkbench.getIcon());
 		detached.setTitle(MotorWorkbench.name + " - All Motors");
 		detached.setContentPane(detachedTabs = new JTabbedPane());
 

@@ -72,6 +72,108 @@
        y1="913.03058"
        x2="1066.1115"
        y2="913.03058" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3898-4"
+       id="linearGradient3126"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.10735762,0,0,0.72061799,937.90699,-497.94623)"
+       x1="-25.169582"
+       y1="913.03058"
+       x2="1066.1115"
+       y2="913.03058" />
+    <linearGradient
+       id="linearGradient3898-4">
+      <stop
+         style="stop-color:#7bcb7b;stop-opacity:1;"
+         offset="0"
+         id="stop3900-4" />
+      <stop
+         style="stop-color:#7b763f;stop-opacity:1;"
+         offset="1"
+         id="stop3902-8" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3908-3"
+       id="linearGradient3128"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.11616172,0,0,0.79461,-936.83002,-233.36032)"
+       x1="-19.7761"
+       y1="495.03568"
+       x2="1071.505"
+       y2="495.03568" />
+    <linearGradient
+       id="linearGradient3908-3">
+      <stop
+         style="stop-color:#c7e8e9;stop-opacity:1;"
+         offset="0"
+         id="stop3910-1" />
+      <stop
+         style="stop-color:#338184;stop-opacity:1;"
+         offset="1"
+         id="stop3912-0" />
+    </linearGradient>
+    <linearGradient
+       y2="495.03568"
+       x2="1071.505"
+       y1="495.03568"
+       x1="-19.7761"
+       gradientTransform="matrix(0.11616172,0,0,0.79461,-936.83002,-233.36032)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient3161"
+       xlink:href="#linearGradient3908-3"
+       inkscape:collect="always" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3898-4"
+       id="linearGradient4017"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.10735762,0,0,0.72061799,937.90699,-497.94623)"
+       x1="-25.169582"
+       y1="913.03058"
+       x2="1066.1115"
+       y2="913.03058" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3908-3"
+       id="linearGradient4019"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.11616172,0,0,0.79461,-936.83002,-233.36032)"
+       x1="-19.7761"
+       y1="495.03568"
+       x2="1071.505"
+       y2="495.03568" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3908-3"
+       id="linearGradient4022"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.09149008,0,0,0.24831563,-1230.455,424.89292)"
+       x1="-19.7761"
+       y1="495.03568"
+       x2="1071.505"
+       y2="495.03568" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3898-4"
+       id="linearGradient4025"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.04473234,0,0,0.22519312,1183.6725,345.3918)"
+       x1="-25.169582"
+       y1="913.03058"
+       x2="1066.1115"
+       y2="913.03058" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3908-3"
+       id="linearGradient4044"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.09149008,0,0,0.24831563,-1230.455,424.89292)"
+       x1="-19.7761"
+       y1="495.03568"
+       x2="1071.505"
+       y2="495.03568" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -80,15 +182,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="64.353521"
-     inkscape:cy="165.36111"
+     inkscape:zoom="0.25"
+     inkscape:cx="1844"
+     inkscape:cy="-922.50335"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1490"
+     inkscape:window-width="1680"
      inkscape:window-height="1003"
-     inkscape:window-x="186"
+     inkscape:window-x="1676"
      inkscape:window-y="-4"
      inkscape:window-maximized="1"
      borderlayer="true"
@@ -110,22 +212,25 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-812.36218)">
-    <rect
-       y="-1.5102069e-014"
-       x="935.20483"
-       height="320"
-       width="117.15735"
-       id="rect3877"
-       style="fill:url(#linearGradient3017);fill-opacity:1;stroke:none"
-       transform="matrix(0,1,1,0,0,0)" />
-    <rect
-       style="fill:url(#linearGradient3014);fill-opacity:1;stroke:none"
-       id="rect3875"
-       width="126.76508"
-       height="320"
-       x="-939.12726"
-       y="1.8290057e-014"
-       transform="matrix(0,-1,1,0,0,0)" />
+    <g
+       id="g3099">
+      <rect
+         transform="matrix(0,1,1,0,0,0)"
+         style="fill:url(#linearGradient3017);fill-opacity:1;stroke:none"
+         id="rect3877"
+         width="117.15735"
+         height="320"
+         x="935.20483"
+         y="-1.5102069e-014" />
+      <rect
+         transform="matrix(0,-1,1,0,0,0)"
+         y="1.8290057e-014"
+         x="-939.12726"
+         height="320"
+         width="126.76508"
+         id="rect3875"
+         style="fill:url(#linearGradient3014);fill-opacity:1;stroke:none" />
+    </g>
     <g
        id="g6566"
        transform="translate(-255,-273)">
@@ -339,5 +444,112 @@
        id="path6500-2"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
+    <g
+       id="g4031"
+       transform="translate(-240,-508)">
+      <rect
+         inkscape:export-ydpi="57.599998"
+         inkscape:export-xdpi="57.599998"
+         inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+         transform="matrix(0,-1,1,0,0,0)"
+         y="497.81802"
+         x="-1232.2642"
+         height="100"
+         width="99.841385"
+         id="rect3875-5"
+         style="fill:url(#linearGradient4044);fill-opacity:1;stroke:none" />
+      <g
+         inkscape:export-ydpi="57.599998"
+         inkscape:export-xdpi="57.599998"
+         inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+         transform="matrix(0.88359328,0.46825519,-0.46825519,0.88359328,632.61727,-112.31136)"
+         id="g4027">
+        <path
+           style="fill:#ff0000;fill-opacity:1;stroke:none"
+           inkscape:transform-center-x="30.767301"
+           inkscape:transform-center-y="-1.5858867"
+           d="m 505.92749,1237.211 c -3.04885,-6.7237 -0.9863,-20.9721 -0.9863,-20.9721 -6.4676,3.0428 -2.77174,18.0262 -2.77174,18.0262 -11.64168,-25.8634 5.00033,-40.1062 14.05497,-45.431 l 3.16854,4.5288 c -7.32995,2.6624 -6.66414,37.0142 -1.93021,54.7766 0,0 -10.25693,-15.8348 -7.05563,-24.71 -3.96352,1.7481 -3.76338,8.4464 -4.47963,13.7815 z"
+           id="path3075-9-9-1"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cccccccc"
+           inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+           inkscape:export-xdpi="57.599998"
+           inkscape:export-ydpi="57.599998" />
+        <path
+           sodipodi:nodetypes="cccccccc"
+           inkscape:connector-curvature="0"
+           id="path3078-3-4-6"
+           d="m 506.86376,1215.8631 c -2.11024,-4.4843 -0.0729,-8.2049 -0.0729,-8.2049 -4.47652,2.0293 -5.72952,7.3159 -5.72952,7.3159 3.98523,-17.6527 9.79314,-21.7076 16.06028,-25.2589 l 1.61291,2.485 c -5.07339,1.7757 -7.62058,23.1392 -6.63065,28.9345 0,0 -2.98335,-8.6783 -1.83467,-11.908 -2.74334,1.1658 -2.90971,3.0782 -3.40546,6.6364 z"
+           inkscape:transform-center-y="-1.0977032"
+           inkscape:transform-center-x="20.519975"
+           style="fill:#ffa100;fill-opacity:1;stroke:none"
+           inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+           inkscape:export-xdpi="57.599998"
+           inkscape:export-ydpi="57.599998" />
+      </g>
+      <path
+         inkscape:export-ydpi="57.599998"
+         inkscape:export-xdpi="57.599998"
+         inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+         style="fill:#7575ff;fill-opacity:1;stroke:#000000;stroke-width:4.12012005;stroke-miterlimit:4;stroke-dasharray:none"
+         d="m 537.08372,1184.7936 3.30873,16.8626 -7.55711,4.187 -10.62252,-12.4153 z"
+         id="path3073-0-0-9-8"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         inkscape:export-ydpi="57.599998"
+         inkscape:export-xdpi="57.599998"
+         inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+         sodipodi:nodetypes="sccccccs"
+         inkscape:connector-curvature="0"
+         id="path6385-8-5"
+         d="m 578.978,1139.1111 c -3.70162,-0.022 -8.19027,0.6893 -13.23522,2.9367 -13.28777,6.4899 -35.96372,34.523 -49.27863,45.3943 0.16851,3.1953 1.96558,5.1731 4.99088,6.4106 15.15839,-8.6262 50.98095,-20.6656 61.52591,-30.4955 10.51091,-10.5581 7.36156,-20.4484 7.06898,-21.2915 l -0.23508,-0.4101 c 0,0 -3.77011,-2.5005 -10.83684,-2.5445 z"
+         style="color:#000000;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:4.12012005;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="57.599998"
+         inkscape:export-xdpi="57.599998"
+         inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+         style="fill:#7575ff;fill-opacity:1;stroke:#000000;stroke-width:4.12012005;stroke-miterlimit:4;stroke-dasharray:none"
+         d="m 531.6666,1177.5254 -16.39101,-8.3334 -6.79049,5.1675 9.40975,13.2059 z"
+         id="path3073-0-3-5"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccc" />
+      <path
+         inkscape:export-ydpi="57.599998"
+         inkscape:export-xdpi="57.599998"
+         inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="path6459-50-4"
+         d="m 519.36767,1191.0341 c 0,0 68.95242,-25.9821 68.95242,-48.0493 0,0 5.73026,7.7803 -5.25407,18.8139 -13.61102,11.1193 -45.64528,22.0718 -61.51222,30.493 -2.28253,-0.967 -2.18613,-1.2576 -2.18613,-1.2576 z"
+         style="color:#000000;fill:#979797;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:export-ydpi="57.599998"
+         inkscape:export-xdpi="57.599998"
+         inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+         sodipodi:nodetypes="ccc"
+         inkscape:connector-curvature="0"
+         id="rect3870-4-4-3"
+         d="m 560.88508,1148.6587 15.75056,-6.7525 c -5.69747,-1.6766 -14.80459,5.4057 -15.75056,6.7525 z"
+         style="fill:#ffffff;fill-opacity:1;stroke:none" />
+      <path
+         inkscape:export-ydpi="57.599998"
+         inkscape:export-xdpi="57.599998"
+         inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path6500-3-8"
+         d="m 548.4532,1155.5324 c -0.72783,8.2818 1.01234,18.538 13.75414,20.0426"
+         style="fill:none;stroke:#000000;stroke-width:0.55887699;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:export-ydpi="57.599998"
+         inkscape:export-xdpi="57.599998"
+         inkscape:export-filename="C:\src\BillKuker\MotorSim\gui\com\billkuker\rocketry\motorsim\visual\workbench\icon.png"
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path6500-2-5-7"
+         d="m 533.24917,1170.8668 c 2.13384,6.2761 4.41907,9.0831 11.30128,12.45"
+         style="fill:none;stroke:#000000;stroke-width:0.55887699;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
   </g>
 </svg>

@@ -17,6 +17,7 @@ public class SettingsEditor extends JDialog {
 		this.f = f;
 		setSize(320, 240);
 		setContentPane(new Editor(Burn.getBurnSettings()));
+		setIconImage(f.getIconImage());
 	}
 
 	@Override

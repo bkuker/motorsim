@@ -1,5 +1,7 @@
 package com.billkuker.rocketry.motorsim.visual.workbench;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -32,6 +34,7 @@ public class MotorWorkbench extends RememberJFrame {
 	private JFrame fuelEditorFrame = new RememberJFrame(800,600){
 		private static final long serialVersionUID = 1L;
 		{
+			setIconImage(getIcon());
 			setSize(800, 600);
 			add(fuelEditor = new FuelsEditor(this));
 			JMenuBar b;
@@ -44,10 +47,14 @@ public class MotorWorkbench extends RememberJFrame {
 	
 	private MotorsEditor motorsEditor;
 
+	public static Image getIcon(){
+		return Toolkit.getDefaultToolkit().getImage(MotorWorkbench.class.getResource("icon.png"));
+	}
 	
 	public MotorWorkbench() {
 		super(1024, 768);
 		setTitle(name);
+		setIconImage(getIcon());
 
 		motorsEditor = new MotorsEditor(this);
 		setContentPane(motorsEditor);
