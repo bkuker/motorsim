@@ -5,6 +5,8 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
@@ -32,6 +34,15 @@ public abstract class ExtrudedShapeGrain extends ExtrudedGrain {
 			}
 		}
 	};
+	
+	public ExtrudedShapeGrain(){
+		addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				webThickness = null;
+			}
+		});
+	}
 
 	protected BurningShape xsection = new BurningShape();
 
@@ -105,9 +116,9 @@ public abstract class ExtrudedShapeGrain extends ExtrudedGrain {
 		}
 		webThickness = Amount.valueOf(guess, SI.MILLIMETER);
 		
-		//TODO Need to check # of burning ends!
-		if (webThickness.isGreaterThan(getLength().divide(2)))
-			webThickness = getLength().divide(2);
+		int ends = numberOfBurningEnds(Amount.valueOf(0, SI.MILLIMETER));
+		if (ends != 0 && webThickness.isGreaterThan(getLength().divide(ends)))
+			webThickness = getLength().divide(ends);
 		
 		return webThickness;
 	}
