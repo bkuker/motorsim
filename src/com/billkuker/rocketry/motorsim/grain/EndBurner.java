@@ -10,6 +10,7 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Validating;
+import com.billkuker.rocketry.motorsim.Validating.ValidationException;
 import com.billkuker.rocketry.motorsim.grain.util.BurningShape;
 import com.billkuker.rocketry.motorsim.grain.util.RotatedShapeGrain;
 
@@ -51,8 +52,14 @@ public class EndBurner extends RotatedShapeGrain implements Validating {
 	
 	@Override
 	public void validate() throws ValidationException {
-		// TODO Auto-generated method stub
-
+		if ( oD.equals(Amount.ZERO) )
+			throw new ValidationException(this, "Invalid oD");
+		if ( getLength().equals(Amount.ZERO) )
+			throw new ValidationException(this, "Invalid Length");
+		if ( puntDiameter.isGreaterThan(oD) )
+			throw new ValidationException(this, "puntDiameter > oD");
+		if ( puntDepth.isGreaterThan(length) )
+			throw new ValidationException(this, "puntDepth > length");
 	}
 
 	public Amount<Length> getLength() {
