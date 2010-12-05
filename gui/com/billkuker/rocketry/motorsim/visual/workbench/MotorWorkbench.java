@@ -31,6 +31,8 @@ public class MotorWorkbench extends RememberJFrame {
 	
 	private SettingsEditor settings = new SettingsEditor(this);
 	
+	private About about = new About(this);
+	
 	private JFrame fuelEditorFrame = new RememberJFrame(800,600){
 		private static final long serialVersionUID = 1L;
 		{
@@ -207,6 +209,22 @@ public class MotorWorkbench extends RememberJFrame {
 									public void actionPerformed(ActionEvent arg0) {
 										fuelEditorFrame.setVisible(true);
 										fuelEditorFrame.toFront();
+									}
+								});
+							}
+						});
+					}
+				});
+				add(new JMenu("Help"){
+					private static final long serialVersionUID = 1L;
+					{
+						add(new JMenuItem("About") {
+							private static final long serialVersionUID = 1L;
+							{
+								addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										about.setVisible(true);
 									}
 								});
 							}
