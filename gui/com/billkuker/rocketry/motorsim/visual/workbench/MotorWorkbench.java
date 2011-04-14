@@ -124,6 +124,7 @@ public class MotorWorkbench extends RememberJFrame {
 			}
 		}
 		MotorWorkbench.this.dispose();
+		System.exit(0);
 	}
 
 	private void addMenu() {
