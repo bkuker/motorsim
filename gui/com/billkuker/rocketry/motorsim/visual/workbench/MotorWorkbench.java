@@ -17,6 +17,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
+import com.billkuker.rocketry.motorsim.debug.DebugFrame;
 import com.billkuker.rocketry.motorsim.fuel.FuelsEditor;
 import com.billkuker.rocketry.motorsim.visual.RememberJFrame;
 
@@ -225,6 +226,17 @@ public class MotorWorkbench extends RememberJFrame {
 									@Override
 									public void actionPerformed(ActionEvent e) {
 										about.setVisible(true);
+									}
+								});
+							}
+						});
+						add(new JMenuItem("Debug") {
+							private static final long serialVersionUID = 1L;
+							{
+								addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										new DebugFrame();
 									}
 								});
 							}
