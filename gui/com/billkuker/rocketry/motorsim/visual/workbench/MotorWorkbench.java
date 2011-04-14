@@ -16,6 +16,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.lf5.LF5Appender;
+
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.debug.DebugFrame;
 import com.billkuker.rocketry.motorsim.fuel.FuelsEditor;
@@ -231,13 +234,35 @@ public class MotorWorkbench extends RememberJFrame {
 								});
 							}
 						});
-						add(new JMenuItem("Debug") {
+						add(new JSeparator());
+						add(new JMenu("Debug"){
 							private static final long serialVersionUID = 1L;
 							{
-								addActionListener(new ActionListener() {
-									@Override
-									public void actionPerformed(ActionEvent e) {
-										new DebugFrame();
+								add(new JMenuItem("Debug Window") {
+									private static final long serialVersionUID = 1L;
+									{
+										addActionListener(new ActionListener() {
+											@Override
+											public void actionPerformed(ActionEvent e) {
+												new DebugFrame();
+											}
+										});
+									}
+								});
+								add(new JMenuItem("Log Window") {
+									LF5Appender lf5;
+									private static final long serialVersionUID = 1L;
+									{
+										addActionListener(new ActionListener() {
+											@Override
+											public void actionPerformed(ActionEvent e) {
+												if ( lf5 == null ){
+													lf5 = new LF5Appender();
+													Logger.getRootLogger().addAppender(lf5);
+												}
+												lf5.getLogBrokerMonitor().show();
+											}
+										});
 									}
 								});
 							}
