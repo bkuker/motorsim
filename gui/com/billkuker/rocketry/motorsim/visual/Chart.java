@@ -47,15 +47,24 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implem
 	private final Stroke dashed = new BasicStroke(1, 1, 1, 1, new float[]{2,4}, 0);
 	private final Font labelFont = new Font(Font.DIALOG, Font.BOLD, 10);
 
-	private static ThreadFactory tf = new ThreadFactory() {
+	private static ThreadFactory fastTF = new ThreadFactory() {
 		public Thread newThread(Runnable r) {
 			Thread t = new Thread(r);
 			t.setDaemon(true);
+			t.setName("Fast Chart Draw");
 			return t;
 		}
 	};
-	private static ExecutorService fast = Executors.newFixedThreadPool(2, tf);
-	private static ExecutorService slow = Executors.newFixedThreadPool(2, tf);
+	private static ThreadFactory slowTF = new ThreadFactory() {
+		public Thread newThread(Runnable r) {
+			Thread t = new Thread(r);
+			t.setDaemon(true);
+			t.setName("Slow Chart Draw");
+			return t;
+		}
+	};
+	private static ExecutorService fast = Executors.newFixedThreadPool(2, fastTF);
+	private static ExecutorService slow = Executors.newFixedThreadPool(2, slowTF);
 
 
 	public class IntervalDomain implements Iterable<Amount<X>> {

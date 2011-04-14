@@ -151,6 +151,10 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 				sp = null;
 			}
 			currentThread = new Thread() {
+				{
+					setName("Burn " + motor.getName());
+					setDaemon(true);
+				}
 				public void run() {
 					final Thread me = this;
 					try {						
