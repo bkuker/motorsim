@@ -11,9 +11,10 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Chamber;
 import com.billkuker.rocketry.motorsim.CylindricalChamber;
+import com.billkuker.rocketry.motorsim.ICylindricalChamber;
 import com.billkuker.rocketry.motorsim.RocketScience;
 
-public class Schedule80 implements Chamber {
+public class Schedule80 implements Chamber, ICylindricalChamber {
 	public static enum Size {		
 		
 		//Dimensions: http://www.harvel.com/pipepvc-sch40-80-dim.asp

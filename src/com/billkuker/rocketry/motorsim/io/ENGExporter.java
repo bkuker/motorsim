@@ -15,8 +15,8 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
-import com.billkuker.rocketry.motorsim.CylindricalChamber;
 import com.billkuker.rocketry.motorsim.GraphSimplifier;
+import com.billkuker.rocketry.motorsim.ICylindricalChamber;
 
 public class ENGExporter {
 
@@ -32,7 +32,7 @@ public class ENGExporter {
 
 	public static void export(Burn b, OutputStream os) throws IOException {
 
-		CylindricalChamber cha = (CylindricalChamber) b.getMotor().getChamber();
+		ICylindricalChamber cha = (ICylindricalChamber) b.getMotor().getChamber();
 
 		NumberFormat nf = new DecimalFormat("00.####");
 

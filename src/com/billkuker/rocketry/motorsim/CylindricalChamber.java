@@ -11,7 +11,7 @@ import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
 
-public class CylindricalChamber implements Chamber {
+public class CylindricalChamber implements Chamber, ICylindricalChamber {
 	
 	private Amount<Length> length = Amount.valueOf(200, SI.MILLIMETER);
 	private Amount<Length> oD = Amount.valueOf(31, SI.MILLIMETER);
