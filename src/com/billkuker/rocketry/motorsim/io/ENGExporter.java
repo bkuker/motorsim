@@ -34,7 +34,7 @@ public class ENGExporter {
 
 		ICylindricalChamber cha = (ICylindricalChamber) b.getMotor().getChamber();
 
-		NumberFormat nf = new DecimalFormat("00.####");
+		NumberFormat nf = new DecimalFormat("0.####");
 
 		StringBuffer out = new StringBuffer();
 
@@ -54,7 +54,7 @@ public class ENGExporter {
 		double wt = prop.doubleValue(SI.KILOGRAM);
 
 		out.append(nf.format(dia) + " " + nf.format(len) + " 0-0-0 "
-				+ nf.format(wt) + " " + nf.format(wt) + " MF\n");
+				+ nf.format(wt) + " " + nf.format(wt + 0.1) + " MF\n");
 
 		GraphSimplifier<Duration, Force> gs = null;
 		try {
