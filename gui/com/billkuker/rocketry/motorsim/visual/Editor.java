@@ -39,7 +39,7 @@ public class Editor extends PropertySheetPanel {
 
 	private Object obj;
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "rawtypes", "unchecked" })
 	public Editor(Object o) {
 		obj = o;
 
@@ -209,7 +209,7 @@ public class Editor extends PropertySheetPanel {
 
 		}
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({"rawtypes","unchecked"})
 		@Override
 		public void setValue(Object o) {
 			Amount a = (Amount) o;

@@ -29,7 +29,7 @@ public class MotorIO {
 	static class FuelConverter implements Converter{
 
 		@Override
-		public boolean canConvert(Class c) {
+		public boolean canConvert(@SuppressWarnings("rawtypes") Class c) {
 			return Fuel.class.isAssignableFrom(c);
 		}
 
@@ -76,7 +76,7 @@ public class MotorIO {
 	
 	static class AmountConverter implements Converter{
 		
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({"rawtypes","unchecked"})
 		public void marshal(Object o, HierarchicalStreamWriter w, MarshallingContext c) {
 			Amount a = (Amount)o;
 			String text;
@@ -101,7 +101,7 @@ public class MotorIO {
 			return s.replace("^3", "\u00B3");
 		}
 
-		public boolean canConvert(Class c) {
+		public boolean canConvert(@SuppressWarnings("rawtypes") Class c) {
 			return c.equals(Amount.class);
 		}
 		

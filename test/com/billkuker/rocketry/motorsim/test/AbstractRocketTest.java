@@ -13,12 +13,12 @@ public abstract class AbstractRocketTest {
 	
 	protected static final Unit<javax.measure.quantity.Volume> cubeMM = SI.MILLIMETER.pow(3).asType(javax.measure.quantity.Volume.class);
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void assertApproximate(Amount a, Amount b){
 		Assert.assertTrue("" + a.to(b.getUnit()) + " !~ " + b , a.approximates(b));
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void assertApproximate(Amount a, Amount b, Amount diff){
 		Assert.assertTrue("" + a.to(b.getUnit()) + " !~~ " + b ,  a.minus(b).abs().isLessThan(diff));
 	}

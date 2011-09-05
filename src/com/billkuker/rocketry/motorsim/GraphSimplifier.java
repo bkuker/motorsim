@@ -26,10 +26,12 @@ public class GraphSimplifier<X extends Quantity, Y extends Quantity> {
 		Amount<Y> y;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private class DDEntry implements Comparable<DDEntry> {
 		Amount<X> x;
 		Amount dd;
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public int compareTo(DDEntry o) {
 			return o.dd.compareTo(dd);
@@ -56,6 +58,7 @@ public class GraphSimplifier<X extends Quantity, Y extends Quantity> {
 		Entry max = null;
 		while (domain.hasNext()) {
 			Amount<X> x = domain.next();
+			@SuppressWarnings("unchecked")
 			Amount<Y> y = (Amount<Y>) f.invoke(source, x);
 			Entry e = new Entry();
 			e.x = x;
@@ -79,6 +82,7 @@ public class GraphSimplifier<X extends Quantity, Y extends Quantity> {
 				out.put(middle.x, middle.y);
 			}
 
+			@SuppressWarnings("rawtypes")
 			Amount d1, d2, dd;
 
 			d1 = middle.y.minus(low.y).divide(middle.x.minus(low.x));

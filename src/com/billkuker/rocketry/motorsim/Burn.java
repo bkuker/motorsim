@@ -311,7 +311,7 @@ public class Burn {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	/*
 	 * This converts the units of this constant to something JScience is able
 	 * to work from. This conversion is unchecked at compile time, but

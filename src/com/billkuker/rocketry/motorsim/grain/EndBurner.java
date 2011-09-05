@@ -10,7 +10,6 @@ import javax.measure.unit.SI;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Validating;
-import com.billkuker.rocketry.motorsim.Validating.ValidationException;
 import com.billkuker.rocketry.motorsim.grain.util.BurningShape;
 import com.billkuker.rocketry.motorsim.grain.util.RotatedShapeGrain;
 
