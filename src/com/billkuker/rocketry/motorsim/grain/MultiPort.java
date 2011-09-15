@@ -21,6 +21,8 @@ import com.billkuker.rocketry.motorsim.visual.GrainPanel;
 
 public class MultiPort extends ExtrudedShapeGrain implements Validating {
 
+	private boolean inhibitOutside = true;
+
 	private Amount<Length> oD = Amount.valueOf(30, SI.MILLIMETER);
 
 	private Amount<Length> coreD = Amount.valueOf(3, SI.MILLIMETER);
@@ -64,7 +66,10 @@ public class MultiPort extends ExtrudedShapeGrain implements Validating {
 		xsection = new BurningShape();
 		Shape outside = new Ellipse2D.Double(-odmm / 2, -odmm / 2, odmm, odmm);
 		xsection.add(outside);
-		xsection.inhibit(outside);
+
+		if (isInhibitOutside())
+			xsection.inhibit(outside);
+
 		xsection.subtract(new Ellipse2D.Double(-cdmm / 2, -cdmm / 2, cdmm, cdmm));
 		webThickness = null;
 
@@ -99,6 +104,7 @@ public class MultiPort extends ExtrudedShapeGrain implements Validating {
 
 	public void setoD(Amount<Length> oD) {
 		this.oD = oD;
+		generateGeometry();
 	}
 
 	public Amount<Length> getCoreD() {
@@ -107,6 +113,7 @@ public class MultiPort extends ExtrudedShapeGrain implements Validating {
 
 	public void setCoreD(Amount<Length> coreD) {
 		this.coreD = coreD;
+		generateGeometry();
 	}
 
 	public Amount<Length> getR1D() {
@@ -115,6 +122,7 @@ public class MultiPort extends ExtrudedShapeGrain implements Validating {
 
 	public void setR1D(Amount<Length> r1d) {
 		r1D = r1d;
+		generateGeometry();
 	}
 
 	public Amount<Length> getR1Offset() {
@@ -123,6 +131,7 @@ public class MultiPort extends ExtrudedShapeGrain implements Validating {
 
 	public void setR1Offset(Amount<Length> r1Offset) {
 		this.r1Offset = r1Offset;
+		generateGeometry();
 	}
 
 	public int getR1Count() {
@@ -131,6 +140,7 @@ public class MultiPort extends ExtrudedShapeGrain implements Validating {
 
 	public void setR1Count(int r1Count) {
 		this.r1Count = r1Count;
+		generateGeometry();
 	}
 
 	public Amount<Length> getR2D() {
@@ -139,6 +149,7 @@ public class MultiPort extends ExtrudedShapeGrain implements Validating {
 
 	public void setR2D(Amount<Length> r2d) {
 		r2D = r2d;
+		generateGeometry();
 	}
 
 	public Amount<Length> getR2Offset() {
@@ -147,6 +158,7 @@ public class MultiPort extends ExtrudedShapeGrain implements Validating {
 
 	public void setR2Offset(Amount<Length> r2Offset) {
 		this.r2Offset = r2Offset;
+		generateGeometry();
 	}
 
 	public int getR2Count() {
@@ -155,6 +167,7 @@ public class MultiPort extends ExtrudedShapeGrain implements Validating {
 
 	public void setR2Count(int r2Count) {
 		this.r2Count = r2Count;
+		generateGeometry();
 	}
 
 	public Amount<Angle> getRingTwoRot() {
@@ -163,5 +176,15 @@ public class MultiPort extends ExtrudedShapeGrain implements Validating {
 
 	public void setRingTwoRot(Amount<Angle> ringTwoRot) {
 		this.ringTwoRot = ringTwoRot;
+		generateGeometry();
+	}
+
+	public boolean isInhibitOutside() {
+		return inhibitOutside;
+	}
+
+	public void setInhibitOutside(boolean inhibitOutside) {
+		this.inhibitOutside = inhibitOutside;
+		generateGeometry();
 	}
 }
