@@ -116,5 +116,35 @@ public class BurnSummary {
 	public double getVolumeLoading() {
 		return volumeLoading;
 	}
+	
+	@Override
+	public String toString(){
+		StringBuilder s = new StringBuilder();
+
+		s.append("====== Burn Summary ======\nRating: ");
+		s.append(getRating());
+		
+		s.append("\nTotal Impulse: ");
+		s.append(RocketScience.ammountToRoundedString(totalImpulse()));
+		
+		s.append("\nISP: ");
+		s.append(RocketScience.ammountToRoundedString(specificImpulse()));
+		
+		s.append("\nThrust: ");
+		s.append("\n\tMax: ");
+		s.append(RocketScience.ammountToRoundedString(maxThrust()));
+		s.append("\n\tAvg: ");
+		s.append(RocketScience.ammountToRoundedString(averageThrust()));
+		
+		s.append("\nMax Pressure: ");
+		s.append(RocketScience.ammountToRoundedString(maxPressure()));
+		
+		s.append("\nBurn Time: ");
+		s.append(RocketScience.ammountToRoundedString(thrustTime()));
+		
+		s.append("\n=======================");
+		
+		return s.toString();
+	}
 
 }
