@@ -54,6 +54,7 @@ public class RocketSimTable extends JScrollPane implements BurnWatcher,
 			this.b = b;
 		}
 
+		boolean ready = false;
 		Simulation s;
 		Motor m;
 		Burn b;
@@ -100,6 +101,8 @@ public class RocketSimTable extends JScrollPane implements BurnWatcher,
 			Entry e = entries.get(row);
 			if (e == null)
 				return "???";
+			if (e.ready == false)
+				return "...";
 			switch (col) {
 			case 0:
 				return e.m.getName();
@@ -143,7 +146,8 @@ public class RocketSimTable extends JScrollPane implements BurnWatcher,
 					Entry entry = entries.get(table.getSelectedRow());
 					SimulationPlotDialog.showPlot(SwingUtilities
 							.getWindowAncestor(RocketSimTable.this), entry.s,
-							PlotConfiguration.DEFAULT_CONFIGURATIONS[0].resetUnits());
+							PlotConfiguration.DEFAULT_CONFIGURATIONS[0]
+									.resetUnits());
 				}
 			}
 		});
@@ -155,7 +159,7 @@ public class RocketSimTable extends JScrollPane implements BurnWatcher,
 	}
 
 	private Entry toEntry(Burn b) {
-		Entry e = new Entry(b.getMotor(), doc.getSimulation(0).copy(), b);
+		final Entry e = new Entry(b.getMotor(), doc.getSimulation(0).copy(), b);
 		OneMotorDatabase.setBurn(b);
 
 		e.s.getConfiguration().getMotorConfigurationID();
@@ -169,11 +173,20 @@ public class RocketSimTable extends JScrollPane implements BurnWatcher,
 			}
 		}
 
-		try {
-			e.s.simulate();
-		} catch (SimulationException e1) {
-			e1.printStackTrace();
-		}
+		tm.fireTableDataChanged();
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					e.s.simulate();
+					e.ready = true;
+					tm.fireTableDataChanged();
+				} catch (SimulationException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		}.start();
 
 		return e;
 	}
@@ -204,7 +217,7 @@ public class RocketSimTable extends JScrollPane implements BurnWatcher,
 	@Override
 	public void preferredUnitsChanged() {
 		tm.fireTableDataChanged();
-		if (UnitPreference.getUnitPreference() == UnitPreference.NONSI){
+		if (UnitPreference.getUnitPreference() == UnitPreference.NONSI) {
 			System.err.println("NONSI");
 			UnitGroup.setDefaultImperialUnits();
 		} else {
