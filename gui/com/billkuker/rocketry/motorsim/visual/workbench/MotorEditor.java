@@ -16,6 +16,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Vector;
 
+import javax.measure.quantity.Duration;
 import javax.measure.unit.SI;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -410,6 +411,46 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 					return null;
 				}
 			});
+			
+			
+			
+			
+			l = new JLabel("Delay:");
+			l.setAlignmentX(LEFT_ALIGNMENT);
+			nameAndFuel.add(l);
+			nameAndFuel.add(new JTextField(Double.toString(motor.getEjectionDelay().doubleValue(SI.SECOND))) {
+				private static final long serialVersionUID = 1L;
+				{
+					setAlignmentX(LEFT_ALIGNMENT);
+					setMinimumSize(new Dimension(200, 20));
+					setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
+					final JTextField t = this;
+					addFocusListener(new FocusListener() {
+
+						@Override
+						public void focusLost(FocusEvent e) {
+							try {
+								String n = t.getText();
+								double d = Double.parseDouble(n);
+								Amount<Duration> delay = Amount.valueOf(d, SI.SECOND);
+								if ( delay != motor.getEjectionDelay() ){
+									motor.setEjectionDelay(delay);
+								}
+							} catch ( Exception ex ){
+								log.warn(e);
+								setText(Double.toString(motor.getEjectionDelay().doubleValue(SI.SECOND)));
+							}
+						}
+
+						@Override
+						public void focusGained(FocusEvent e) {
+
+						}
+					});
+
+				}
+			});
+			
 			
 			
 			nameAndFuel.add(Box.createVerticalGlue());

@@ -1,5 +1,6 @@
 package com.billkuker.rocketry.motorsim;
 
+import javax.measure.quantity.Duration;
 import javax.measure.unit.SI;
 
 import org.jscience.physics.amount.Amount;
@@ -10,6 +11,7 @@ public class Motor implements Validating{
 	private Nozzle nozzle;
 	private Fuel fuel;
 	private String name;
+	private Amount<Duration> ejectionDelay = Amount.valueOf(5, SI.SECOND);
 	
 	public void validate() throws ValidationException {
 		if ( chamber.chamberVolume().isLessThan(grain.volume(Amount.valueOf(0, SI.MILLIMETER)))){
@@ -63,5 +65,13 @@ public class Motor implements Validating{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Amount<Duration> getEjectionDelay() {
+		return ejectionDelay;
+	}
+
+	public void setEjectionDelay(Amount<Duration> ejectionDelay) {
+		this.ejectionDelay = ejectionDelay;
 	}
 }

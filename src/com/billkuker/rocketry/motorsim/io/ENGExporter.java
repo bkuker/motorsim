@@ -52,8 +52,11 @@ public class ENGExporter {
 						b.getMotor().getFuel().getDensityRatio())).to(
 				SI.KILOGRAM);
 		double wt = prop.doubleValue(SI.KILOGRAM);
+		
+		double delay = b.getMotor().getEjectionDelay().doubleValue(SI.SECOND);
+		String delayString = Integer.toString((int)delay);
 
-		out.append(nf.format(dia) + " " + nf.format(len) + " 0-0-0 "
+		out.append(nf.format(dia) + " " + nf.format(len) + " " + delayString + "-0-0 "
 				+ nf.format(wt) + " " + nf.format(wt + 0.1) + " MF\n");
 
 		GraphSimplifier<Duration, Force> gs = null;
