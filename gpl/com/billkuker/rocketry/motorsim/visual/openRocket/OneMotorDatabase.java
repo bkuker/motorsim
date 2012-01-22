@@ -295,10 +295,10 @@ public class OneMotorDatabase implements MotorDatabase {
 		time = new double[burn.getData().size()];
 		thrust = new double[burn.getData().size()];
 		
-		Coordinate c = new Coordinate();
 
 		for (int i = 0; i < cg.length; i++) {
-			cg[i] = c;
+			cg[i] = new Coordinate();
+			cg[i].setWeight(0.0); //TODO: Set weight!
 		}
 
 		int i = 0;

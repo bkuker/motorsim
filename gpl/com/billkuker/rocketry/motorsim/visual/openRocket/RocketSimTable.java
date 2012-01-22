@@ -1,5 +1,8 @@
 package com.billkuker.rocketry.motorsim.visual.openRocket;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -8,11 +11,15 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.measure.unit.SI;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
+import net.sf.openrocket.aerodynamics.Warning;
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.document.Simulation;
 import net.sf.openrocket.file.RocketLoadException;
@@ -35,9 +42,11 @@ import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
 import com.billkuker.rocketry.motorsim.visual.workbench.BurnWatcher;
 
-public class RocketSimTable extends JScrollPane implements BurnWatcher,
+public class RocketSimTable extends JPanel implements BurnWatcher,
 		RocketScience.UnitPreferenceListener {
 	static final long serialVersionUID = 1L;
+
+	private static final Color RED = new Color(196, 0, 0);
 
 	static {
 		Application.setBaseTranslator(new ResourceBundleTranslator(
@@ -138,7 +147,39 @@ public class RocketSimTable extends JScrollPane implements BurnWatcher,
 	private OpenRocketDocument doc;
 
 	public RocketSimTable() {
-		setViewportView(table);
+		setLayout(new BorderLayout());
+		JScrollPane scroll = new JScrollPane();
+		scroll.setViewportView(table);
+		add(scroll, BorderLayout.CENTER);
+
+		table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+			private static final long serialVersionUID = 1L;
+
+			public Component getTableCellRendererComponent(JTable table,
+					Object value, boolean isSelected, boolean hasFocus,
+					int row, int column) {
+				Component c = super.getTableCellRendererComponent(table, value,
+						isSelected, hasFocus, row, column);
+				Entry e = entries.get(row);
+				if (e.ready && e.s.getSimulatedWarnings().size() > 0) {
+					c.setBackground(RED);
+					c.setForeground(Color.WHITE);
+					StringBuilder sb = new StringBuilder();
+					sb.append("<html>");
+					for (Warning w : e.s.getSimulatedWarnings()) {
+						sb.append(w.toString());
+						sb.append("<br>");
+					}
+					sb.append("<html>");
+					setToolTipText(sb.toString());
+				} else {
+					c.setBackground(table.getBackground());
+					c.setForeground(table.getForeground());
+				}
+				return c;
+			}
+		});
+
 		RocketScience.addUnitPreferenceListener(this);
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -156,6 +197,11 @@ public class RocketSimTable extends JScrollPane implements BurnWatcher,
 
 	public void openRocket(File f) throws RocketLoadException {
 		this.doc = new OpenRocketLoader().load(f);
+		JPanel rocketInfo = new JPanel();
+		JLabel name = new JLabel("File: " + f.getAbsolutePath());
+		rocketInfo.add(name);
+		add(rocketInfo, BorderLayout.NORTH);
+		revalidate();
 	}
 
 	private Entry toEntry(Burn b) {
