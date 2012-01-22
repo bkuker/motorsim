@@ -3,7 +3,6 @@ package com.billkuker.rocketry.motorsim.visual.openRocket;
 import java.util.List;
 import java.util.Vector;
 
-import javax.measure.quantity.Duration;
 import javax.measure.quantity.Mass;
 import javax.measure.unit.SI;
 
@@ -298,7 +297,7 @@ public class OneMotorDatabase implements MotorDatabase {
 		thrust = new double[burn.getData().size()];
 
 		cg[0] = new Coordinate();
-		
+
 		double lastWeight = b
 				.getMotor()
 				.getGrain()
@@ -306,29 +305,25 @@ public class OneMotorDatabase implements MotorDatabase {
 				.times(b.getMotor().getFuel().getIdealDensity()
 						.times(b.getMotor().getFuel().getDensityRatio()))
 				.to(Mass.UNIT).doubleValue(SI.KILOGRAM);
-		
+
 		int i = 0;
+
 		double len = ((ICylindricalChamber) burn.getMotor().getChamber())
 				.getLength().doubleValue(SI.METER);
-		
+
 		for (Interval d : burn.getData().values()) {
 			lastWeight = lastWeight - d.fuelBurnt.doubleValue(SI.KILOGRAM);
-			cg[i] = new Coordinate(len/2.0,0,0,lastWeight);
+			cg[i] = new Coordinate(len / 2.0, 0, 0, lastWeight);
 			System.err.println(lastWeight);
+
+			double t = d.thrust.doubleValue(SI.NEWTON);
+			t = Math.max(t, 0.0001);
+			thrust[i] = t;
+
+			time[i] = d.time.doubleValue(SI.SECOND);
 			i++;
 		}
 
-		i = 0;
-		for (Amount<Duration> t : burn.getData().keySet()) {
-			time[i++] = t.doubleValue(SI.SECOND);
-		}
-
-		i = 0;
-		for (Interval d : burn.getData().values()) {
-			double t = d.thrust.doubleValue(SI.NEWTON);
-			t = Math.max(t, 0.0001);
-			thrust[i++] = t;
-		}
 		thrust[0] = 0;
 		thrust[thrust.length - 1] = 0;
 	}
