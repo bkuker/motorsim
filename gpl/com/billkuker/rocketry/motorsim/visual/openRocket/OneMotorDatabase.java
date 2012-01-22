@@ -1,8 +1,10 @@
 package com.billkuker.rocketry.motorsim.visual.openRocket;
+
 import java.util.List;
 import java.util.Vector;
 
 import javax.measure.quantity.Duration;
+import javax.measure.quantity.Mass;
 import javax.measure.unit.SI;
 
 import net.sf.openrocket.database.MotorDatabase;
@@ -49,7 +51,7 @@ public class OneMotorDatabase implements MotorDatabase {
 
 		@Override
 		public String getDescription() {
-			if ( burn == null )
+			if (burn == null)
 				return "NO MOTOR YET";
 			return burn.getMotor().getName();
 		}
@@ -294,14 +296,29 @@ public class OneMotorDatabase implements MotorDatabase {
 		cg = new Coordinate[burn.getData().size()];
 		time = new double[burn.getData().size()];
 		thrust = new double[burn.getData().size()];
-		
 
-		for (int i = 0; i < cg.length; i++) {
-			cg[i] = new Coordinate();
-			cg[i].setWeight(0.0); //TODO: Set weight!
+		cg[0] = new Coordinate();
+		
+		double lastWeight = b
+				.getMotor()
+				.getGrain()
+				.volume(Amount.valueOf(0, SI.METER))
+				.times(b.getMotor().getFuel().getIdealDensity()
+						.times(b.getMotor().getFuel().getDensityRatio()))
+				.to(Mass.UNIT).doubleValue(SI.KILOGRAM);
+		
+		int i = 0;
+		double len = ((ICylindricalChamber) burn.getMotor().getChamber())
+				.getLength().doubleValue(SI.METER);
+		
+		for (Interval d : burn.getData().values()) {
+			lastWeight = lastWeight - d.fuelBurnt.doubleValue(SI.KILOGRAM);
+			cg[i] = new Coordinate(len/2.0,0,0,lastWeight);
+			System.err.println(lastWeight);
+			i++;
 		}
 
-		int i = 0;
+		i = 0;
 		for (Amount<Duration> t : burn.getData().keySet()) {
 			time[i++] = t.doubleValue(SI.SECOND);
 		}
