@@ -51,6 +51,7 @@ public class RocketScience {
 
 	public static enum UnitPreference{
 		SI(new Unit[]{
+				javax.measure.unit.SI.METERS_PER_SECOND,
 				javax.measure.unit.SI.MILLIMETER.pow(2),
 				javax.measure.unit.SI.MILLIMETER,
 				javax.measure.unit.SI.MILLIMETER.divide(javax.measure.unit.SI.SECOND),
@@ -60,6 +61,7 @@ public class RocketScience {
 				NEWTON_SECOND
 		}),
 		NONSI(new Unit[]{
+				javax.measure.unit.NonSI.MILES_PER_HOUR,
 				javax.measure.unit.NonSI.INCH.pow(2),
 				javax.measure.unit.NonSI.INCH,
 				javax.measure.unit.NonSI.POUND_FORCE,
@@ -155,6 +157,7 @@ public class RocketScience {
 		return nf.format(a.doubleValue(a.getUnit())) + " " + a.getUnit();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T extends Quantity> String ammountToRoundedString(Amount<T> a) {
 		if (a == null)
 			return "Null";
@@ -163,6 +166,14 @@ public class RocketScience {
 		double d = a.doubleValue(u);
 
 		DecimalFormat df;
+		
+		if (u == SI.MILLIMETER && d > 1000.0) {
+			u = (Unit<T>) SI.METER;
+			d = d / 1000.0;
+		} else if (u == NonSI.INCH && d > 12.0) {
+			u = (Unit<T>) NonSI.FOOT;
+			d = d / 12.0;
+		}
 
 		if (Math.abs(d) < 10.0) {
 			df = new DecimalFormat("#.##");
