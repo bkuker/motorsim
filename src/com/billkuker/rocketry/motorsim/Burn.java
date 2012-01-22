@@ -113,6 +113,7 @@ public class Burn {
 		public Amount<Pressure> chamberPressure;
 		Amount<Mass> chamberProduct;
 		public Amount<Force> thrust;
+		public Amount<Mass> fuelBurnt;
 
 		public String toString(){
 			return time + " " + dt + " " + regression + " " + chamberPressure + " " + chamberProduct;
@@ -173,6 +174,7 @@ public class Burn {
 		initial.chamberPressure = settings.getAtmosphereicPressure();
 		initial.chamberProduct = Amount.valueOf(0, SI.KILOGRAM);
 		initial.thrust = Amount.valueOf(0, SI.NEWTON);
+		initial.fuelBurnt = Amount.valueOf(0, SI.KILOGRAM);
 		
 		data.put(Amount.valueOf(0, SI.SECOND), initial);
 		
@@ -226,7 +228,9 @@ public class Burn {
 			assert(positive(volumeBurnt));
 			//log.info("Volume Burnt: " + volumeBurnt.to(SI.MILLIMETER.pow(3)));
 			
-			Amount<MassFlowRate> mGenRate = volumeBurnt.times(motor.getFuel().getIdealDensity().times(motor.getFuel().getDensityRatio())).divide(dt).to(MassFlowRate.UNIT);
+			Amount<Mass> massBurnt = volumeBurnt.times(motor.getFuel().getIdealDensity().times(motor.getFuel().getDensityRatio())).to(Mass.UNIT);
+			next.fuelBurnt = massBurnt;
+			Amount<MassFlowRate> mGenRate = massBurnt.divide(dt).to(MassFlowRate.UNIT);
 			assert(positive(mGenRate));
 			
 			//log.debug("Mass Gen Rate: " + mGenRate);
