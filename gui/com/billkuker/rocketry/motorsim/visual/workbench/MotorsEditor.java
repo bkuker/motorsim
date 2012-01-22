@@ -23,6 +23,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 
+import net.sf.openrocket.file.RocketLoadException;
+
 import org.apache.log4j.Logger;
 
 import com.billkuker.rocketry.motorsim.Burn;
@@ -32,6 +34,7 @@ import com.billkuker.rocketry.motorsim.io.HTMLExporter;
 import com.billkuker.rocketry.motorsim.io.MotorIO;
 import com.billkuker.rocketry.motorsim.visual.MultiObjectEditor;
 import com.billkuker.rocketry.motorsim.visual.RememberJFrame;
+import com.billkuker.rocketry.motorsim.visual.openRocket.RocketSimTable;
 
 public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	private static Logger log = Logger.getLogger(MotorsEditor.class);
@@ -42,6 +45,7 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	MultiMotorPressureChart mpc = new MultiMotorPressureChart();
 	JScrollPane mmtScroll;
 	MultiMotorTable mmt = new MultiMotorTable();
+	RocketSimTable rst = new RocketSimTable();
 
 	JFrame detached;
 	JTabbedPane detachedTabs;
@@ -97,9 +101,11 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 		detachedTabs.remove(mbc);
 		detachedTabs.remove(mpc);
 		detachedTabs.remove(mmtScroll);
+		detachedTabs.remove(rst);
 		insertTab("All Motors", null, mmtScroll, null, 0);
 		insertTab("All Thrust", null, mbc, null, 1);
 		insertTab("All Pressure", null, mpc, null, 2);
+		insertTab("Flight Sims", null, rst, null, 3);
 		detached.setVisible(false);
 	}
 	
@@ -109,9 +115,11 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 		remove(mbc);
 		remove(mpc);
 		remove(mmtScroll);
+		remove(rst);
 		detachedTabs.addTab("All Motors",mmtScroll);
 		detachedTabs.addTab("All Thrust", mbc);
 		detachedTabs.addTab("All Pressure", mpc);
+		detachedTabs.addTab("Flight Sims", rst);
 		detached.setVisible(true);
 	}
 
@@ -120,6 +128,7 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 		e.addBurnWatcher(mbc);
 		e.addBurnWatcher(mpc);
 		e.addBurnWatcher(mmt);
+		e.addBurnWatcher(rst);
 	}
 
 	@Override
@@ -143,10 +152,39 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 	protected void saveToFile(Motor o, File f) throws IOException {
 		MotorIO.writeMotor(o, new FileOutputStream(f));
 	}
+	
+	private void openRocket(){
+		final FileDialog fd = new FileDialog(frame, "Open Rocket...", FileDialog.LOAD);
+		fd.setVisible(true);
+		if ( fd.getFile() != null ) {
+			File file = new File(fd.getDirectory() + fd.getFile());
+			log.warn("Opening File " + file.getAbsolutePath());
+			try {
+				rst.openRocket(file);
+			} catch (RocketLoadException e) {
+				log.error(e);
+			}
+		}
+	}
 
 	@Override
 	public JMenu getMenu() {
 		JMenu ret = super.getMenu();
+		ret.add(new JSeparator());
+		
+		ret.add(new JMenuItem("Open Rocket..."){
+			private static final long serialVersionUID = 1L;
+			{
+				addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent ae) {
+						log.debug("Open Rocksim...");
+						openRocket();
+					}
+				});
+			}
+		});
+		
 		ret.add(new JSeparator());
 		ret.add(new JMenu("Export"){
 			private static final long serialVersionUID = 1L;
