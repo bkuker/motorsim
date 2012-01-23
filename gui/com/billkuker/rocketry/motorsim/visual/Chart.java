@@ -5,6 +5,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -16,10 +20,10 @@ import java.util.concurrent.ThreadFactory;
 import javax.measure.quantity.Area;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Quantity;
-import javax.measure.quantity.Volume;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -151,7 +155,38 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implem
 				true, // Use tool tips
 				false // Configure chart to generate URLs?
 				);
-		add(new ChartPanel(chart));
+		ChartPanel cp = new ChartPanel(chart);
+		cp.getPopupMenu().add(new JMenuItem("Copy CSV to Clipboard") {
+			private static final long serialVersionUID = 1L;
+			{
+				addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent ae) {
+						XYSeries s = dataset.getSeries(0);
+						StringBuilder sb = new StringBuilder();
+						sb.append(f.getName().substring(0, 1).toUpperCase()
+								+ f.getName().substring(1));
+						sb.append("\n");
+						sb.append(Chart.this.xUnit.toString());
+						sb.append(",");
+						sb.append(Chart.this.yUnit.toString());
+						sb.append("\n");
+						for (int i = 0; i < s.getItemCount(); i++) {
+							sb.append(s.getX(i));
+							sb.append(",");
+							sb.append(s.getY(i));
+							sb.append("\n");
+						}
+						Toolkit.getDefaultToolkit()
+								.getSystemClipboard()
+								.setContents(
+										new StringSelection(sb.toString()),
+										null);
+					}
+				});
+			}
+		}, 3);
+		add(cp);
 	}
 	
 
@@ -348,7 +383,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implem
 			{
 				setContentPane(Chart.this);
 				setSize(640, 480);
-				setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				setDefaultCloseOperation(EXIT_ON_CLOSE);
 			}
 		}.setVisible(true);
 	}
@@ -367,13 +402,14 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implem
 
 		c.show();
 
+		/*
 		Chart<Length, Volume> v = new Chart<Length, Volume>(SI.MILLIMETER,
 				SI.MILLIMETER.pow(3).asType(Volume.class), g, "volume");
 
 		v.setDomain(c.new IntervalDomain(Amount.valueOf(0, SI.CENTIMETER), g
 				.webThickness()));
 
-		v.show();
+		v.show();*/
 	}
 
 
