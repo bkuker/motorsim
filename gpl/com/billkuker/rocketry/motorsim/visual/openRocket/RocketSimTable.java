@@ -37,6 +37,7 @@ import net.sf.openrocket.unit.UnitGroup;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
+import com.billkuker.rocketry.motorsim.Colors;
 import com.billkuker.rocketry.motorsim.Motor;
 import com.billkuker.rocketry.motorsim.RocketScience;
 import com.billkuker.rocketry.motorsim.RocketScience.UnitPreference;
@@ -45,8 +46,6 @@ import com.billkuker.rocketry.motorsim.visual.workbench.BurnWatcher;
 public class RocketSimTable extends JPanel implements BurnWatcher,
 		RocketScience.UnitPreferenceListener {
 	static final long serialVersionUID = 1L;
-
-	private static final Color RED = new Color(196, 0, 0);
 
 	static {
 		Application.setBaseTranslator(new ResourceBundleTranslator(
@@ -162,7 +161,7 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 						isSelected, hasFocus, row, column);
 				Entry e = entries.get(row);
 				if (e.ready && e.s.getSimulatedWarnings().size() > 0) {
-					c.setBackground(RED);
+					c.setBackground(Colors.RED);
 					c.setForeground(Color.WHITE);
 					StringBuilder sb = new StringBuilder();
 					sb.append("<html>");

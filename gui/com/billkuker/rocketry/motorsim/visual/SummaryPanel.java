@@ -16,13 +16,12 @@ import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
 import com.billkuker.rocketry.motorsim.BurnSummary;
+import com.billkuker.rocketry.motorsim.Colors;
 import com.billkuker.rocketry.motorsim.RocketScience;
 
 public class SummaryPanel extends JPanel implements Burn.BurnProgressListener, RocketScience.UnitPreferenceListener {
 	private static final long serialVersionUID = 1L;
-	private static final Color RED = new Color(196, 0, 0);
-	private static final Color GREEN = new Color(0, 196, 0);
-	private static final Color ORANGE = new Color(160, 96, 0);
+
 	private final Burn burn;
 	private final JProgressBar bar = new JProgressBar();
 	private BurnSummary bs;
@@ -100,11 +99,11 @@ public class SummaryPanel extends JPanel implements Burn.BurnProgressListener, R
 				} else {
 					double d = bi.getSaftyFactor();
 					if (d >= 1.5) {
-						saftyColor = GREEN;
+						saftyColor = Colors.GREEN;
 					} else if (d > 1) {
-						saftyColor = ORANGE;
+						saftyColor = Colors.ORANGE;
 					} else {
-						saftyColor = RED;
+						saftyColor = Colors.RED;
 					}
 					JLabel l = new JLabel(new DecimalFormat("##########.##")
 							.format(bi.getSaftyFactor()));
