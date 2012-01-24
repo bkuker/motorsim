@@ -30,6 +30,8 @@ public class OneMotorDatabase implements MotorDatabase {
 	static Coordinate cg[];
 	static double[] time;
 	static double[] thrust;
+	
+	static Object lock = new Object();
 
 	static Motor motor = new Motor() {
 

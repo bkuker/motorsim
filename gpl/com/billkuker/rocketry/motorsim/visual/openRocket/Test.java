@@ -25,7 +25,7 @@ public class Test {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		RocketSimTable st = new RocketSimTable();
-		st.openRocket(new File("simple.ork"));
+
 
 		com.billkuker.rocketry.motorsim.Motor m = new PVC9();
 		m.setEjectionDelay(Amount.valueOf(1, SI.SECOND));
@@ -33,8 +33,12 @@ public class Test {
 		b.burn();
 		st.replace(null, b);
 
+		st.openRocket(new File("simple.ork"));
+		
 		frame.setContentPane(st);
 		frame.setVisible(true);
+		
+
 
 	}
 

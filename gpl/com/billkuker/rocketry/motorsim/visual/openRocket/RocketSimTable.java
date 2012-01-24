@@ -6,8 +6,10 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.measure.unit.SI;
@@ -68,7 +70,6 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 		Burn b;
 	}
 
-	List<Entry> entries = new Vector<Entry>();
 
 	class TM extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
@@ -144,6 +145,8 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 	private TM tm = new TM();
 	private JTable table = new JTable(tm);
 	private OpenRocketDocument doc;
+	List<Entry> entries = new Vector<Entry>();
+	Set<Burn> burns = new HashSet<Burn>();
 
 	public RocketSimTable() {
 		setLayout(new BorderLayout());
@@ -200,32 +203,44 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 		JLabel name = new JLabel("File: " + f.getAbsolutePath());
 		rocketInfo.add(name);
 		add(rocketInfo, BorderLayout.NORTH);
+		
+		entries = new Vector<Entry>();
+		for ( Burn b : burns ){
+			entries.add(toEntry(b));
+		}
+		tm.fireTableDataChanged();
 		revalidate();
 	}
 
-	private Entry toEntry(Burn b) {
+	private Entry toEntry(final Burn b) {
 		final Entry e = new Entry(b.getMotor(), doc.getSimulation(0).copy(), b);
-		OneMotorDatabase.setBurn(b);
-
-		e.s.getConfiguration().getMotorConfigurationID();
-		Iterator<RocketComponent> iterator = doc.getRocket().iterator();
-		while (iterator.hasNext()) {
-			RocketComponent c = iterator.next();
-			if (c instanceof MotorMount) {
-				((MotorMount) c).setMotorDelay(e.s.getConfiguration()
-						.getMotorConfigurationID(), b.getMotor()
-						.getEjectionDelay().doubleValue(SI.SECOND));
-			}
-		}
-
 		tm.fireTableDataChanged();
 		new Thread() {
 			@Override
 			public void run() {
 				try {
-					e.s.simulate();
-					e.ready = true;
-					tm.fireTableDataChanged();
+					synchronized (OneMotorDatabase.lock) {
+
+						OneMotorDatabase.setBurn(b);
+
+						e.s.getConfiguration().getMotorConfigurationID();
+						Iterator<RocketComponent> iterator = doc.getRocket()
+								.iterator();
+						while (iterator.hasNext()) {
+							RocketComponent c = iterator.next();
+							if (c instanceof MotorMount) {
+								((MotorMount) c).setMotorDelay(e.s
+										.getConfiguration()
+										.getMotorConfigurationID(), b
+										.getMotor().getEjectionDelay()
+										.doubleValue(SI.SECOND));
+							}
+						}
+
+						e.s.simulate();
+						e.ready = true;
+						tm.fireTableDataChanged();
+					}
 				} catch (SimulationException e1) {
 					e1.printStackTrace();
 				}
@@ -238,6 +253,9 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 
 	@Override
 	public void replace(Burn oldBurn, Burn newBurn) {
+		burns.add(newBurn);
+		burns.remove(oldBurn);
+		
 		if (doc == null) {
 			return; // TODO, deal with changing rockets
 		}
