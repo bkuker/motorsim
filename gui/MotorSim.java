@@ -1,3 +1,5 @@
+import java.util.Locale;
+
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -6,6 +8,7 @@ import com.billkuker.rocketry.motorsim.visual.workbench.MotorWorkbench;
 public class MotorSim {
 
 	public static void main(String args[]) throws Exception {
+		Locale.setDefault(Locale.ENGLISH);
 
 		try {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
