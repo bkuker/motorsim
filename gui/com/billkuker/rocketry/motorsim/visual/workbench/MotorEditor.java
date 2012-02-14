@@ -58,6 +58,7 @@ import com.billkuker.rocketry.motorsim.grain.Moonburner;
 import com.billkuker.rocketry.motorsim.grain.MultiGrain;
 import com.billkuker.rocketry.motorsim.grain.MultiPort;
 import com.billkuker.rocketry.motorsim.grain.RodAndTubeGrain;
+import com.billkuker.rocketry.motorsim.grain.Square;
 import com.billkuker.rocketry.motorsim.grain.Star;
 import com.billkuker.rocketry.motorsim.visual.BurnPanel;
 import com.billkuker.rocketry.motorsim.visual.ClassChooser;
@@ -120,6 +121,7 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 		grainTypes.add(CSlot.class);
 		grainTypes.add(EndBurner.class);
 		grainTypes.add(MultiPort.class);
+		grainTypes.add(Square.class);
 	}
 	
 	private List<Class<? extends Chamber>> chamberTypes = new Vector<Class<? extends Chamber>>();
