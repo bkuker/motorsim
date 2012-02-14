@@ -71,6 +71,7 @@ public class ENGExporter {
 		}
 
 		int cnt = 0;
+		double lastTime = 0;
 		for (Amount<Duration> t : gs.getDomain()) {
 			cnt++;
 			double thrust = gs.value(t).doubleValue(SI.NEWTON);
@@ -78,11 +79,17 @@ public class ENGExporter {
 				continue; // This is a hack to ignore 0 thrust early in burn
 			}
 			out.append("   ");
-			out.append(nf.format(t.doubleValue(SI.SECOND)));
+			out.append(nf.format(lastTime = t.doubleValue(SI.SECOND)));
 			out.append(" ");
 			out.append(nf.format(thrust));
 			out.append("\n");
 		}
+		
+		out.append("   ");
+		out.append(nf.format(lastTime + 0.01));
+		out.append(" ");
+		out.append(nf.format(0.0));
+		out.append("\n");
 		out.append(";\n\n");
 
 		os.write(out.toString().getBytes());
