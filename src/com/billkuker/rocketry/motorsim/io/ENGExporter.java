@@ -5,7 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.measure.quantity.Duration;
 import javax.measure.quantity.Force;
@@ -34,7 +36,7 @@ public class ENGExporter {
 
 		ICylindricalChamber cha = (ICylindricalChamber) b.getMotor().getChamber();
 
-		NumberFormat nf = new DecimalFormat("0.####");
+		NumberFormat nf = new DecimalFormat("0.####", new DecimalFormatSymbols(Locale.US));
 
 		StringBuffer out = new StringBuffer();
 
