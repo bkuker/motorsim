@@ -59,12 +59,16 @@ public class OneMotorDatabase implements MotorDatabase {
 
 		@Override
 		public double getDiameter() {
+			if ( burn == null )
+				return 0;
 			return ((ICylindricalChamber) burn.getMotor().getChamber()).getOD()
 					.doubleValue(SI.METER);
 		}
 
 		@Override
 		public double getLength() {
+			if ( burn == null )
+				return 0;
 			return ((ICylindricalChamber) burn.getMotor().getChamber())
 					.getLength().doubleValue(SI.METER);
 		}

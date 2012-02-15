@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import javax.measure.unit.SI;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -69,7 +68,6 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 		Motor m;
 		Burn b;
 	}
-
 
 	class TM extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
@@ -199,13 +197,16 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 
 	public void openRocket(File f) throws RocketLoadException {
 		this.doc = new OpenRocketLoader().load(f);
-		JPanel rocketInfo = new JPanel();
-		JLabel name = new JLabel("File: " + f.getAbsolutePath());
-		rocketInfo.add(name);
-		add(rocketInfo, BorderLayout.NORTH);
-		
+		// JPanel rocketInfo = new JPanel();
+		// JLabel name = new JLabel("File: " + f.getAbsolutePath());
+		// rocketInfo.add(name);
+		// add(rocketInfo, BorderLayout.NORTH);
+
+		RocketPanel p = new RocketPanel(this.doc);
+		add(p, BorderLayout.NORTH);
+
 		entries = new Vector<Entry>();
-		for ( Burn b : burns ){
+		for (Burn b : burns) {
 			entries.add(toEntry(b));
 		}
 		tm.fireTableDataChanged();
@@ -255,7 +256,7 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 	public void replace(Burn oldBurn, Burn newBurn) {
 		burns.add(newBurn);
 		burns.remove(oldBurn);
-		
+
 		if (doc == null) {
 			return; // TODO, deal with changing rockets
 		}

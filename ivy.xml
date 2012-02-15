@@ -9,9 +9,6 @@
 
 		<dependency org="log4j" name="log4j" rev="1.2.16" conf="core->default" />
 
-
-		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
-
 		<dependency org="xpp3" name="xpp3_min" rev="1.1.4c" conf="core->default" />
 
 		<dependency org="com.thoughtworks.xstream" name="xstream"
@@ -20,6 +17,10 @@
 		<dependency org="jfree" name="jfreechart" rev="1.0.13"
 			conf="gui->default" />
 
+		<dependency org="com.miglayout" name="miglayout" rev="3.7.4"
+			conf="gui->default" />
+
+		<dependency org="junit" name="junit" rev="4.10" conf="test->default" />
 
 	</dependencies>
 </ivy-module>
