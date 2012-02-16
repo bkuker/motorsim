@@ -282,10 +282,8 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 	public void preferredUnitsChanged() {
 		tm.fireTableDataChanged();
 		if (UnitPreference.getUnitPreference() == UnitPreference.NONSI) {
-			System.err.println("NONSI");
 			UnitGroup.setDefaultImperialUnits();
 		} else {
-			System.err.println("SI");
 			UnitGroup.setDefaultMetricUnits();
 		}
 	}

@@ -15,6 +15,7 @@ import net.sf.openrocket.util.Coordinate;
 import net.sf.openrocket.util.Inertia;
 import net.sf.openrocket.util.MathUtil;
 
+import org.apache.log4j.Logger;
 import org.jscience.physics.amount.Amount;
 
 import com.billkuker.rocketry.motorsim.Burn;
@@ -24,6 +25,8 @@ import com.billkuker.rocketry.motorsim.ICylindricalChamber;
 import com.billkuker.rocketry.motorsim.RocketScience;
 
 public class OneMotorDatabase implements MotorDatabase {
+	
+	private static final Logger log = Logger.getLogger(OneMotorDatabase.class);
 
 	static Burn burn;
 	static BurnSummary bs;
@@ -320,7 +323,6 @@ public class OneMotorDatabase implements MotorDatabase {
 		for (Interval d : burn.getData().values()) {
 			lastWeight = lastWeight - d.fuelBurnt.doubleValue(SI.KILOGRAM);
 			cg[i] = new Coordinate(len / 2.0, 0, 0, lastWeight);
-			System.err.println(lastWeight);
 
 			double t = d.thrust.doubleValue(SI.NEWTON);
 			t = Math.max(t, 0.0001);
@@ -342,7 +344,7 @@ public class OneMotorDatabase implements MotorDatabase {
 			String manufacturer, String designation, double diameter,
 			double length) {
 		List<Motor> ret = new Vector<Motor>();
-		System.err.println("Returning " + motor.getDescription());
+		log.debug("Returning " + motor.getDescription());
 		ret.add(motor);
 		return ret;
 	}

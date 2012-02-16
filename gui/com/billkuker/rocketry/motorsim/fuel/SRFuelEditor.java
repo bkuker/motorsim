@@ -193,10 +193,8 @@ public class SRFuelEditor extends AbstractFuelEditor {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				if ( si.isSelected() ){
-					System.err.println("SI");
 					f.setType(Type.SI);
 				} else {
-					System.err.println("NONSI");
 					f.setType(Type.NONSI);
 				}
 				update();

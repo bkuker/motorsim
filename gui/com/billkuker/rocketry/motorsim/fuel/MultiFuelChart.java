@@ -58,7 +58,6 @@ public class MultiFuelChart extends JPanel implements FuelResolver.FuelsChangeLi
 				.getPreferredUnit(SI.PASCAL);
 		rateUnit = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(SI.METERS_PER_SECOND);
-		System.err.println(pressureUnit);
 		removeAll();
 		JFreeChart chart = ChartFactory.createXYLineChart(
 				"", // Title
@@ -84,7 +83,6 @@ public class MultiFuelChart extends JPanel implements FuelResolver.FuelsChangeLi
 		f.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				System.err.println("PropertyChanged :" + evt.getPropertyName());
 				removeFuel(f);
 				addFuel(f, keep);
 			}
