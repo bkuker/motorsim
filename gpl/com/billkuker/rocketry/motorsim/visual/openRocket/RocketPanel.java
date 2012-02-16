@@ -138,7 +138,6 @@ public class RocketPanel extends JPanel implements TreeSelectionListener,
 		configuration.addChangeListener(new StateChangeListener() {
 			@Override
 			public void stateChanged(EventObject e) {
-				// System.out.println("Configuration changed, calling updateFigure");
 				updateExtras();
 				figure.updateFigure();
 			}
@@ -153,48 +152,8 @@ public class RocketPanel extends JPanel implements TreeSelectionListener,
 
 		setPreferredSize(new Dimension(800, 250));
 
-		// // Create toolbar
-
-		/*
-		 * // Side/back buttons FigureTypeAction action = new
-		 * FigureTypeAction(RocketFigure.TYPE_SIDE); // // Side view
-		 * action.putValue(Action.NAME,
-		 * trans.get("RocketPanel.FigTypeAct.Sideview")); // // Side view
-		 * action.putValue(Action.SHORT_DESCRIPTION,
-		 * trans.get("RocketPanel.FigTypeAct.ttip.Sideview")); JToggleButton
-		 * toggle = new JToggleButton(action); add(toggle, "spanx, split");
-		 * 
-		 * action = new FigureTypeAction(RocketFigure.TYPE_BACK); // // Back
-		 * view action.putValue(Action.NAME,
-		 * trans.get("RocketPanel.FigTypeAct.Backview")); // // Back view
-		 * action.putValue(Action.SHORT_DESCRIPTION,
-		 * trans.get("RocketPanel.FigTypeAct.ttip.Backview")); toggle = new
-		 * JToggleButton(action); add(toggle, "gap rel");
-		 */
-		/*
-		 * // Zoom level selector ScaleSelector scaleSelector = new
-		 * ScaleSelector(scrollPane); add(scaleSelector);
-		 */
-		// add(new JLabel());
-
-		/*
-		 * // Stage selector StageSelector stageSelector = new
-		 * StageSelector(configuration); add(stageSelector, "");
-		 * 
-		 * add(new JLabel(), "wrap");
-		 */
-		/*
-		 * 
-		 * // Motor configuration selector //// Motor configuration: JLabel
-		 * label = new JLabel(trans.get("RocketPanel.lbl.Motorcfg"));
-		 * label.setHorizontalAlignment(JLabel.RIGHT); add(label,
-		 * "growx, right"); add(new JComboBox(new
-		 * MotorConfigurationModel(configuration)), "wrap");
-		 */
+		
 		configuration.setMotorConfigurationID(null);
-
-		// add(new JLabel(), "growx, right");
-		// add(new JLabel(), "wrap");
 
 		// Create slider and scroll pane
 
@@ -216,13 +175,6 @@ public class RocketPanel extends JPanel implements TreeSelectionListener,
 				JSlider.VERTICAL, true), "ax 50%, wrap, width " + (d.width + 6)
 				+ "px:null:null, growy");
 
-		/*
-		 * // // <html>Click to select &nbsp;&nbsp; Shift+click to select other
-		 * // &nbsp;&nbsp; Double-click to edit &nbsp;&nbsp; Click+drag to move
-		 * infoMessage = new JLabel(trans.get("RocketPanel.lbl.infoMessage"));
-		 * infoMessage.setFont(new Font("Sans Serif", Font.PLAIN, 9));
-		 * add(infoMessage, "skip, span, gapleft 25, wrap");
-		 */
 		addExtras();
 	}
 
@@ -420,7 +372,6 @@ public class RocketPanel extends JPanel implements TreeSelectionListener,
 		extraText.setTheta(cpTheta);
 
 		cg = massCalculator.getCG(configuration, MassCalcType.LAUNCH_MASS);
-		// System.out.println("CG computed as "+cg+ " CP as "+cp);
 
 		if (cp.weight > 0.000001)
 			cpx = cp.x;

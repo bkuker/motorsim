@@ -380,7 +380,7 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							motor.setFuel((Fuel)getSelectedItem());
-							System.out.println("FUEL CHANGED");
+							log.debug("FUEL CHANGED");
 						}});
 				}
 			});
