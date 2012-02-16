@@ -52,6 +52,7 @@ public class RocketScience {
 	public static enum UnitPreference{
 		SI(new Unit[]{
 				javax.measure.unit.SI.METERS_PER_SECOND,
+				javax.measure.unit.SI.MILLIMETER.pow(3),
 				javax.measure.unit.SI.MILLIMETER.pow(2),
 				javax.measure.unit.SI.MILLIMETER,
 				javax.measure.unit.SI.MILLIMETER.divide(javax.measure.unit.SI.SECOND),
@@ -62,6 +63,7 @@ public class RocketScience {
 		}),
 		NONSI(new Unit[]{
 				javax.measure.unit.NonSI.MILES_PER_HOUR,
+				javax.measure.unit.NonSI.INCH.pow(3),
 				javax.measure.unit.NonSI.INCH.pow(2),
 				javax.measure.unit.NonSI.INCH,
 				javax.measure.unit.NonSI.POUND_FORCE,
