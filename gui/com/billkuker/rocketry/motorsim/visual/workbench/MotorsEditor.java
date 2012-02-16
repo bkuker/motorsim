@@ -137,6 +137,7 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 		mpc.removeBurn(e.burn);
 		mmt.removeBurn(e.burn);
 		rst.replace(e.burn, null);
+		e.closed = true;
 	}
 
 	@Override

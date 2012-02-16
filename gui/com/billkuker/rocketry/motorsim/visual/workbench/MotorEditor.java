@@ -77,6 +77,7 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 	SummaryPanel sp;
 	JTextArea error;
 	JTabbedPane tabs;
+	boolean closed = false;
 
 	private Vector<BurnWatcher> burnWatchers = new Vector<BurnWatcher>();
 	private DefaultComboBoxModel availableFuels = new DefaultComboBoxModel();
@@ -171,6 +172,11 @@ public class MotorEditor extends JPanel implements PropertyChangeListener, FuelR
 									@Override
 									public void setProgress(float f) {
 										if ( currentThread != me ){
+											log.info("Cancel burn on change");
+											throw new BurnCanceled();
+										}
+										if ( closed ){
+											log.info("Cancel burn on close");
 											throw new BurnCanceled();
 										}
 									}
