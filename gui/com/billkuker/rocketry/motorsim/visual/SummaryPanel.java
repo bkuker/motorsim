@@ -37,15 +37,21 @@ public class SummaryPanel extends JPanel implements Burn.BurnProgressListener, R
 	}
 
 	@Override
-	public void setProgress(float p) {
-		int pct = (int) (p * 100);
-		bar.setValue(pct);
-		Amount<Length> web = burn.getMotor().getGrain().webThickness();
-		Amount<Length> remaining = web.times(1.0 - p);
-		if ( remaining.isLessThan(Amount.valueOf(0, SI.MILLIMETER))){
-			remaining = Amount.valueOf(0, remaining.getUnit());
-		}
-		bar.setString("Burn Progress: " + pct + "% (" + RocketScience.ammountToRoundedString(remaining) + " web thickness remaining)");
+	public void setProgress(final float p) {
+		SwingUtilities.invokeLater(new Thread() {
+			public void run() {
+				int pct = (int) (p * 100);
+				bar.setValue(pct);
+				Amount<Length> web = burn.getMotor().getGrain().webThickness();
+				Amount<Length> remaining = web.times(1.0 - p);
+				if (remaining.isLessThan(Amount.valueOf(0, SI.MILLIMETER))) {
+					remaining = Amount.valueOf(0, remaining.getUnit());
+				}
+				bar.setString("Burn Progress: " + pct + "% ("
+						+ RocketScience.ammountToRoundedString(remaining)
+						+ " web thickness remaining)");
+			}
+		});
 	}
 
 	@Override
@@ -64,38 +70,40 @@ public class SummaryPanel extends JPanel implements Burn.BurnProgressListener, R
 	private void setBurnSummary(final BurnSummary bi) {
 		SwingUtilities.invokeLater(new Thread() {
 			public void run() {
-				removeAll();
+				remove(bar);
 				setLayout(new GridLayout(2, 5));
-				SummaryPanel.this.add(new JLabel("Rating"));
-				SummaryPanel.this.add(new JLabel("Total Impulse"));
-				SummaryPanel.this.add(new JLabel("ISP"));
-				SummaryPanel.this.add(new JLabel("Max Thrust"));
-				SummaryPanel.this.add(new JLabel("Average Thust"));
-				SummaryPanel.this.add(new JLabel("Max Pressure"));
-				SummaryPanel.this.add(new JLabel("Fuel Mass"));
-				SummaryPanel.this.add(new JLabel("Volume Loading"));
-				SummaryPanel.this.add(new JLabel("Safty Factor"));
+				add(new JLabel("Rating"));
+				add(new JLabel("Total Impulse"));
+				add(new JLabel("ISP"));
+				add(new JLabel("Max Thrust"));
+				add(new JLabel("Average Thust"));
+				add(new JLabel("Max Pressure"));
+				add(new JLabel("Fuel Mass"));
+				add(new JLabel("Volume Loading"));
+				add(new JLabel("Safty Factor"));
 
-				SummaryPanel.this.add(new JLabel(bi.getRating()));
-				SummaryPanel.this.add(new JLabel(RocketScience
-						.ammountToRoundedString(bi.totalImpulse())));
-				SummaryPanel.this.add(new JLabel(RocketScience
-						.ammountToRoundedString(bi.specificImpulse())));
-				SummaryPanel.this.add(new JLabel(RocketScience
-						.ammountToRoundedString(bi.maxThrust())));
-				SummaryPanel.this.add(new JLabel(RocketScience
-						.ammountToRoundedString(bi.averageThrust())));
-				SummaryPanel.this.add(new JLabel(RocketScience
-						.ammountToRoundedString(bi.maxPressure())));
-				SummaryPanel.this.add(new JLabel(RocketScience
-						.ammountToRoundedString(bi.getPropellantMass())));
-				SummaryPanel.this.add(new JLabel(Integer.toString((int)(bi.getVolumeLoading()*100.0)) + "%"));
-				
+				add(new JLabel(bi.getRating()));
+				add(new JLabel(RocketScience.ammountToRoundedString(bi
+						.totalImpulse())));
+				add(new JLabel(RocketScience.ammountToRoundedString(bi
+						.specificImpulse())));
+				add(new JLabel(RocketScience.ammountToRoundedString(bi
+						.maxThrust())));
+				add(new JLabel(RocketScience.ammountToRoundedString(bi
+						.averageThrust())));
+				add(new JLabel(RocketScience.ammountToRoundedString(bi
+						.maxPressure())));
+				add(new JLabel(RocketScience.ammountToRoundedString(bi
+						.getPropellantMass())));
+				add(new JLabel(
+						Integer.toString((int) (bi.getVolumeLoading() * 100.0))
+								+ "%"));
+
 				Color saftyColor;
 				if (bi.getSaftyFactor() == null) {
 
 					saftyColor = Color.BLACK;
-					SummaryPanel.this.add(new JLabel("NA"));
+					add(new JLabel("NA"));
 				} else {
 					double d = bi.getSaftyFactor();
 					if (d >= 1.5) {
@@ -110,12 +118,12 @@ public class SummaryPanel extends JPanel implements Burn.BurnProgressListener, R
 					l.setOpaque(true);
 					l.setBackground(saftyColor);
 					l.setForeground(Color.WHITE);
-					SummaryPanel.this.add(l);
+					add(l);
 				}
 				revalidate();
+				repaint();
 			}
 		});
 	}
-
 
 }
