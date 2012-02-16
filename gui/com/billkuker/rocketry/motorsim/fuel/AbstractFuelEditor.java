@@ -65,7 +65,7 @@ public abstract class AbstractFuelEditor  extends JSplitPane {
 				try {
 					burnRate = new Chart<Pressure, Velocity>(
 							SI.MEGA(SI.PASCAL), SI.MILLIMETER.divide(SI.SECOND)
-									.asType(Velocity.class), f, "burnRate");
+									.asType(Velocity.class), f, "burnRate",  "Chamber Pressure", "Burn Rate");
 				} catch (NoSuchMethodException e) {
 					throw new Error(e);
 				}

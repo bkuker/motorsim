@@ -65,14 +65,14 @@ public class GrainPanel extends JPanel {
 					SI.MILLIMETER,
 					SI.MILLIMETER.pow(2).asType(Area.class),
 					grain,
-					"surfaceArea");
+					"surfaceArea", "Regression", "Area");
 			area.setDomain(area.new IntervalDomain(Amount.valueOf(0, SI.MILLIMETER), grain.webThickness()));
 			
 			volume = new Chart<Length, Volume>(
 					SI.MILLIMETER,
 					SI.MILLIMETER.pow(3).asType(Volume.class),
 					grain,
-					"volume");
+					"volume", "Regression", "Volume");
 			volume.setDomain(volume.new IntervalDomain(Amount.valueOf(0, SI.MILLIMETER), grain.webThickness()));
 
 			area.setMaximumSize(new Dimension(200,100));

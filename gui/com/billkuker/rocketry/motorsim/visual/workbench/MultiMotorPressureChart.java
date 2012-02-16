@@ -65,7 +65,7 @@ public class MultiMotorPressureChart extends JPanel implements BurnWatcher {
 		JFreeChart chart = ChartFactory.createXYLineChart(
 				"", // Title
 				"Time (" + time.toString() + ")", // x-axis Label
-				"Pressure (" + pressureUnit.toString() + ")", // y-axis Label
+				"Chamber Pressure (" + pressureUnit.toString() + ")", // y-axis Label
 				dataset, PlotOrientation.VERTICAL, // Plot Orientation
 				true, // Show Legend
 				true, // Use tool tips

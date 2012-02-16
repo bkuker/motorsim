@@ -118,12 +118,15 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implem
 	Unit<X> xUnit;
 	Unit<Y> yUnit;
 
+	String xLabel;
+	String yLabel;
+	
 	Object source;
 	Method f;
 	
 	Iterable<Amount<X>> domain;
-
-	public Chart(Unit<X> xUnit, Unit<Y> yUnit, Object source, String method)
+	
+	public Chart(Unit<X> xUnit, Unit<Y> yUnit, Object source, String method, String xLabel, String yLabel)
 			throws NoSuchMethodException {
 		super(new BorderLayout());
 		f = source.getClass().getMethod(method, Amount.class);
@@ -132,10 +135,20 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implem
 		
 		this.xUnit = xUnit;
 		this.yUnit = yUnit;
+		
+		this.xLabel = xLabel;
+		this.yLabel = yLabel;
 
 		RocketScience.addUnitPreferenceListener(this);
 		
 		setup();
+	}
+	
+	private static String toTitle(Method f) {
+		String ret = f.getName().substring(0, 1).toUpperCase()
+				+ f.getName().substring(1);
+		ret = ret.replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2");
+		return ret;
 	}
 	
 	private void setup(){
@@ -145,11 +158,10 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implem
 		this.yUnit = RocketScience.UnitPreference.getUnitPreference()
 				.getPreferredUnit(yUnit);
 
-		chart = ChartFactory.createXYLineChart(f.getName().substring(0, 1)
-				.toUpperCase()
-				+ f.getName().substring(1), // Title
-				this.xUnit.toString(), // x-axis Label
-				this.yUnit.toString(), // y-axis Label
+		chart = ChartFactory.createXYLineChart(
+				toTitle(f), // Title
+				xLabel + " (" + xUnit.toString() + ")", // x-axis Label
+				yLabel + " (" + yUnit.toString() + ")", // y-axis Label
 				dataset, PlotOrientation.VERTICAL, // Plot Orientation
 				false, // Show Legend
 				true, // Use tool tips
@@ -167,9 +179,9 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implem
 						sb.append(f.getName().substring(0, 1).toUpperCase()
 								+ f.getName().substring(1));
 						sb.append("\n");
-						sb.append(Chart.this.xUnit.toString());
+						sb.append(Chart.this.chart.getXYPlot().getDomainAxis().getLabel());
 						sb.append(",");
-						sb.append(Chart.this.yUnit.toString());
+						sb.append(Chart.this.chart.getXYPlot().getRangeAxis().getLabel());
 						sb.append("\n");
 						for (int i = 0; i < s.getItemCount(); i++) {
 							sb.append(s.getX(i));
@@ -395,7 +407,7 @@ public class Chart<X extends Quantity, Y extends Quantity> extends JPanel implem
 		g.setID(Amount.valueOf(10, SI.MILLIMETER));
 
 		Chart<Length, Area> c = new Chart<Length, Area>(SI.MILLIMETER,
-				SI.MILLIMETER.pow(2).asType(Area.class), g, "surfaceArea");
+				SI.MILLIMETER.pow(2).asType(Area.class), g, "surfaceArea", "Regression", "Area");
 
 		c.setDomain(c.new IntervalDomain(Amount.valueOf(0, SI.CENTIMETER), g
 				.webThickness()));

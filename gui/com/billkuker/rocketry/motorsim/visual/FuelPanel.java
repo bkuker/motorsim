@@ -20,7 +20,7 @@ public class FuelPanel extends JSplitPane {
 		Chart<Pressure, Velocity> burnRate;
 		try {
 			burnRate = new Chart<Pressure, Velocity>(SI.MEGA(SI.PASCAL),
-					SI.METERS_PER_SECOND, f, "burnRate");
+					SI.METERS_PER_SECOND, f, "burnRate",  "Chamber Pressure", "Burn Rate");
 		} catch (NoSuchMethodException e) {
 			throw new Error(e);
 		}

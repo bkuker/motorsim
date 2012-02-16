@@ -42,21 +42,21 @@ public class BurnPanel extends JPanel {
 					SI.SECOND,
 					SI.MEGA(SI.PASCAL),
 					b,
-					"pressure");
+					"pressure", "Time", "Chamber Pressure");
 			pressure.setDomain(burn.getData().keySet());
 			
 			thrust = new Chart<Duration, Force>(
 					SI.SECOND,
 					SI.NEWTON,
 					b,
-					"thrust");
+					"thrust", "Time", "Thrust");
 			thrust.setDomain(burn.getData().keySet());
 			
 			burnRate = new Chart<Pressure, Velocity>(
 					SI.MEGA(SI.PASCAL),
 					SI.METERS_PER_SECOND,
 					burn.getMotor().getFuel(),
-					"burnRate");
+					"burnRate", "Chamber Pressure", "Burn Rate");
 			burnRate.setDomain(
 					burnRate.new IntervalDomain(
 							Amount.valueOf(0, SI.MEGA(SI.PASCAL)),
