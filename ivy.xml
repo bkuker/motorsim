@@ -1,5 +1,5 @@
 <ivy-module version="1.0">
-	<info organisation="com.martellotech" module="marwatch.marCentral" />
+	<info organisation="com.billkuker" module="motorsim" />
 	<configurations>
 		<conf name="core" />
 		<conf name="gui" extends="core" />
