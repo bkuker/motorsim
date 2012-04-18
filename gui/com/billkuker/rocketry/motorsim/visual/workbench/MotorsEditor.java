@@ -23,8 +23,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 
-import net.sf.openrocket.file.RocketLoadException;
-
 import org.apache.log4j.Logger;
 
 import com.billkuker.rocketry.motorsim.Burn;
@@ -163,7 +161,7 @@ public class MotorsEditor extends MultiObjectEditor<Motor, MotorEditor> {
 			log.warn("Opening File " + file.getAbsolutePath());
 			try {
 				rst.openRocket(file);
-			} catch (RocketLoadException e) {
+			} catch (Exception e) {
 				log.error(e);
 			}
 		}

@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -23,8 +25,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import net.sf.openrocket.aerodynamics.Warning;
 import net.sf.openrocket.document.OpenRocketDocument;
 import net.sf.openrocket.document.Simulation;
+import net.sf.openrocket.file.DatabaseMotorFinder;
 import net.sf.openrocket.file.RocketLoadException;
-import net.sf.openrocket.file.openrocket.OpenRocketLoader;
+import net.sf.openrocket.file.openrocket.importt.OpenRocketLoader;
 import net.sf.openrocket.gui.plot.PlotConfiguration;
 import net.sf.openrocket.gui.plot.SimulationPlotDialog;
 import net.sf.openrocket.gui.util.SwingPreferences;
@@ -51,7 +54,7 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 	static {
 		Application.setBaseTranslator(new ResourceBundleTranslator(
 				"l10n.messages"));
-		Application.setMotorSetDatabase(new OneMotorDatabase());
+		//Application.setMotorSetDatabase(new OneMotorDatabase());
 		Application.setPreferences(new SwingPreferences());
 
 	}
@@ -195,8 +198,8 @@ public class RocketSimTable extends JPanel implements BurnWatcher,
 		preferredUnitsChanged();
 	}
 
-	public void openRocket(File f) throws RocketLoadException {
-		this.doc = new OpenRocketLoader().load(f);
+	public void openRocket(File f) throws RocketLoadException, IOException {
+		this.doc = new OpenRocketLoader().loadFromStream(new FileInputStream(f), new DatabaseMotorFinder());
 		// JPanel rocketInfo = new JPanel();
 		// JLabel name = new JLabel("File: " + f.getAbsolutePath());
 		// rocketInfo.add(name);
