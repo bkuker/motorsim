@@ -25,5 +25,6 @@
 		<nature>org.eclipse.ajdt.ui.ajnature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>net.sourceforge.metrics.nature</nature>
+		<nature>org.apache.ivyde.eclipse.ivynature</nature>
 	</natures>
 </projectDescription>
