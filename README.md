@@ -1,4 +1,4 @@
-motorsim
+MotorSim
 ========
 
-Solid rocket motor simulation
+Open source solid rocket motor simulation, written in Java.
